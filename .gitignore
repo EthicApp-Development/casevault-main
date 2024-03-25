@@ -128,3 +128,16 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Rails proyect
+
+backend/db/*.sqlite3
+backend/db/*.sqlite3-journal
+backend/db/*.sqlite3-[0-9]*
+
+backend/storage/*
+backend/tmp/*
+
+backemd/config/initializers/secret_token.rb
+backend/config/master.key
+backend/config/credentials/*.key
