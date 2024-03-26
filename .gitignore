@@ -3,7 +3,6 @@ logs
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
@@ -130,14 +129,101 @@ dist
 .pnp.*
 
 # Rails proyect
-
-backend/db/*.sqlite3
-backend/db/*.sqlite3-journal
-backend/db/*.sqlite3-[0-9]*
-
 backend/storage/*
 backend/tmp/*
 
 backemd/config/initializers/secret_token.rb
 backend/config/master.key
 backend/config/credentials/*.key
+
+# Ruby on Rails-specific ignores
+backend/*.rbc
+backend/capybara-*.html
+backend/.rspec
+backend/db/*.sqlite3
+backend/db/*.sqlite3-journal
+backend/db/*.sqlite3-[0-9]*
+backend/public/system
+backend/coverage/
+backend/spec/tmp
+backend/*.orig
+backend/rerun.txt
+backend/pickle-email-*.html
+
+# Ignore all logfiles and tempfiles.
+backend/log/*
+!backend/log/.keep
+!backend/tmp/.keep
+
+# Secrets
+backend/config/initializers/secret_token.rb
+backend/config/master.key
+
+# Environment configuration
+backend/.env
+backend/.env*.local
+
+# Ruby environment
+backend/.bundle
+backend/vendor/bundle
+backend/.rvmrc
+
+# Ignore pow environment settings
+backend/.powenv
+
+# Ignore Byebug command history file.
+backend/.byebug_history
+
+# Precompiled javascript packs
+backend/public/packs
+backend/public/packs-test
+backend/public/assets
+
+# Yarn files
+backend/yarn-error.log
+backend/yarn-debug.log*
+backend/.yarn-integrity
+
+# Uploaded files in development
+backend/public/uploads
+
+# React-specific ignores
+frontend/.idea/
+frontend/.vscode/
+frontend/node_modules/
+frontend/build/
+frontend/.DS_Store
+frontend/*.tgz
+frontend/my-app*
+frontend/template/src/__tests__/__snapshots__/
+frontend/lerna-debug.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.changelog
+frontend/.npm/
+
+# General ignores for both Rails and React
+frontend/vendor/assets/bower_components
+frontend/*.bowerrc
+frontend/bower.json
+
+# Node modules (duplicated for backend for any potential Node.js usage)
+backend/node_modules/
+
+!**/glob-import/dir/node_modules
+frontend/.DS_Store
+frontend/.idea
+frontend/.pnpm-store
+*.cpuprofile
+*.local
+*.log
+/docs/.vitepress/cache
+frontend/packages/vite/LICENSE
+frontend/dist
+frontend/dist-ssr
+frontend/explorations
+frontend/playground-temp
+frontend/temp
+frontend/TODOs.md
+frontend/.eslintcache
