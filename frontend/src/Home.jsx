@@ -92,7 +92,7 @@ export default function Home() {
 
     return (
         <Container maxWidth="xl">
-            <Navbar />
+
             <BackgroundBox>
                 <img
                     src="src/assets/Shutterstock_2072700533.jpg" // Ruta de la imagen
@@ -104,7 +104,7 @@ export default function Home() {
                 </CreateCaseButton>
             </BackgroundBox>
 
-            <Navbar />
+
             <Grid container spacing={2}>
                 {fakeData.map(caseData => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
