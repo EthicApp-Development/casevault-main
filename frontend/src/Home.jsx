@@ -92,7 +92,6 @@ export default function Home() {
 
     return (
         <Container maxWidth="xl">
-
             <BackgroundBox>
                 <img
                     src="src/assets/Shutterstock_2072700533.jpg" // Ruta de la imagen

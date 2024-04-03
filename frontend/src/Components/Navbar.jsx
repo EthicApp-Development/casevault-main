@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Box, AppBar, Toolbar, IconButton, Typography, Tab, Tabs } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import useTabs from '../Hooks/UseTabs';
 import { useNavigate } from 'react-router-dom';
+import AppContext from '../Contexts/AppContext';
 
 const Search = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -54,9 +54,10 @@ const WhiteTab = styled(Tab)({
 });
 
 export default function Navbar() {
-    const [tab, setTab] = useTabs(0);
+
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
+    const { tab, setTab } = useContext(AppContext)
 
     const onSearch = (searchTerm) => {
         if (searchTerm.trim() !== "") {
@@ -77,6 +78,10 @@ export default function Navbar() {
     const handleTabChange = (event, newValue) => {
         setTab(newValue);
         if (newValue === 0) {
+            console.log(newValue)
+            navigate('/home');
+        }
+        else if (newValue === 0) {
             console.log(newValue)
             navigate('/home');
         }

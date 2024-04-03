@@ -1,34 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import newTheme from './Components/Theme'
-import { TabProvider } from './Utils/Tabcontext'
-import Navbar from './Components/Navbar'
+
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './Components/Navbar.jsx';
+import Home from './Home.jsx'; // Importa tus componentes correctamente
+import UserCases from './MyCases/UserCases.jsx';
+import SearchResults from './SearchResults.jsx';
+import useTabs from './Hooks/UseTabs.jsx';
+import AppContext from './Contexts/AppContext.jsx';
 
 function App() {
+
+  const [tab, setTab] = useTabs(0)
   return (
-    <TabProvider>
-      <>
-        <div>
-          <a href="https://vitejs.dev" target="_blank">
-            <img src={viteLogo} className="logo" alt="Vite logo" />
-          </a>
-          <a href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
-        </div>
-        <h1>Vite + React</h1>
-        <div className="card">
-          <p>
-            Edit <code>src/App.jsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p>
-      </>
-    </TabProvider>
+    <div>
+      <AppContext.Provider value={{
+        tab,
+        setTab
+      }}>
+        <Navbar />
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route path="/search/:searchTerm" element={<SearchResults />} />
+          <Route path="/usercases/" element={<UserCases />} />
+        </Routes>
+      </AppContext.Provider>
+    </div>
   );
 }
 
