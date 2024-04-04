@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      args:
+        RUBY_VERSION: 3.3.0
+    volumes:
+      - ./backend:/app
+      - bundle_data:/usr/local/bundle
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: development
+      BUNDLE_PATH: /usr/local/bundle
+    command: ./bin/rails server -b 0.0.0.0
+    
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+
+volumes:
+  bundle_data:
