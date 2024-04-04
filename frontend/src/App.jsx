@@ -7,7 +7,7 @@ import UserCases from './MyCases/UserCases.jsx';
 import SearchResults from './SearchResults.jsx';
 import useTabs from './Hooks/UseTabs.jsx';
 import AppContext from './Contexts/AppContext.jsx';
-
+import { Box } from "@mui/material";
 function App() {
 
   return (
@@ -16,11 +16,13 @@ function App() {
 
       }}>
         <Navbar />
-        <Routes>
-          <Route path="/home" element={<Home />} />
-          <Route path="/search/:searchTerm" element={<SearchResults />} />
-          <Route path="/usercases/" element={<UserCases />} />
-        </Routes>
+        <Box marginTop={20}>
+          <Routes>
+            <Route path="/home" element={<Home />} />
+            <Route path="/search/:searchTerm" element={<SearchResults />} />
+            <Route path="/usercases/" element={<UserCases />} />
+          </Routes>
+        </Box>
       </AppContext.Provider>
     </div>
   );
