@@ -9,7 +9,6 @@ const SearchResults = ({ match }) => {
     return (
         <Box>
             <Typography>Resultados de búsqueda para "{searchTerm}"</Typography>
-
         </Box>
     );
 }

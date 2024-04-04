@@ -10,12 +10,10 @@ import AppContext from './Contexts/AppContext.jsx';
 
 function App() {
 
-  const [tab, setTab] = useTabs(0)
   return (
     <div>
       <AppContext.Provider value={{
-        tab,
-        setTab
+
       }}>
         <Navbar />
         <Routes>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Box, AppBar, Toolbar, IconButton, Typography, Tab, Tabs } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
@@ -57,7 +57,29 @@ export default function Navbar() {
 
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
-    const { tab, setTab } = useContext(AppContext)
+    const [tab, setTab] = useState()
+    const { pathname } = location;
+
+
+    useEffect(() => {
+        switch (pathname) {
+            case '/home':
+                setTab(0);
+                break;
+            case '/mycases':
+                setTab(1);
+                break;
+            case '/savedcases':
+                setTab(2);
+                break;
+            case '/information':
+                setTab(3);
+                break;
+            default:
+                setTab(0);
+                break;
+        }
+    }, [pathname]);
 
     const onSearch = (searchTerm) => {
         if (searchTerm.trim() !== "") {
