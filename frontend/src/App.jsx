@@ -8,6 +8,7 @@ import SearchResults from './SearchResults.jsx';
 import useTabs from './Hooks/UseTabs.jsx';
 import AppContext from './Contexts/AppContext.jsx';
 import { Box } from "@mui/material";
+import CreateCase from './CreationCases/CreateCase.jsx';
 function App() {
 
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/search/:searchTerm" element={<SearchResults />} />
             <Route path="/usercases/" element={<UserCases />} />
+            <Route path="/create_case/" element={<CreateCase />} />
           </Routes>
         </Box>
       </AppContext.Provider>

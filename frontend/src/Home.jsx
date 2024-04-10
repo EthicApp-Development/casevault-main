@@ -4,7 +4,7 @@ import CaseCard from "./Case/CaseCard";
 import { styled, alpha } from '@mui/material/styles';
 import useTabs from "./Hooks/UseTabs";
 import { useState } from "react";
-
+import RTE from "./Utils/RTE";
 const fakeData = [
     {
         id: 1,
@@ -102,7 +102,6 @@ export default function Home() {
                     Crear Caso
                 </CreateCaseButton>
             </BackgroundBox>
-
 
             <Grid container spacing={2}>
                 {fakeData.map(caseData => (
