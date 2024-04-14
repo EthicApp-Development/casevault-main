@@ -142,7 +142,7 @@ export const link_style = {
 export const paper_style = {
     padding: 2,
     borderRadius: 2,
-    background: 'white',
+    background: '#F7F9F9',
     position: 'relative'
 }
 
