@@ -5,6 +5,8 @@ import useToggle from '../Hooks/ToggleHook';
 import React from 'react';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import CreateCaseTab from './CreateCase';
+
 export default function TextCreator() {
     const [open, setOpen] = React.useState(false);
 
@@ -44,12 +46,14 @@ export default function TextCreator() {
     );
 
     return (
-        <Box>
+        <Box marginTop={5}>
             <Button onClick={toggleDrawer(true)}>Cambiar sección de texto</Button>
+            <Box marginTop={3}>
+                <RTE />
+            </Box>
             <Drawer open={open} onClose={toggleDrawer(false)}>
                 {DrawerList}
             </Drawer>
-            <RTE />
         </Box>
     );
 }
