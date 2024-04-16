@@ -141,3 +141,5 @@ backend/tmp/*
 backemd/config/initializers/secret_token.rb
 backend/config/master.key
 backend/config/credentials/*.key
+
+backend/vendor/cache/*
