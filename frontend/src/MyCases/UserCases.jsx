@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import React from 'react';
 
 const UserCases = ({ match }) => {

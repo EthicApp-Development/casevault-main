@@ -55,10 +55,10 @@ const WhiteTab = styled(Tab)({
 
 export default function Navbar() {
 
-    const [searchValue, setSearchValue] = useState("");
-    const navigate = useNavigate();
+    const [searchValue, setSearchValue] = useState("")
+    const navigate = useNavigate()
     const [tab, setTab] = useState()
-    const { pathname } = location;
+    const { pathname } = location
 
 
     useEffect(() => {
@@ -98,14 +98,17 @@ export default function Navbar() {
     };
 
     const handleTabChange = (event, newValue) => {
-        setTab(newValue);
+        setTab(newValue)
         if (newValue === 0) {
+            navigate('/home')
+        }
+        else if (newValue === 1) {
             console.log(newValue)
-            navigate('/home');
+            navigate('/mycases')
         }
         else if (newValue === 0) {
             console.log(newValue)
-            navigate('/home');
+            navigate('/home')
         }
     }
 

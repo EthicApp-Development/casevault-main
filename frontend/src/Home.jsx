@@ -4,7 +4,8 @@ import CaseCard from "./Case/CaseCard";
 import { styled, alpha } from '@mui/material/styles';
 import useTabs from "./Hooks/UseTabs";
 import { useState } from "react";
-
+import RTE from "./Utils/RTE";
+import { useNavigate } from "react-router-dom";
 const fakeData = [
     {
         id: 1,
@@ -78,17 +79,17 @@ const BackgroundBox = styled(Box)({
 
 const CreateCaseButton = styled(Button)({
     position: 'absolute',
-    bottom: '16px', // Ajusta la posición vertical del botón
+    bottom: '16px',
     left: '50%',
-    transform: 'translateX(-50%)', // Centra el botón horizontalmente
+    transform: 'translateX(-50%)',
 });
 
 export default function Home() {
     const [tab, setTab] = useTabs(0);
-
+    const navigate = useNavigate()
     const handleCreateCase = () => {
-        // Lógica para crear un caso
-    };
+        navigate("/create_case/text")
+    }
 
     return (
         <Container maxWidth="xl">
@@ -102,7 +103,6 @@ export default function Home() {
                     Crear Caso
                 </CreateCaseButton>
             </BackgroundBox>
-
 
             <Grid container spacing={2}>
                 {fakeData.map(caseData => (
