@@ -5,9 +5,8 @@ import useToggle from '../../Hooks/ToggleHook';
 import React from 'react';
 import { paper_style, title_style } from '../../Utils/defaultStyles';
 import VideoField from './VideoDataField';
+import { italic, inline } from '../../Utils/defaultStyles';
 import newTheme from '../../Components/Theme';
-import VideoShow from './VideoShow';
-
 
 const css = {
     link: {
@@ -26,22 +25,17 @@ const css = {
     }
 }
 
-export default function VideoCreator() {
+export default function VideoShow({ url, description }) {
     const [open, setOpen] = useState(false);
-
-    const toggleDrawer = (newOpen) => () => {
-        setOpen(newOpen);
-    };
 
     return (
         <Box marginTop={3}>
-            <Typography variant='h2' sx={title_style}>Videos relacionados al caso</Typography>
-            <Box>
-                <VideoShow url={"https://www.youtube.com/embed/zQyrhjEAqLs"} description={"descripción"} />
-            </Box>
-            <Box>
-                <VideoField />
-            </Box>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+
+            <Typography variant='subtitle1' sx={italic}>
+                {description}
+            </Typography>
+
         </Box>
-    );
+    )
 }

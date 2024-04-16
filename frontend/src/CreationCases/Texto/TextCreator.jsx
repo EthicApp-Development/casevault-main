@@ -1,11 +1,11 @@
 import { Drawer, Box, List, ListItem, ListItemIcon, ListItemButton, ListItemText, Divider, Button, Typography } from '@mui/material'
-import RTE from '../Utils/RTE'
+import RTE from '../../Utils/RTE'
 import { useState } from 'react';
-import useToggle from '../Hooks/ToggleHook';
+import useToggle from '../../Hooks/ToggleHook';
 import React from 'react';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import CreateCaseTab from './CreateCase';
+import CreateCaseTab from '../CreateCase';
 
 export default function TextCreator() {
     const [open, setOpen] = React.useState(false);
@@ -54,6 +54,6 @@ export default function TextCreator() {
             <Drawer open={open} onClose={toggleDrawer(false)}>
                 {DrawerList}
             </Drawer>
-        </Box>
+        </Box >
     );
 }
