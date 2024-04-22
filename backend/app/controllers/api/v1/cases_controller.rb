@@ -1,16 +1,17 @@
-class CasesController < ApplicationController
+
+class Api::V1::CasesController < ApplicationController
   before_action :set_case, only: %i[ show update destroy ]
 
   # GET /cases
   def index
     @cases = Case.all
 
-    render json: @cases
+    render json: @cases, include: [:images, :documents, :audios, :videos]
   end
 
   # GET /cases/1
   def show
-    render json: @case
+    render json: @case, include: [:images, :documents, :audios, :videos]
   end
 
   # POST /cases
@@ -46,6 +47,6 @@ class CasesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def case_params
-      params.require(:case).permit(:title, :description, :body)
+      params.require(:case).permit(:title, :description, :body, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :description, :_destroy, :file], videos_attributes: [:id, :url, :_destroy])
     end
 end
