@@ -11,7 +11,12 @@ class Api::V1::CasesController < ApplicationController
 
   # GET /cases/1
   def show
-    render json: @case, include: [:images, :documents, :audios, :videos]
+    render json: @case.as_json(include: {
+      images: { only: [:title, :description], methods: :image_url },
+      documents: { only: [:title, :description], methods: :document_url },
+      audios: { only: [:title, :description], methods: :audio_url },
+      videos: { only: [:title, :description]}
+    })
   end
 
   # POST /cases
@@ -19,6 +24,12 @@ class Api::V1::CasesController < ApplicationController
     @case = Case.new(case_params)
 
     if @case.save
+      if params[:case][:images_attributes].present?
+        images_params = params[:case][:images_attributes]
+        images_params.each do |image_param|
+          ImagesController.new.create(image_param.permit(:title, :description, :file))
+        end
+      end
       render json: @case, status: :created, location: @case
     else
       render json: @case.errors, status: :unprocessable_entity

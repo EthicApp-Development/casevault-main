@@ -3,6 +3,10 @@ class Audio < ApplicationRecord
 
   has_one_attached :file
 
-  validates :title, presence: true
-  validates :description, presence: true
+  validates :title
+  validates :description
+
+  def audio_url
+    Rails.application.routes.url_helpers.url_for(file) if file.attached?
+  end
 end

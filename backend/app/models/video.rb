@@ -1,8 +1,7 @@
 class Video < ApplicationRecord
-  belongs_to :case
+  belongs_to :cases
 
-  has_one_attached :file
-
-  validates :title, presence: true
-  validates :description, presence: true
+  validates :title
+  validates :description
+  validates :url
 end
