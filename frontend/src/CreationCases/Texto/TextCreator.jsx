@@ -1,14 +1,12 @@
-import { Drawer, Box, List, ListItem, ListItemIcon, ListItemButton, ListItemText, Divider, Button, Typography } from '@mui/material'
+import { Drawer, Box, List, ListItem, ListItemButton, Button, Typography } from '@mui/material'
 import RTE from '../../Utils/RTE'
-import { useState } from 'react';
-import useToggle from '../../Hooks/ToggleHook';
+import { useState, useContext } from 'react';
 import React from 'react';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import CreateCaseTab from '../CreateCase';
+import { useCaseContext } from '../CreateCase';
 
 export default function TextCreator() {
     const [open, setOpen] = React.useState(false);
+    const { text, setText } = useCaseContext();
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -49,7 +47,7 @@ export default function TextCreator() {
         <Box marginTop={5}>
             <Button onClick={toggleDrawer(true)}>Cambiar sección de texto</Button>
             <Box marginTop={3}>
-                <RTE />
+                <RTE text={text} setText={setText} />
             </Box>
             <Drawer open={open} onClose={toggleDrawer(false)}>
                 {DrawerList}

@@ -12,6 +12,7 @@ import VideoCreator from './CreationCases/Video/VideoCreator.jsx';
 import DocumentCreator from './CreationCases/Documents/DocumentCreator.jsx';
 import AudioCreator from './CreationCases/Audios/AudioCreator.jsx';
 import Login from './Session/Login.jsx';
+import InfoCreator from './CreationCases/Information/InfoCreator.jsx';
 
 function App() {
   const location = useLocation();
@@ -33,6 +34,7 @@ function App() {
               <Route path="videos" element={<VideoCreator />} />
               <Route path="documents" element={<DocumentCreator />} />
               <Route path="audios" element={<AudioCreator />} />
+              <Route path="information" element={<InfoCreator />} />
             </Route>
           </Routes>
         </Box>
