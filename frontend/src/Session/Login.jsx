@@ -12,20 +12,32 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-
+import { authLogin } from '../API/login';
 const defaultTheme = createTheme();
 
 export default function Login() {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-    };
-
+   
+    const handleSubmit = async (event) => {
+        try {
+        
+            event.preventDefault();
+            const data = new FormData(event.currentTarget);
+            const params = { "email": data.get("email"), "password": data.get("password") };
+            const response = await authLogin({ user: params });
+            console.log("RESPUESTA")
+            console.log(response.data.data)
+            const account = {
+                id: response.data.data.id,
+                email: response.data.data.email,
+                jti: response.data.data.jti
+            };
+            
+            localStorage.setItem("account", JSON.stringify(account));
+        } catch (error) {
+            console.error("Error during authentication:", error);
+        }
+    }
+    
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">

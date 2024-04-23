@@ -4,6 +4,7 @@ import CaseCard from "./Case/CaseCard";
 import { styled } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import getCurrentUser from './Hooks/GetUser';
 
 const CASES_API = import.meta.env.VITE_API_CASES_URL;
 
@@ -25,6 +26,7 @@ const CreateCaseButton = styled(Button)({
 export default function Home() {
     const [cases, setCases] = useState([]);
     const navigate = useNavigate();
+    const currentUser = getCurrentUser()
 
     useEffect(() => {
         const fetchCases = async () => {
