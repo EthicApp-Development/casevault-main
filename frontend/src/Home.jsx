@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import getCurrentUser from './Hooks/GetUser';
-
+import { Navigate } from 'react-router-dom';
 const CASES_API = import.meta.env.VITE_API_CASES_URL;
 
 const BackgroundBox = styled(Box)({
@@ -27,7 +27,8 @@ export default function Home() {
     const [cases, setCases] = useState([]);
     const navigate = useNavigate();
     const currentUser = getCurrentUser()
-
+    const [authenticated, setauthenticated] = useState(null);
+    
     useEffect(() => {
         const fetchCases = async () => {
             console.log(CASES_API);
@@ -37,6 +38,10 @@ export default function Home() {
             } catch (error) {
                 console.log(error);
             }
+            const loggedInUser = localStorage.getItem("authenticated");
+            if (loggedInUser) {
+              setauthenticated(loggedInUser);
+            }
         };
         fetchCases();
     }, []); 
@@ -44,27 +49,31 @@ export default function Home() {
     const handleCreateCase = () => {
         navigate("/create_case/text")
     }
+    if (!authenticated) {
+        <Navigate replace to="/login" />;
+        } else {
+        return (
+            
+            <Container maxWidth="xl">
+                <BackgroundBox>
+                    <img
+                        src="src/assets/Shutterstock_2072700533.jpg"
+                        alt="Imagen de fondo"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                    <CreateCaseButton variant="contained" onClick={handleCreateCase}>
+                        Crear Caso
+                    </CreateCaseButton>
+                </BackgroundBox>
 
-    return (
-        <Container maxWidth="xl">
-            <BackgroundBox>
-                <img
-                    src="src/assets/Shutterstock_2072700533.jpg"
-                    alt="Imagen de fondo"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-                <CreateCaseButton variant="contained" onClick={handleCreateCase}>
-                    Crear Caso
-                </CreateCaseButton>
-            </BackgroundBox>
-
-            <Grid container spacing={2}>
-                {cases.map(caseData => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
-                        <CaseCard title={caseData.title} description={caseData.description} />
-                    </Grid>
-                ))}
-            </Grid>
-        </Container>
-    );
+                <Grid container spacing={2}>
+                    {cases.map(caseData => (
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
+                            <CaseCard title={caseData.title} description={caseData.description} />
+                        </Grid>
+                    ))}
+                </Grid>
+            </Container>
+        );
+    }
 }

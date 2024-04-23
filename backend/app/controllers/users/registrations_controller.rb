@@ -5,7 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   respond_to :json
 
   def sign_up_params
-    params.require(:user).permit(:email, :password)
+    params.require(:user).permit(:email, :password, :first_name, :last_name)
   end
 
   private

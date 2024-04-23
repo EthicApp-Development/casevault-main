@@ -22,7 +22,7 @@ function App() {
       <AppContext.Provider value={{
 
       }}>
-        {pathname !== "/login/" && <Navbar />}
+        {pathname !== "/login/" && pathname !== "/login" && <Navbar />}
         <Box marginTop={20}>
           <Routes>
             <Route path="/home" element={<Home />} />
