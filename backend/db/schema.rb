@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_23_014241) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_30_170253) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -54,6 +54,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_23_014241) do
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_cases_on_user_id"
   end
 
   create_table "documents", force: :cascade do |t|
@@ -83,6 +85,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_23_014241) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "jti", null: false
+    t.string "first_name"
+    t.string "last_name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -101,6 +105,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_23_014241) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audios", "cases"
+  add_foreign_key "cases", "users"
   add_foreign_key "documents", "cases"
   add_foreign_key "images", "cases"
   add_foreign_key "videos", "cases"
