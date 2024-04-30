@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import getCurrentUser from './Hooks/GetUser';
 import { Navigate } from 'react-router-dom';
+import { createCase } from './API/cases';
 const CASES_API = import.meta.env.VITE_API_CASES_URL;
 
 const BackgroundBox = styled(Box)({
@@ -46,9 +47,20 @@ export default function Home() {
         fetchCases();
     }, []); 
 
-    const handleCreateCase = () => {
-        navigate("/create_case/text")
+    async function handleCreateCase() {
+        const body = {user_id: currentUser.id}
+        try {
+            const response = await createCase(body);
+            
+            const createdCase = response?.data?.info;
+            navigate(`/create_case/${createdCase.id}/text`)
+
+        } catch (error) {
+            console.error("Error al crear el caso:", error);
+        }
+
     }
+    
     if (!authenticated) {
         <Navigate replace to="/login" />;
         } else {

@@ -29,11 +29,11 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/search/:searchTerm" element={<SearchResults />} />
             <Route path="/mycases/" element={<UserCases />} />
-            <Route path="/create_case" element={<CreateCase />}>
+            <Route path="/create_case/:caseId/" element={<CreateCase />}>
               <Route path="text" element={<TextCreator />} />
               <Route path="videos" element={<VideoCreator />} />
               <Route path="documents" element={<DocumentCreator />} />
-              <Route path="images" element={<ImageCreator />} />
+              {/* <Route path="images" element={<ImageCreator />} /> */}
               <Route path="audios" element={<AudioCreator />} />
               <Route path="information" element={<InfoCreator />} />
             </Route>

@@ -22,9 +22,8 @@ class Api::V1::CasesController < ApplicationController
   # POST /cases
   def create
     @case = Case.new(case_params)
-
     if @case.save
-      render json: @case, status: :created, location: @case
+      render json: {info: @case, status: :created, location: @case}
     else
       render json: @case.errors, status: :unprocessable_entity
     end
@@ -52,6 +51,6 @@ class Api::V1::CasesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def case_params
-      params.require(:case).permit(:title, :description, :body, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :description, :_destroy, :file], videos_attributes: [:id, :url, :_destroy])
+      params.permit(:user_id,:title, :description, :body, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :description, :_destroy, :file], videos_attributes: [:id, :url, :_destroy])
     end
 end
