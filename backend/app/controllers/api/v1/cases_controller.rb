@@ -24,12 +24,6 @@ class Api::V1::CasesController < ApplicationController
     @case = Case.new(case_params)
 
     if @case.save
-      if params[:case][:images_attributes].present?
-        images_params = params[:case][:images_attributes]
-        images_params.each do |image_param|
-          ImagesController.new.create(image_param.permit(:title, :description, :file))
-        end
-      end
       render json: @case, status: :created, location: @case
     else
       render json: @case.errors, status: :unprocessable_entity

@@ -33,7 +33,7 @@ function App() {
               <Route path="text" element={<TextCreator />} />
               <Route path="videos" element={<VideoCreator />} />
               <Route path="documents" element={<DocumentCreator />} />
-              <Route path="images" element={<DocumentCreator />} />
+              <Route path="images" element={<ImageCreator />} />
               <Route path="audios" element={<AudioCreator />} />
               <Route path="information" element={<InfoCreator />} />
             </Route>
