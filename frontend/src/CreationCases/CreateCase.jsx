@@ -33,21 +33,24 @@ function CreateCase() {
                 break
             case 1:
                 navigate('/create_case/videos')
-                break;
+                break
             case 2:
                 navigate('/create_case/documents')
-                break;
+                break
             case 3:
-                navigate('/create_case/audios')
-                break;
+                navigate('/create_case/images')
+                break
             case 4:
-                navigate('/create_case/visibility')
-                break;
+                navigate('/create_case/audios')
+                break
             case 5:
+                navigate('/create_case/visibility')
+                break
+            case 6:
                 navigate('/create_case/information')
-                break;
+                break
             default:
-                break;
+                break
         }
     }
 
@@ -77,9 +80,10 @@ function CreateCase() {
                             <Tab label="Texto" value={0} />
                             <Tab label="Videos" value={1} />
                             <Tab label="Documentos" value={2} />
-                            <Tab label="Audios" value={3} />
-                            <Tab label="Visibilidad" value={4} />
-                            <Tab label="Información" value={5} />
+                            <Tab label="Imágenes" value={3} />
+                            <Tab label="Audios" value={4} />
+                            <Tab label="Visibilidad" value={5} />
+                            <Tab label="Información" value={6} />
                         </Tabs>
                         <Button variant="contained" sx={{ minWidth: 120 }}>Send Case</Button>
                     </Box>

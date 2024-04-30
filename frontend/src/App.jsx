@@ -23,7 +23,7 @@ function App() {
 
       }}>
         {pathname !== "/login/" && pathname !== "/login" && <Navbar />}
-        <Box marginTop={20}>
+        <Box marginTop={0} marginLeft={45}>
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -33,6 +33,7 @@ function App() {
               <Route path="text" element={<TextCreator />} />
               <Route path="videos" element={<VideoCreator />} />
               <Route path="documents" element={<DocumentCreator />} />
+              <Route path="images" element={<DocumentCreator />} />
               <Route path="audios" element={<AudioCreator />} />
               <Route path="information" element={<InfoCreator />} />
             </Route>

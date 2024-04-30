@@ -25,20 +25,20 @@ const css = {
 }
 
 const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    const formData = new FormData();
-    formData.append('file', file);
+    const file = event.target.files[0]
+    const formData = new FormData()
+    formData.append('file', file)
     axios.post('/upload', formData)
         .then(response => {
-            console.log(response);
+            console.log(response)
         })
         .catch(error => {
-            console.error(error);
-        });
-};
+            console.error(error)
+        })
+}
 
 export default function DocumentCreator() {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
 
 
     return (
