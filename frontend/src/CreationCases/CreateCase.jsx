@@ -19,9 +19,7 @@ function CreateCase() {
     const [audios, setAudios] = useState([]);
     const [videos, setVideos] = useState([]);
     const [visibility, setVisibility] = useState('');
-    console.log(title)
-    console.log(summary)
-    console.log(text)
+    const [caseObject, setCaseObject] = useState({});
     const navigate = useNavigate();
 
     const handleTabChange = (event, newValue) => {
@@ -67,8 +65,10 @@ function CreateCase() {
         setVideos,
         visibility,
         setVisibility,
-        setText,
         text,
+        setText,
+        caseObject,
+        setCaseObject,
     };
 
     return (

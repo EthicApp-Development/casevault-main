@@ -3,7 +3,9 @@ import { styled } from '@mui/material/styles';
 import RTE from '../../Utils/RTE';
 import React, { useState, useEffect } from 'react';
 import { useCaseContext } from '../CreateCase';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { updateCase, getCase } from '../../API/cases';
 
 const SaveCaseButton = styled(Button)({
     position: 'absolute',
@@ -18,38 +20,36 @@ const SaveCaseButton = styled(Button)({
     },
 });
 
-const CASES_API = import.meta.env.VITE_API_CASES_URL;
-
 export default function TextCreator() {
-    const [open, setOpen] = React.useState(false);
-    const { text, setText, title, setTitle } = useCaseContext();
-    const location = useLocation();
-    const [caseId, setCaseId] = useState(null);
+    const { text, setText, title, setTitle, setCaseObject } = useCaseContext();
+    const { caseId, } = useParams();
     const navigate = useNavigate();
 
     useEffect(() => {
-        const path = location.pathname;
-        const segments = path.split('/');
-        const idIndex = segments.findIndex(segment => segment === 'create_case');
-        
-        if (idIndex !== -1 && segments.length > idIndex + 1) {
-            const id = segments[idIndex + 1];
-            setCaseId(id);
+        async function fetchCase() {
+            try {
+                const response = await getCase(caseId);
+                if (response.status === 200) {
+                    setText(response.data.description);
+                    setTitle(response.data.title);
+                    setCaseObject(response.data);
+                } else {
+                    console.error('Error al obtener el caso:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error al procesar la solicitud:', error);
+            }
         }
-    }, [location]);
+        fetchCase();
+    }, [caseId]);
 
-    const handleSave = async () => {
+
+    async function handleSave() {
+        const body = { title: title, description: text }
         try {
-            const response = await fetch(`${CASES_API}/${caseId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ title: title, description: text })
-            });
-    
-            if (response.ok) {
-                console.log('Guardado exitoso');
+            const response = await updateCase(caseId, body);
+            console.log(response);
+            if (response.status === 200) {
                 navigate('/home')
             } else {
                 console.error('Error al guardar:', response.statusText);
@@ -58,41 +58,6 @@ export default function TextCreator() {
             console.error('Error al procesar la solicitud:', error);
         }
     };
-
-    // const toggleDrawer = (newOpen) => () => {
-    //     setOpen(newOpen);
-    // };
-
-    // const DrawerList = (
-    //     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
-    //         <List>
-
-    //             <ListItem disablePadding>
-    //                 <ListItemButton>
-    //                     <Typography>Texto</Typography>
-
-    //                 </ListItemButton>
-    //             </ListItem>
-    //             <ListItem disablePadding>
-    //                 <ListItemButton>
-    //                     <Typography>Preguntas</Typography>
-
-    //                 </ListItemButton>
-    //             </ListItem>
-    //             <ListItem disablePadding>
-    //                 <ListItemButton>
-    //                     <Typography>Links</Typography>
-    //                 </ListItemButton>
-    //             </ListItem>
-    //             <ListItem disablePadding>
-    //                 <ListItemButton>
-    //                     <Typography>Edición colaborativa</Typography>
-    //                 </ListItemButton>
-    //             </ListItem>
-
-    //         </List>
-    //     </Box>
-    // );
 
     return (
         <Box marginTop={5}>
@@ -114,10 +79,6 @@ export default function TextCreator() {
             <Box marginTop={1}>
                 <RTE text={text} setText={setText} />
             </Box>
-            {/* <Drawer open={open} onClose={toggleDrawer(false)}>
-                {DrawerList}
-            </Drawer> */}
-            {/* <Button onClick={toggleDrawer(true)}>Cambiar sección de texto</Button> */}
             <SaveCaseButton onClick={handleSave}>Guardar</SaveCaseButton>
         </Box >
     );

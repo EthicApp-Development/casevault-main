@@ -33,7 +33,6 @@ export default function Home() {
     
     useEffect(() => {
         const fetchCases = async () => {
-            console.log(CASES_API);
             try {
                 const response = await axios.get(CASES_API);
                 setCases(response.data);
