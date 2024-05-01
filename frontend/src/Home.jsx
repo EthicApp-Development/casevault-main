@@ -3,6 +3,7 @@ import { Box, Grid, Container, Button } from "@mui/material";
 import CaseCard from "./Case/CaseCard";
 import { styled } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
+import ListItemButton from '@mui/material/ListItemButton';
 import axios from "axios";
 import getCurrentUser from './Hooks/GetUser';
 import { Navigate } from 'react-router-dom';
@@ -81,7 +82,9 @@ export default function Home() {
                 <Grid container spacing={2}>
                     {cases.map(caseData => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
-                            <CaseCard title={caseData.title} description={caseData.description} />
+                            <ListItemButton onClick={() => navigate(`/create_case/${caseData.id}/text`)}>
+                                <CaseCard title={caseData.title} description={caseData.description} />
+                            </ListItemButton>
                         </Grid>
                     ))}
                 </Grid>

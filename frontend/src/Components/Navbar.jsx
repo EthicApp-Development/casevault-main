@@ -91,12 +91,21 @@ function Navbar(props) {
             { text: 'Ajustes', icon: <SettingsIcon /> },
             ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
-            <ListItemButton>
+            {item.route ? (
+              <ListItemButton onClick={() => navigate(item.route)}>
                 <ListItemIcon>
-                {item.icon}
+                  {item.icon}
                 </ListItemIcon>
                 <ListItemText primary={item.text} />
-            </ListItemButton>
+              </ListItemButton>
+            ) : (
+              <ListItemButton>
+                <ListItemIcon>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            )}
             </ListItem>
         ))}
         </List>
