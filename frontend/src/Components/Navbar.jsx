@@ -1,12 +1,30 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Box, AppBar, Toolbar, IconButton, Typography, Tab, Tabs } from '@mui/material';
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
-import AppContext from '../Contexts/AppContext';
+import { styled, alpha } from '@mui/material/styles';
+import InputBase from '@mui/material/InputBase';
+import { useState } from 'react';
+import HomeIcon from '@mui/icons-material/Home';
+import SchoolIcon from '@mui/icons-material/School';
+import FolderIcon from '@mui/icons-material/Folder';
+import SettingsIcon from '@mui/icons-material/Settings';
+import newTheme from './Theme';
 
+const drawerWidth = 240;
 const Search = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -43,45 +61,60 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         },
     },
 }));
+function Navbar(props) {
+  const { window } = props;
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [isClosing, setIsClosing] = React.useState(false);
 
-const WhiteTabs = styled(Tabs)({
-    backgroundColor: 'white',
-    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.05)',
-});
+  const [searchValue, setSearchValue] = useState("")
+  const navigate = useNavigate()
+  const { pathname } = location
 
-const WhiteTab = styled(Tab)({
-    backgroundColor: 'white',
-});
+  const handleDrawerClose = () => {
+    setIsClosing(true);
+    setMobileOpen(false);
+  };
 
-export default function Navbar() {
+  const handleDrawerTransitionEnd = () => {
+    setIsClosing(false);
+  };
 
-    const [searchValue, setSearchValue] = useState("")
-    const navigate = useNavigate()
-    const [tab, setTab] = useState()
-    const { pathname } = location
+  const drawer = (
+    <div>
+       <Toolbar />
+       <Divider />
+        <List>
+            {[
+            { text: 'Home', icon: <HomeIcon /> },
+            { text: 'Mis casos', icon: <SchoolIcon /> },
+            { text: 'Casos guardados', icon: <FolderIcon /> },
+            { text: 'Ajustes', icon: <SettingsIcon /> },
+            ].map((item, index) => (
+            <ListItem key={item.text} disablePadding>
+            {item.route ? (
+              <ListItemButton onClick={() => navigate(item.route)}>
+                <ListItemIcon>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            ) : (
+              <ListItemButton>
+                <ListItemIcon>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            )}
+            </ListItem>
+        ))}
+        </List>
+      <Divider />
+    </div>
+  );
 
-
-    useEffect(() => {
-        switch (pathname) {
-            case '/home':
-                setTab(0);
-                break;
-            case '/mycases':
-                setTab(1);
-                break;
-            case '/savedcases':
-                setTab(2);
-                break;
-            case '/information':
-                setTab(3);
-                break;
-            default:
-                setTab(0);
-                break;
-        }
-    }, [pathname]);
-
-    const onSearch = (searchTerm) => {
+  const container = window !== undefined ? () => window().document.body : undefined;
+  const onSearch = (searchTerm) => {
         if (searchTerm.trim() !== "") {
             navigate(`/search/${encodeURIComponent(searchTerm)}`);
         }
@@ -97,26 +130,18 @@ export default function Navbar() {
         }
     };
 
-    const handleTabChange = (event, newValue) => {
-        setTab(newValue)
-        if (newValue === 0) {
-            navigate('/home')
-        }
-        else if (newValue === 1) {
-            console.log(newValue)
-            navigate('/mycases')
-        }
-        else if (newValue === 0) {
-            console.log(newValue)
-            navigate('/home')
-        }
-    }
-
-    return (
-        <Box sx={{ position: 'relative' }}>
-            <AppBar sx={{ height: 64 }}>
-                <Toolbar sx={{ justifyContent: 'space-between' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+  return (
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        sx={{
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          ml: { sm: `${drawerWidth}px` },
+        }}
+      >
+        <Toolbar sx={{justifyContent: 'space-between'}}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <IconButton
                             size="large"
                             edge="start"
@@ -157,16 +182,52 @@ export default function Navbar() {
                     >
                         <AccountCircle />
                     </IconButton>
-                </Toolbar>
-                <Box sx={{ zIndex: 1, width: "100%" }} >
-                    <WhiteTabs value={tab} onChange={handleTabChange} aria-label="basic tabs example">
-                        <WhiteTab label="Home" />
-                        <WhiteTab label="Mis casos" />
-                        <WhiteTab label="Casos guardados" />
-                        <WhiteTab label="Información" />
-                    </WhiteTabs>
-                </Box>
-            </AppBar>
-        </Box>
-    );
+        </Toolbar>
+      </AppBar>
+      <Box
+        component="nav"
+        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        aria-label="mailbox folders"
+      >
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onTransitionEnd={handleDrawerTransitionEnd}
+          onClose={handleDrawerClose}
+          ModalProps={{
+            keepMounted: true, 
+          }}
+          sx={{
+            display: { xs: 'block', sm: 'none' },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: drawerWidth,
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', sm: 'block' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+          open
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+      >
+        <Toolbar />
+
+      </Box>
+    </Box>
+  );
 }
+
+export default Navbar;

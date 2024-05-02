@@ -8,6 +8,8 @@ RUN npm install
 
 RUN npm install -g vite
 
+RUN npm install --save @ckeditor/ckeditor5-react @ckeditor/ckeditor5-build-classic
+
 COPY . .
 
 EXPOSE 3001

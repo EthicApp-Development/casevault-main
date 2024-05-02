@@ -4,9 +4,9 @@ const newTheme = createTheme({
     spacing: 6,
     palette: {
         primary: {
-            main: '#77b0c2',
-            light: '#b6e0ed',
-            dark: '#256678'
+            main: '#4b4949',
+            light: '#8b8b8b',
+            dark: '#232323'
         },
         secondary: {
             main: '#c4cd50',

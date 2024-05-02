@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Im
 import App from './App.jsx';
 import { ThemeProvider } from '@mui/material';
 import newTheme from './Components/Theme.jsx';
-import Navbar from './Components/Navbar.jsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
