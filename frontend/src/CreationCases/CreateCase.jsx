@@ -19,6 +19,7 @@ function CreateCase() {
     const [audios, setAudios] = useState([]);
     const [videos, setVideos] = useState([]);
     const [visibility, setVisibility] = useState('');
+    const [mainImage, setMainImage] = useState('');
     const [caseObject, setCaseObject] = useState({});
     const navigate = useNavigate();
 
@@ -67,6 +68,8 @@ function CreateCase() {
         setVisibility,
         text,
         setText,
+        mainImage,
+        setMainImage,
         caseObject,
         setCaseObject,
     };

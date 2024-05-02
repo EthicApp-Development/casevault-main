@@ -6,18 +6,35 @@ class Api::V1::CasesController < ApplicationController
   def index
     @cases = Case.all
 
-    render json: @cases, include: [:images, :documents, :audios, :videos]
+    cases_with_images = @cases.map do |c|
+      if c.main_image.attached?
+        c.as_json.merge(main_image_url: url_for(c.main_image))
+      else
+        c.as_json.merge(main_image_url: nil)
+      end
+    end
+
+    render json: cases_with_images, include: [:images, :documents, :audios, :videos]
   end
 
   # GET /cases/1
   def show
-    render json: @case.as_json(include: {
+    case_json = @case.as_json(include: {
       images: { only: [:title, :description], methods: :image_url },
       documents: { only: [:title, :description], methods: :document_url },
       audios: { only: [:title, :description], methods: :audio_url },
       videos: { only: [:title, :description]}
     })
+  
+    if @case.main_image.attached?
+      case_json.merge!(main_image_url: url_for(@case.main_image))
+    else
+      case_json.merge!(main_image_url: nil)
+    end
+  
+    render json: case_json
   end
+  
 
   # POST /cases
   def create
@@ -51,6 +68,6 @@ class Api::V1::CasesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def case_params
-      params.require(:case).permit(:user_id, :title, :description, :body, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :description, :_destroy, :file], videos_attributes: [:id, :url, :_destroy])
+      params.require(:case).permit(:user_id, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :description, :_destroy, :file], videos_attributes: [:id, :url, :_destroy])
     end
 end

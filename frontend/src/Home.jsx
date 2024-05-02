@@ -48,9 +48,14 @@ export default function Home() {
     }, []); 
 
     async function handleCreateCase() {
-        const body = {user_id: currentUser.id}
+        const response = await fetch("src/assets/default_case_img.webp");
+        const blob = await response.blob();
+        const defaultImg = new File([blob], "default_case_img.webp");
+        const formData = new FormData();
+        formData.append('case[user_id]', currentUser.id);
+        formData.append('case[main_image]', defaultImg);
         try {
-            const response = await createCase(body);
+            const response = await createCase(formData);
             
             const createdCase = response?.data?.info;
             navigate(`/create_case/${createdCase.id}/text`)
@@ -58,7 +63,6 @@ export default function Home() {
         } catch (error) {
             console.error("Error al crear el caso:", error);
         }
-
     }
     
     if (!authenticated) {
@@ -82,7 +86,7 @@ export default function Home() {
                     {cases.map(caseData => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
                             <ListItemButton onClick={() => navigate(`/create_case/${caseData.id}/text`)}>
-                                <CaseCard title={caseData.title} description={caseData.description} />
+                                <CaseCard title={caseData.title} description={caseData.description} image_url={caseData.main_image_url} />
                             </ListItemButton>
                         </Grid>
                     ))}
