@@ -37,9 +37,6 @@ export default function VideoCreator() {
         <Box marginTop={3}>
             <Typography variant='h2' sx={title_style}>Videos relacionados al caso</Typography>
             <Box>
-                <VideoShow url={"https://www.youtube.com/embed/zQyrhjEAqLs"} description={"descripción"} />
-            </Box>
-            <Box>
                 <VideoField />
             </Box>
         </Box>
