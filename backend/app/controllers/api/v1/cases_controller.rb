@@ -1,7 +1,7 @@
 
 class Api::V1::CasesController < ApplicationController
   before_action :set_case, only: %i[ show update destroy ]
-
+  load_and_authorize_resource
   # GET /cases
   def index
     @cases = Case.all

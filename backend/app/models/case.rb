@@ -5,6 +5,7 @@ class Case < ApplicationRecord
     has_many :documents, dependent: :destroy
     has_many :audios, dependent: :destroy
 
+    has_many :authors, through: :case_authorships, source: :user
     has_one_attached :main_image
 
     accepts_nested_attributes_for :images, :documents, :audios, :videos, allow_destroy: true

@@ -49,4 +49,6 @@ gem "devise"
 
 gem "devise-jwt"
 
+gem 'cancancan'
+
 gem 'pry', '~> 0.14.2'
