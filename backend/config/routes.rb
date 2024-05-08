@@ -13,13 +13,13 @@ Rails.application.routes.draw do
   }
   namespace :api do
     namespace :v1 do
-      resources :cases
+      resources :cases do
+        resources :videos, only: [:index, :create, :update, :destroy]
+      end
       resources :images
       resources :users
     end
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # root "posts#index"
 end

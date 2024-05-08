@@ -1,12 +1,9 @@
-import { Drawer, Box, Typography } from '@mui/material'
-import RTE from '../../Utils/RTE'
+import { Box, Typography } from '@mui/material'
 import { useState } from 'react';
-import useToggle from '../../Hooks/ToggleHook';
 import React from 'react';
-import { paper_style, title_style } from '../../Utils/defaultStyles';
+import { title_style } from '../../Utils/defaultStyles';
 import VideoField from './VideoDataField';
 import newTheme from '../../Components/Theme';
-import VideoShow from './VideoShow';
 
 
 const css = {
@@ -28,10 +25,6 @@ const css = {
 
 export default function VideoCreator() {
     const [open, setOpen] = useState(false);
-
-    const toggleDrawer = (newOpen) => () => {
-        setOpen(newOpen);
-    };
 
     return (
         <Box marginTop={3}>
