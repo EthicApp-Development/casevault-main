@@ -16,3 +16,11 @@ export function getCase(caseId) {
 export function updateCase(caseId, data) {
 	return instance.patch(`api/v1/cases/${caseId}`, data);
 }
+
+export function addDocumentToCase(caseId, documentData) {
+	return instance.post(`api/v1/cases/${caseId}/documents`, documentData);
+  }
+
+export function getDocuments(caseId) {
+	return instance.get(`/api/v1/cases/${caseId}/documents`);
+  }
