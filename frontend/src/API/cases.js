@@ -24,3 +24,7 @@ export function addDocumentToCase(caseId, documentData) {
 export function getDocuments(caseId) {
 	return instance.get(`/api/v1/cases/${caseId}/documents`);
   }
+
+export function deleteDocuments(caseId,id) {
+	return instance.delete(`/api/v1/cases/${caseId}/documents/${id}`);
+  }

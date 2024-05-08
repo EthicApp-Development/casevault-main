@@ -24,15 +24,41 @@ class Api::V1::DocumentsController < ApplicationController
     #POST /cases/:case_id/documents
     def create
         @document = @case.documents.build(document_params)
+        
         if @document.save
-          render json: {info: @document, url: download_document(@document), status: :created}
+            @documents = @case.documents.map do |document|
+              {
+                id: document.id,
+                title: document.title,
+                description: document.description,
+                download_url: download_document(document)
+              }
+            end
+            
+            @documents = [] if @documents.empty?
+            render json: {info: @documents, url: download_document(@document), status: :created}
         else
           render json: {info: @document.errors, status: :unprocessable_entity}
         end
     end
 
+    #DELETE /cases/:case_id/documents/:id
+
     def destroy
-      @document = @case.documents.find(params[:document_id])
+      @document = @case.documents.find(params[:id])
+      @document.destroy
+      @documents = @case.documents.map do |document|
+        {
+          id: document.id,
+          title: document.title,
+          description: document.description,
+          download_url: download_document(document)
+        }
+      end
+      @documents = [] if @documents.empty?
+    
+      render json: { info: @documents, status: :success }
+    
     end
 
     private

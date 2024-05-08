@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :cases do
-        resources :documents, only: [:index, :create] do
+        resources :documents, only: [:index, :create, :destroy] do
           member do
             get :download_document
           end
