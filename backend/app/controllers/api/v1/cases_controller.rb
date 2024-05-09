@@ -22,7 +22,7 @@ class Api::V1::CasesController < ApplicationController
     case_json = @case.as_json(include: {
       images: { only: [:title, :description], methods: :image_url },
       documents: { only: [:title, :description], methods: :document_url },
-      audios: { only: [:title, :description], methods: :audio_url },
+      audios: { only: [:title, :url], methods: :file_url },
       videos: { only: [:title, :description]}
     })
   
@@ -68,6 +68,6 @@ class Api::V1::CasesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def case_params
-      params.require(:case).permit(:user_id, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :description, :_destroy, :file], videos_attributes: [:id, :url, :_destroy])
+      params.require(:case).permit(:user_id, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :url, :_destroy])
     end
 end
