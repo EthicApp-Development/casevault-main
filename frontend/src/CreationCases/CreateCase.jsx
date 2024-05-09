@@ -1,7 +1,7 @@
 import { useState, createContext, useContext } from "react";
 import { Typography, Box, Tab, Tabs, Button } from '@mui/material';
 import useToggle from "../Hooks/ToggleHook";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 
 const CaseContext = createContext();
 
@@ -21,6 +21,7 @@ function CreateCase() {
     const [visibility, setVisibility] = useState('');
     const [mainImage, setMainImage] = useState('');
     const [caseObject, setCaseObject] = useState({});
+    const { caseId, } = useParams();
     const navigate = useNavigate();
 
     const handleTabChange = (event, newValue) => {
@@ -28,25 +29,25 @@ function CreateCase() {
 
         switch (newValue) {
             case 0:
-                navigate('/create_case/text')
+                navigate(`/create_case/${caseId}/text`)
                 break
             case 1:
-                navigate('/create_case/videos')
+                navigate(`/create_case/${caseId}/videos`)
                 break
             case 2:
-                navigate('/create_case/documents')
+                navigate(`/create_case/${caseId}/documents`)
                 break
             case 3:
-                navigate('/create_case/images')
+                navigate(`/create_case/${caseId}/images`)
                 break
             case 4:
-                navigate('/create_case/audios')
+                navigate(`/create_case/${caseId}/audios`)
                 break
             case 5:
-                navigate('/create_case/visibility')
+                navigate(`/create_case/${caseId}/visibility`)
                 break
             case 6:
-                navigate('/create_case/information')
+                navigate(`/create_case/${caseId}/information`)
                 break
             default:
                 break
