@@ -5,12 +5,20 @@ export function createCase(data) {
 	return instance.post("api/v1/cases", data);
 }
 
+export function createCaseVideo(caseId, data){
+	return instance.post(`api/v1/cases/${caseId}/videos`, data)
+}
+
 export function getCases() {
 	return instance.get("api/v1/cases");
 }
 
 export function getCase(caseId) {
 	return instance.get(`api/v1/cases/${caseId}`);
+}
+
+export function getCaseVideos(caseId){
+	return instance.get(`api/v1/cases/${caseId}/videos`)
 }
 
 export function updateCase(caseId, data) {
@@ -28,3 +36,7 @@ export function getDocuments(caseId) {
 export function deleteDocuments(caseId,id) {
 	return instance.delete(`/api/v1/cases/${caseId}/documents/${id}`);
   }
+
+export function deleteCaseVideo(caseId, videoId) {
+	return instance.delete(`api/v1/cases/${caseId}/videos/${videoId}`)
+
