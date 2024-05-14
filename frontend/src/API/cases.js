@@ -25,6 +25,18 @@ export function updateCase(caseId, data) {
 	return instance.patch(`api/v1/cases/${caseId}`, data);
 }
 
+export function addDocumentToCase(caseId, documentData) {
+	return instance.post(`api/v1/cases/${caseId}/documents`, documentData);
+  }
+
+export function getDocuments(caseId) {
+	return instance.get(`/api/v1/cases/${caseId}/documents`);
+  }
+
+export function deleteDocuments(caseId,id) {
+	return instance.delete(`/api/v1/cases/${caseId}/documents/${id}`);
+  }
+
 export function deleteCaseVideo(caseId, videoId) {
 	return instance.delete(`api/v1/cases/${caseId}/videos/${videoId}`)
-}
+

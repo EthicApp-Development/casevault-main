@@ -116,7 +116,7 @@ const newTheme = createTheme({
         subtitle1: {
             color: "#6A6A6A",
             fontSize: "0.95rem",
-            fontWeight: 400,
+            fontWeight: 600,
             lineHeight: "1.5rem"
         },
         subtitle2: {

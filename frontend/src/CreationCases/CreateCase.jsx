@@ -29,25 +29,25 @@ function CreateCase() {
 
         switch (newValue) {
             case 0:
-                navigate(`/create_case/${caseId}/text`)
+                navigate(`/create_case/${caseObject.id}/text`)
                 break
             case 1:
-                navigate(`/create_case/${caseId}/videos`)
+                navigate(`/create_case/${caseObject.id}/videos`)
                 break
             case 2:
-                navigate(`/create_case/${caseId}/documents`)
+                navigate(`/create_case/${caseObject.id}/documents`)
                 break
             case 3:
-                navigate(`/create_case/${caseId}/images`)
+                navigate(`/create_case/${caseObject.id}/images`)
                 break
             case 4:
-                navigate(`/create_case/${caseId}/audios`)
+                navigate(`/create_case/${caseObject.id}/audios`)
                 break
             case 5:
-                navigate(`/create_case/${caseId}/visibility`)
+                navigate(`/create_case/${caseObject.id}/visibility`)
                 break
             case 6:
-                navigate(`/create_case/${caseId}/information`)
+                navigate(`/create_case/${caseObject.id}/information`)
                 break
             default:
                 break
@@ -73,6 +73,7 @@ function CreateCase() {
         setMainImage,
         caseObject,
         setCaseObject,
+
     };
 
     return (
