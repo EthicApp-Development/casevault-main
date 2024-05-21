@@ -1,3 +1,3 @@
 class Video < ApplicationRecord
-  belongs_to :cases
+  belongs_to :case
 end

@@ -1,27 +1,24 @@
 Rails.application.routes.draw do
-  get 'users/index'
-  get 'users/show'
-  get 'users/new'
-  get 'users/create'
-  get 'users/edit'
-  get 'users/update'
-  get 'users/destroy'
-
+  # Rutas para usuarios generadas por Devise
   devise_for :users, controllers: { 
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
-  namespace :api do
-    namespace :v1 do
-      resources :cases do
-        resources :audios, only: [:index, :create, :update, :destroy]
+
+  # Rutas del API
+namespace :api do
+  namespace :v1 do
+    resources :cases do
+      resources :audios, only: [:index, :create, :update, :destroy]
+      resources :documents, only: [:index, :create, :destroy] do
+        member do
+          get :download_document
+        end
       end
-      resources :images
-      resources :users
+      resources :videos, only: [:index, :create, :update, :destroy]
     end
   end
-
+end
+  # Ruta para comprobar el estado de la aplicación
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # root "posts#index"
 end

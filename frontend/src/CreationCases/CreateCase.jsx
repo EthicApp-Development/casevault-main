@@ -1,7 +1,7 @@
 import { useState, createContext, useContext } from "react";
 import { Typography, Box, Tab, Tabs, Button } from '@mui/material';
 import useToggle from "../Hooks/ToggleHook";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams, useParams } from "react-router-dom";
 
 const CaseContext = createContext();
 
@@ -22,6 +22,7 @@ function CreateCase() {
     const [mainImage, setMainImage] = useState('');
     const [caseObject, setCaseObject] = useState({});
     const { caseId, } = useParams();
+    const { caseId, } = useParams();
     const navigate = useNavigate();
 
     const handleTabChange = (event, newValue) => {
@@ -29,25 +30,25 @@ function CreateCase() {
 
         switch (newValue) {
             case 0:
-                navigate('/create_case/text')
+                navigate(`/create_case/${caseObject.id}/text`)
                 break
             case 1:
-                navigate('/create_case/videos')
+                navigate(`/create_case/${caseObject.id}/videos`)
                 break
             case 2:
-                navigate('/create_case/documents')
+                navigate(`/create_case/${caseObject.id}/documents`)
                 break
             case 3:
-                navigate('/create_case/images')
+                navigate(`/create_case/${caseObject.id}/images`)
                 break
             case 4:
-                navigate(`/create_case/${caseId}/audios`)
+                navigate(`/create_case/${caseObject.id}/audios`)
                 break
             case 5:
-                navigate('/create_case/visibility')
+                navigate(`/create_case/${caseObject.id}/visibility`)
                 break
             case 6:
-                navigate('/create_case/information')
+                navigate(`/create_case/${caseObject.id}/information`)
                 break
             default:
                 break
@@ -73,6 +74,7 @@ function CreateCase() {
         setMainImage,
         caseObject,
         setCaseObject,
+
     };
 
     return (

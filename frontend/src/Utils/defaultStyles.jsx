@@ -1,3 +1,4 @@
+import { backdropClasses } from "@mui/material"
 import newTheme from "../Components/Theme"
 
 export const inline_space = {
@@ -122,7 +123,10 @@ export const labeless = {
 }
 
 export const dialog_style = {
-    padding: 3
+    padding: 3,
+    background: "#eeeeee",
+    borderRadius: 5,
+    marginBottom: 3,
 }
 
 export const full_dialog_style = {
