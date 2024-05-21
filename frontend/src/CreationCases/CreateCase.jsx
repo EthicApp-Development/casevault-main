@@ -1,7 +1,7 @@
 import { useState, createContext, useContext } from "react";
 import { Typography, Box, Tab, Tabs, Button } from '@mui/material';
 import useToggle from "../Hooks/ToggleHook";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams, useParams } from "react-router-dom";
 
 const CaseContext = createContext();
 
@@ -21,6 +21,7 @@ function CreateCase() {
     const [visibility, setVisibility] = useState('');
     const [mainImage, setMainImage] = useState('');
     const [caseObject, setCaseObject] = useState({});
+    const { caseId, } = useParams();
     const { caseId, } = useParams();
     const navigate = useNavigate();
 

@@ -41,7 +41,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_30_170253) do
 
   create_table "audios", force: :cascade do |t|
     t.string "title"
-    t.text "description"
+    t.string "url"
     t.integer "case_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
