@@ -1,7 +1,7 @@
 import { useState, createContext, useContext } from "react";
-import { Typography, Box, Tab, Tabs, Button } from '@mui/material';
+import { Box, Tab, Tabs} from '@mui/material';
 import useToggle from "../Hooks/ToggleHook";
-import { Outlet, useNavigate, useParams, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 
 const CaseContext = createContext();
 
@@ -22,7 +22,6 @@ function CreateCase() {
     const [mainImage, setMainImage] = useState('');
     const [caseObject, setCaseObject] = useState({});
     const { caseId, } = useParams();
-    const { caseId, } = useParams();
     const navigate = useNavigate();
 
     const handleTabChange = (event, newValue) => {
@@ -39,15 +38,12 @@ function CreateCase() {
                 navigate(`/create_case/${caseObject.id}/documents`)
                 break
             case 3:
-                navigate(`/create_case/${caseObject.id}/images`)
-                break
-            case 4:
                 navigate(`/create_case/${caseObject.id}/audios`)
                 break
-            case 5:
+            case 4:
                 navigate(`/create_case/${caseObject.id}/visibility`)
                 break
-            case 6:
+            case 5:
                 navigate(`/create_case/${caseObject.id}/information`)
                 break
             default:
@@ -86,12 +82,10 @@ function CreateCase() {
                             <Tab label="Texto" value={0} />
                             <Tab label="Videos" value={1} />
                             <Tab label="Documentos" value={2} />
-                            <Tab label="Imágenes" value={3} />
-                            <Tab label="Audios" value={4} />
-                            <Tab label="Visibilidad" value={5} />
-                            <Tab label="Información" value={6} />
+                            <Tab label="Audios" value={3} />
+                            <Tab label="Visibilidad" value={4} />
+                            <Tab label="Información" value={5} />
                         </Tabs>
-                        <Button variant="contained" sx={{ minWidth: 120 }}>Send Case</Button>
                     </Box>
                     <Outlet />
                 </Box>

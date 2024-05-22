@@ -1,7 +1,7 @@
 import { Box, Button, Typography, TextField, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import RTE from '../../Utils/RTE';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useCaseContext } from '../CreateCase';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
@@ -122,7 +122,7 @@ export default function TextCreator() {
                     </Grid>
                 </Grid>
             </Grid>
-            <SaveCaseButton onClick={handleSave}>Guardar</SaveCaseButton>
+            <SaveCaseButton onClick={handleSave}>Guardar y salir</SaveCaseButton>
         </Box>
     );
 }

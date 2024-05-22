@@ -30,7 +30,6 @@ export default function Home() {
     const navigate = useNavigate();
     const currentUser = getCurrentUser()
     const [authenticated, setauthenticated] = useState(null);
-    
     useEffect(() => {
         const fetchCases = async () => {
             try {
@@ -41,7 +40,7 @@ export default function Home() {
             }
             const loggedInUser = localStorage.getItem("authenticated");
             if (loggedInUser) {
-              setauthenticated(loggedInUser);
+                setauthenticated(loggedInUser);
             }
         };
         fetchCases();
