@@ -14,7 +14,7 @@ class Api::V1::CasesController < ApplicationController
       end
     end
 
-    render json: cases_with_images, include: [:images, :documents, :audios, :videos]
+    render json: {info: cases_with_images, include: [:images, :documents, :audios, :videos]}
   end
 
   # GET /cases/1

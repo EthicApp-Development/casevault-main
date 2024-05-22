@@ -83,7 +83,7 @@ function Navbar(props) {
        <Divider />
         <List>
             {[
-            { text: 'Home', icon: <HomeIcon />, route: '/home' },
+            { text: 'Home', icon: <HomeIcon />, route: '/home'},
             { text: 'Mis casos', icon: <SchoolIcon /> },
             { text: 'Casos guardados', icon: <FolderIcon /> },
             { text: 'Ajustes', icon: <SettingsIcon /> },
@@ -137,7 +137,7 @@ function Navbar(props) {
           width: { sm: `calc(100%)` },
           ml: { sm: `${drawerWidth}px` },
           backgroundColor: 'primary.main',
-          zIndex: (theme) => theme.zIndex.drawer + 1,
+          zIndex: (theme) => theme.zIndex.drawer + 1
         }}
       >
         <Toolbar sx={{justifyContent: 'space-between'}}>
@@ -209,7 +209,9 @@ function Navbar(props) {
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: drawerWidth },
           }}
           open
         >

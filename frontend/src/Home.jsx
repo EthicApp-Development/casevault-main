@@ -34,7 +34,7 @@ export default function Home() {
         const fetchCases = async () => {
             try {
                 const response = await axios.get(CASES_API);
-                setCases(response.data);
+                setCases(response.data.info);
             } catch (error) {
                 console.log(error);
             }
@@ -63,12 +63,11 @@ export default function Home() {
             console.error("Error al crear el caso:", error);
         }
     }
-    
+    console.log(cases)
     if (!authenticated) {
         <Navigate replace to="/login" />;
         } else {
         return (
-            
             <Container maxWidth="xl">
                 <BackgroundBox>
                     <img

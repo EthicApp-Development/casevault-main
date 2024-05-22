@@ -55,18 +55,6 @@ export default function DocumentCreator() {
   const { caseId } = useParams()
   const [openMenu, toggleMenu] = useToggle(false)
 
-  useEffect(() => {
-    async function fetchDocuments() {
-      try {
-        const response = await getDocuments(caseId)
-        setDocuments(response.data.info)
-      } catch (error) {
-        console.error("Error fetching documents:", error)
-      }
-    }
-
-    fetchDocuments();
-  }, [caseId])
 
     async function handleDeleteDocument(documentId) {
       try {
