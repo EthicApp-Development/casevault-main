@@ -1,10 +1,10 @@
 class Api::V1::VideosController < ApplicationController
     before_action :set_case
 
-    # GET /cases/:case_id/videos
+    # GET /cases/:id/videos
     def index
         @videos = @case.videos
-        render json: @videos
+        render json: {info: @videos, status: :success }
     end
 
     # POST /cases/:case_id/videos
@@ -37,7 +37,7 @@ class Api::V1::VideosController < ApplicationController
     private
 
     def set_case
-        @case = Case.find(params[:case_id])
+        @case = Case.find(params[:id])
     end
 
     def video_params

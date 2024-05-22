@@ -1,33 +1,17 @@
 import { useState, useEffect } from "react";
-import { Box, TextField, Button, IconButton } from "@mui/material";
+import { Box, TextField, Button, IconButton, Collapse } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getCaseVideos, createCaseVideo, deleteCaseVideo } from "../../API/cases";
 import { useParams } from 'react-router-dom';
-
+import { useCaseContext } from "../CreateCase";
 const YT_API_KEY = "AIzaSyCRaU7KOSkcfLlK0ncd2732bcEYtBQDnxA";
 
-const VideoFields = () => {
+const VideoFields = ({open}) => {
     const [url, setUrl] = useState('');
-    const [videos, setVideos] = useState([]);
     const [title, setTitle] = useState('');
-    const { caseId, } = useParams();
+    const { caseId } = useParams();
+    const {videos, setVideos, caseObject} = useCaseContext()
 
-    useEffect(() => {
-      fetchCaseVideos();
-    }, []);
-
-    const fetchCaseVideos = async () => {
-        try {
-            const response = await getCaseVideos(caseId);
-            if (response.status === 200) {
-              setVideos(response.data);
-            } else {
-              alert("Error al obtener los videos del caso");
-            }
-        } catch (error) {
-          alert("Error al procesar la solicitud");
-        }
-    };
 
     const handleSave = async () => {
         let embedUrl = '';
@@ -93,34 +77,34 @@ const VideoFields = () => {
     
     return (
       <div>
-        <Box sx={{ border: '1px solid black', padding: '10px', marginBottom: '10px' }}>
-          <TextField
-            label="URL"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            variant="outlined"
-            size="small"
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Título Alternativo"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            variant="outlined"
-            size="small"
-            rows={4}
-            fullWidth
-            margin="normal"
-          />
-          <Button
-            onClick={handleSave}
-            variant="contained"
-            style={{ display: 'flex', marginLeft: 'auto' }}
-          >
-            Guardar
-          </Button>
-        </Box>
+        <Collapse in={open} unmountOnExit>
+            <TextField
+              label="URL"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              variant="outlined"
+              size="small"
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Título Alternativo"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              variant="outlined"
+              size="small"
+              rows={4}
+              fullWidth
+              margin="normal"
+            />
+            <Button
+              onClick={handleSave}
+              variant="contained"
+              style={{ display: 'flex', marginLeft: 'auto' }}
+            >
+              Guardar
+            </Button>
+        </Collapse>
 
         {videos.map((video, index) => (
           <Box key={index} sx={{ border: '1px solid black', padding: '10px', marginBottom: '10px', position: 'relative' }}>
@@ -131,7 +115,6 @@ const VideoFields = () => {
                           height="315"
                           src={video.url}
                           title="YouTube video player"
-                          frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen
                       ></iframe>

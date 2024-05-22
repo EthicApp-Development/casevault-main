@@ -1,10 +1,12 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Typography,IconButton} from '@mui/material'
 import { useState } from 'react';
 import React from 'react';
 import { title_style } from '../../Utils/defaultStyles';
 import VideoField from './VideoDataField';
 import newTheme from '../../Components/Theme';
-
+import useToggle from '../../Hooks/ToggleHook';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { useCaseContext } from '../CreateCase';
 
 const css = {
     link: {
@@ -24,13 +26,16 @@ const css = {
 }
 
 export default function VideoCreator() {
-    const [open, setOpen] = useState(false);
-
+    const [open, toggleOpen] = useToggle(false);
+    const {videos, setVideos, caseObject} = useCaseContext()
     return (
         <Box marginTop={3}>
-            <Typography variant='h2' sx={title_style}>Videos relacionados al caso</Typography>
+          <Typography variant='h2' sx={title_style}>Videos relacionados al caso</Typography>
+          <IconButton onClick={toggleOpen}>
+            <AddCircleOutlineIcon/>
+          </IconButton>
             <Box>
-                <VideoField />
+                <VideoField open={open}  />
             </Box>
         </Box>
     );

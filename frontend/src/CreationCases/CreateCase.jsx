@@ -1,7 +1,8 @@
-import { useState, createContext, useContext } from "react";
+import React, { useState, createContext, useContext, useEffect } from "react";
 import { Typography, Box, Tab, Tabs, Button } from '@mui/material';
 import useToggle from "../Hooks/ToggleHook";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
+import { getCase } from "../API/cases";
 
 const CaseContext = createContext();
 
@@ -9,9 +10,8 @@ export const useCaseContext = () => {
     return useContext(CaseContext);
 };
 
-
 function CreateCase() {
-    const [selectedTab, setSelectedTab] = useToggle(0);
+    const [selectedTab, setSelectedTab] = useState(0); // Inicializar en 0
     const [title, setTitle] = useState('');
     const [summary, setSummary] = useState('');
     const [text, setText] = useState('');
@@ -21,36 +21,77 @@ function CreateCase() {
     const [visibility, setVisibility] = useState('');
     const [mainImage, setMainImage] = useState('');
     const [caseObject, setCaseObject] = useState({});
-    const { caseId, } = useParams();
+    const { caseId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    console.log("CAE OBJECT", caseObject)
+
+    useEffect(() => {
+        async function fetchData() {
+            if (!!caseObject) {
+                try {
+                    const response = await getCase(caseId)
+                    setCaseObject(response.data)
+                    console.log(response.data)
+                } catch (error) {
+                    console.log("No se pudo obtener el caso")
+                }
+            }
+        }
+        fetchData()
+    }, [caseId]);
+
+    useEffect(() => {
+        const segments = location.pathname.split('/');
+        const tabSegment = segments[segments.length - 1];
+        const tabValue = getTabValue(tabSegment);
+        setSelectedTab(tabValue); 
+    }, [location.pathname]);
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue)
+        navigate(`/create_case/${caseObject?.id}/${getTabSegment(newValue)}`)
+    }
 
-        switch (newValue) {
+    const getTabSegment = (tabIndex) => {
+        switch (tabIndex) {
             case 0:
-                navigate(`/create_case/${caseObject.id}/text`)
-                break
+                return 'text';
             case 1:
-                navigate(`/create_case/${caseObject.id}/videos`)
-                break
+                return 'videos';
             case 2:
-                navigate(`/create_case/${caseObject.id}/documents`)
-                break
+                return 'documents';
             case 3:
-                navigate(`/create_case/${caseObject.id}/images`)
-                break
+                return 'images';
             case 4:
-                navigate(`/create_case/${caseObject.id}/audios`)
-                break
+                return 'audios';
             case 5:
-                navigate(`/create_case/${caseObject.id}/visibility`)
-                break
+                return 'visibility';
             case 6:
-                navigate(`/create_case/${caseObject.id}/information`)
-                break
+                return 'information';
             default:
-                break
+                return '';
+        }
+    }
+
+    const getTabValue = (tabSegment) => {
+        switch (tabSegment) {
+            case 'text':
+                return 0;
+            case 'videos':
+                return 1;
+            case 'documents':
+                return 2;
+            case 'images':
+                return 3;
+            case 'audios':
+                return 4;
+            case 'visibility':
+                return 5;
+            case 'information':
+                return 6;
+            default:
+                return 0;
         }
     }
 

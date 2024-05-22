@@ -39,4 +39,4 @@ export function deleteDocuments(caseId,id) {
 
 export function deleteCaseVideo(caseId, videoId) {
 	return instance.delete(`api/v1/cases/${caseId}/videos/${videoId}`)
-
+}

@@ -13,10 +13,19 @@ import DocumentCreator from './CreationCases/Documents/DocumentCreator.jsx';
 import AudioCreator from './CreationCases/Audios/AudioCreator.jsx';
 import Login from './Session/Login.jsx';
 import InfoCreator from './CreationCases/Information/InfoCreator.jsx';
-
+import { useEffect } from 'react';
 function App() {
   const location = useLocation();
   const { pathname } = location
+
+  useEffect(() => {
+    const accountInfo = localStorage.getItem('account');
+    if (!accountInfo && pathname !== "/login" && pathname !== "/login/") {
+      // Redirigir a la página de inicio de sesión si no hay información de cuenta en el almacenamiento local
+      window.location.href = "/login";
+    }
+  }, [pathname]);
+
   return (
     <div>
       <AppContext.Provider value={{
