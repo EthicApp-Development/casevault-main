@@ -21,7 +21,7 @@ const VideoFields = ({open, toggleOpen}) => {
     const [url, setUrl] = useState('')
     const [title, setTitle] = useState('')
     const { caseId } = useParams()
-    const {videos, setVideos, caseObject} = useCaseContext()
+    const {videos, setVideos} = useCaseContext()
     
 
     const handleSave = async () => {
@@ -43,13 +43,13 @@ const VideoFields = ({open, toggleOpen}) => {
             alert("Hubo un error al verificar el video.")
             return;
         }
-        let newCaseData = {
+        let newVideoData = {
           url: embedUrl,
           title: title || videoTitle,
         };
         try {
-          const response = await createCaseVideo(caseId, newCaseData)
-          if (response.data.info) {
+          const response = await createCaseVideo(caseId, newVideoData)
+          if (response.status === 200) {
               setVideos(response.data.info)
               setUrl('')
               setTitle('')
@@ -63,15 +63,12 @@ const VideoFields = ({open, toggleOpen}) => {
     }
 
     const handleDelete = async (index, videoId) => {
-      console.log("caseid",caseId)
-      console.log("videoid",videoId)
         try {
-          const response = await deleteCaseVideo(caseId, videoId)
-          setVideos(response.data.info)
-          if (response.status === 204){
-            const newVideos= [...videos]
+          const response = await deleteCaseVideo(caseId, videoId);
+          if (response.status === 200){
+            const newVideos = [...videos];
             newVideos.splice(index, 1)
-            setVideos(newVideos)
+            setVideos(newVideos);
           }
         } catch (error) {
           alert('Hubo un error al eliminar el video.')
@@ -87,7 +84,6 @@ const VideoFields = ({open, toggleOpen}) => {
             throw new Error("No se pudo obtener el ID del video de YouTube.");
         }
     }
-    console.log(videos)
     return (
       <>
         <Collapse in={open} unmountOnExit>
@@ -138,7 +134,7 @@ const VideoFields = ({open, toggleOpen}) => {
                 </div>  
               )}
               <Box sx={css.item_actions}>
-                <IconButton onClick={() => handleDelete(caseId,video.id)}>
+                <IconButton onClick={() => handleDelete(index, video.id)}>
                   <DeleteIcon />
                 </IconButton>
               </Box>

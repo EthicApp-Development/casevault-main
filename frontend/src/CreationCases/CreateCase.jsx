@@ -29,14 +29,11 @@ function CreateCase() {
         async function fetchData() {
             if (!!caseObject) {
                 try {
-                    const response = await getCase(caseId)
-                    console.log(caseId)
-                    console.log("respuesta", response.data)
-                    setCaseObject(response.data)
-                    setVideos(response.data.videos)
-                    console.log(response.data)
+                    const response = await getCase(caseId);
+                    setCaseObject(response.data);
+                    setVideos(response.data.videos);
                 } catch (error) {
-                    console.log("No se pudo obtener el caso")
+                    console.log("No se pudo obtener el caso");
                 }
             }
         }
@@ -49,8 +46,6 @@ function CreateCase() {
         const tabValue = getTabValue(tabSegment);
         setSelectedTab(tabValue); 
     }, [location.pathname]);
-
-    console.log(caseObject)
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue)

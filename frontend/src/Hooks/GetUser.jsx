@@ -8,7 +8,6 @@ export default function getCurrentUser() {
         const fetchUser = async () => {
             const accountString = localStorage.getItem("account");
             if (accountString) {
-                console.log("accountString", accountString);
                 const account = JSON.parse(accountString);
                 const userId = account.id;
                 try {
