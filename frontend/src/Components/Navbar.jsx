@@ -14,7 +14,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import { useState } from 'react';
@@ -85,7 +85,7 @@ function Navbar(props) {
        <Divider />
         <List>
             {[
-            { text: 'Home', icon: <HomeIcon /> },
+            { text: 'Home', icon: <HomeIcon />, route: '/home'},
             { text: 'Mis casos', icon: <SchoolIcon /> },
             { text: 'Casos guardados', icon: <FolderIcon /> },
             { text: 'Ajustes', icon: <SettingsIcon /> },
@@ -136,25 +136,24 @@ function Navbar(props) {
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          width: { sm: `calc(100%)` },
           ml: { sm: `${drawerWidth}px` },
+          backgroundColor: 'primary.main',
+          zIndex: (theme) => theme.zIndex.drawer + 1
         }}
       >
         <Toolbar sx={{justifyContent: 'space-between'}}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <IconButton
-                            size="large"
-                            edge="start"
-                            color="inherit"
-                            aria-label="open drawer"
-                            sx={{ mr: 2 }}
-                        >
-                        </IconButton>
                         <Typography
                             variant="h1"
                             noWrap
-                            component="div"
-                            sx={{ display: { xs: 'none', sm: 'block' } }}
+                            component={Link}
+                            to="/home"
+                            sx={{ 
+                              display: { xs: 'none', sm: 'block' },
+                              textDecoration: "none",
+                              color: "inherit"
+                            }}
                         >
                             CaseVault
                         </Typography>
@@ -212,7 +211,9 @@ function Navbar(props) {
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: drawerWidth },
           }}
           open
         >
@@ -221,7 +222,7 @@ function Navbar(props) {
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth})` } }}
       >
         <Toolbar />
 

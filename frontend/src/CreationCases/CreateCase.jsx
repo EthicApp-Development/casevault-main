@@ -17,21 +17,23 @@ function CreateCase() {
     const [text, setText] = useState('');
     const [documents, setDocuments] = useState([]);
     const [audios, setAudios] = useState([]);
-    const [videos, setVideos] = useState([]);
     const [visibility, setVisibility] = useState('');
     const [mainImage, setMainImage] = useState('');
     const [caseObject, setCaseObject] = useState({});
     const { caseId } = useParams();
+    const [videos, setVideos] = useState([]);
     const navigate = useNavigate();
     const location = useLocation();
-    console.log("CAE OBJECT", caseObject)
 
     useEffect(() => {
         async function fetchData() {
             if (!!caseObject) {
                 try {
                     const response = await getCase(caseId)
+                    console.log(caseId)
+                    console.log("respuesta", response.data)
                     setCaseObject(response.data)
+                    setVideos(response.data.videos)
                     console.log(response.data)
                 } catch (error) {
                     console.log("No se pudo obtener el caso")
@@ -47,6 +49,8 @@ function CreateCase() {
         const tabValue = getTabValue(tabSegment);
         setSelectedTab(tabValue); 
     }, [location.pathname]);
+
+    console.log(caseObject)
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue)

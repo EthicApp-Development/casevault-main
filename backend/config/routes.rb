@@ -17,13 +17,12 @@ namespace :api do
   namespace :v1 do
     resources :users, only: [:index, :show, :create, :update, :destroy]
     resources :cases do
+      resources :videos, only: [:index, :create, :update, :destroy]
       resources :documents, only: [:index, :create, :destroy] do
         member do
           get :download_document
         end
       end
-
-      resources :videos, only: [:index, :create, :update, :destroy]
     end
   end
 end

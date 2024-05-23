@@ -10,10 +10,11 @@ class Api::V1::VideosController < ApplicationController
     # POST /cases/:case_id/videos
     def create
         @video = @case.videos.build(video_params)
+        @videos = @case.videos
         if @video.save
-            render json: @video, status: :created
+            render json: {info: @videos, status: :created}
         else
-            render json: @video.errors, status: :unprocessable_entity
+            render json: {info: @video.errors, status: :unprocessable_entity}
         end
     end
 
@@ -30,14 +31,15 @@ class Api::V1::VideosController < ApplicationController
     # DELETE /cases/:case_id/videos/:id
     def destroy
         @video = @case.videos.find(params[:id])
+        @videos = @case.videos
         @video.destroy
-        head :no_content
+        render json: {info: @videos, status: :success}
     end
 
     private
 
     def set_case
-        @case = Case.find(params[:id])
+        @case = Case.find(params[:case_id])
     end
 
     def video_params

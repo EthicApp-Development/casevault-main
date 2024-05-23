@@ -1,36 +1,46 @@
-import { useState, useEffect } from "react";
-import { Box, TextField, Button, IconButton, Collapse } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
-import { getCaseVideos, createCaseVideo, deleteCaseVideo } from "../../API/cases";
-import { useParams } from 'react-router-dom';
-import { useCaseContext } from "../CreateCase";
-const YT_API_KEY = "AIzaSyCRaU7KOSkcfLlK0ncd2732bcEYtBQDnxA";
-
-const VideoFields = ({open}) => {
-    const [url, setUrl] = useState('');
-    const [title, setTitle] = useState('');
-    const { caseId } = useParams();
+import { useState, useEffect } from "react"
+import { Box, TextField, Button, IconButton, Collapse, Typography} from "@mui/material"
+import DeleteIcon from '@mui/icons-material/Delete'
+import { getCaseVideos, createCaseVideo, deleteCaseVideo } from "../../API/cases"
+import { useParams } from 'react-router-dom'
+import { useCaseContext } from "../CreateCase"
+import { dialog_style } from "../../Utils/defaultStyles"
+const YT_API_KEY = "AIzaSyCRaU7KOSkcfLlK0ncd2732bcEYtBQDnxA"
+const css = {
+  item:{
+    margin: '6px 0',
+    borderRadius: 1,
+    padding: 0.5,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 3,
+    flexWrap: 'wrap'
+  },
+}
+const VideoFields = ({open, toggleOpen}) => {
+    const [url, setUrl] = useState('')
+    const [title, setTitle] = useState('')
+    const { caseId } = useParams()
     const {videos, setVideos, caseObject} = useCaseContext()
-
+    
 
     const handleSave = async () => {
-        let embedUrl = '';
-        let videoTitle = '';
-        
+        let embedUrl = ''
+        let videoTitle = ''
         try {
-            const videoId = getYouTubeVideoId(url);
-            const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${YT_API_KEY}`);
-            const data = await response.json();
+            const videoId = getYouTubeVideoId(url)
+            const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${YT_API_KEY}`)
+            const data = await response.json()
             
             if (data.items.length > 0) {
-                embedUrl = `https://www.youtube.com/embed/${videoId}`;
-                videoTitle = data.items[0].snippet.title;
+                embedUrl = `https://www.youtube.com/embed/${videoId}`
+                videoTitle = data.items[0].snippet.title
             } else {
-                alert("El video no existe en YouTube.");
+                alert("El video no existe en YouTube.")
                 return;
             }
         } catch (error) {
-            alert("Hubo un error al verificar el video.");
+            alert("Hubo un error al verificar el video.")
             return;
         }
         let newCaseData = {
@@ -38,32 +48,35 @@ const VideoFields = ({open}) => {
           title: title || videoTitle,
         };
         try {
-          const response = await createCaseVideo(caseId, newCaseData);
-          if (response.status === 201) {
-              newCaseData.id = response.data.id;
-              setVideos([...videos, newCaseData]);
-              setUrl('');
-              setTitle('');
+          const response = await createCaseVideo(caseId, newCaseData)
+          if (response.data.info) {
+              setVideos(response.data.info)
+              setUrl('')
+              setTitle('')
           } else {
               alert('Hubo un error al guardar el video.');
           }
         } catch (error) {
             alert('Hubo un error al procesar la solicitud.');
         }
-    };
+        toggleOpen()
+    }
 
     const handleDelete = async (index, videoId) => {
+      console.log("caseid",caseId)
+      console.log("videoid",videoId)
         try {
           const response = await deleteCaseVideo(caseId, videoId)
+          setVideos(response.data.info)
           if (response.status === 204){
-            const newVideos= [...videos];
-            newVideos.splice(index, 1);
-            setVideos(newVideos);
+            const newVideos= [...videos]
+            newVideos.splice(index, 1)
+            setVideos(newVideos)
           }
         } catch (error) {
-          alert('Hubo un error al eliminar el video.');
+          alert('Hubo un error al eliminar el video.')
         }
-    };
+    }
 
     const getYouTubeVideoId = (url) => {
         const regExp = /^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/;
@@ -73,10 +86,10 @@ const VideoFields = ({open}) => {
         } else {
             throw new Error("No se pudo obtener el ID del video de YouTube.");
         }
-    };
-    
+    }
+    console.log(videos)
     return (
-      <div>
+      <>
         <Collapse in={open} unmountOnExit>
             <TextField
               label="URL"
@@ -105,33 +118,34 @@ const VideoFields = ({open}) => {
               Guardar
             </Button>
         </Collapse>
-
         {videos.map((video, index) => (
-          <Box key={index} sx={{ border: '1px solid black', padding: '10px', marginBottom: '10px', position: 'relative' }}>
+          <Box sx={{...dialog_style,marginTop: 5}} key={index}>
+              <Box sx={{...css.item_name, marginLeft: 2}}> 
+                <Typography variant='subtitle1'>Título</Typography>
+                <Typography variant='body1'>{video.title}</Typography>
+              </Box>
+            <Box sx={css.item}>
               {video.url && (
-                  <div>
-                      <iframe
-                          width="315"
-                          height="315"
-                          src={video.url}
-                          title="YouTube video player"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                      ></iframe>
-                  </div>
+                <div>
+                  <iframe
+                      width="315"
+                      height="315"
+                      src={video.url}
+                      title="YouTube video player"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                  ></iframe>
+                </div>  
               )}
-              <div>
-                <strong>Título:</strong> {video.title}
-              </div>
-              <IconButton
-                  onClick={() => handleDelete(index, video.id)}
-                  style={{ position: 'absolute', top: 0, right: 0, color: 'red' }}
-              >
+              <Box sx={css.item_actions}>
+                <IconButton onClick={() => handleDelete(caseId,video.id)}>
                   <DeleteIcon />
-              </IconButton>
+                </IconButton>
+              </Box>
+            </Box>
           </Box>
         )).reverse()}
-      </div>
+      </>
     );
   };
 

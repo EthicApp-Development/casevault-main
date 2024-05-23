@@ -1,5 +1,4 @@
 import { Box, Typography,IconButton} from '@mui/material'
-import { useState } from 'react';
 import React from 'react';
 import { title_style } from '../../Utils/defaultStyles';
 import VideoField from './VideoDataField';
@@ -35,7 +34,7 @@ export default function VideoCreator() {
             <AddCircleOutlineIcon/>
           </IconButton>
             <Box>
-                <VideoField open={open}  />
+                <VideoField open={open} toggleOpen={toggleOpen}  />
             </Box>
         </Box>
     );
