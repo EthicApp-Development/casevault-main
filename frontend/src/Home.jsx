@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Navigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
-import ListItem from '@mui/material/ListItem';
-import { Box, Grid, Container, Button } from "@mui/material";
+import { Box, Grid, Container, Button, ListItem } from "@mui/material";
 import axios from "axios";
 import CaseCard from "./Case/CaseCard";
 import { createCase } from './API/cases';
@@ -82,12 +81,15 @@ export default function Home() {
                 <Grid container spacing={2}>
                     {cases.map(caseData => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
-                            <ListItem>
+                            <ListItem onClick={() => navigate(`/show_case/${caseData.id}`)}>
                                 <CaseCard
                                     title={caseData.title}
                                     description={caseData.description}
                                     image_url={caseData.main_image_url}
-                                    onEdit={() => navigate(`/create_case/${caseData.id}/text`)}
+                                    onEdit={(e) => {
+                                        e.stopPropagation();
+                                        navigate(`/create_case/${caseData.id}/text`);
+                                    }}
                                 />
                             </ListItem>
                         </Grid>
