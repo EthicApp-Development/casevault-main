@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Container, Button } from "@mui/material";
-import CaseCard from "./Case/CaseCard";
+import { useNavigate, Navigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
-import { useNavigate } from "react-router-dom";
-import ListItemButton from '@mui/material/ListItemButton';
+import ListItem from '@mui/material/ListItem';
+import { Box, Grid, Container, Button } from "@mui/material";
 import axios from "axios";
-import getCurrentUser from './Hooks/GetUser';
-import { Navigate } from 'react-router-dom';
+import CaseCard from "./Case/CaseCard";
 import { createCase } from './API/cases';
+import getCurrentUser from './Hooks/GetUser';
+
 const CASES_API = import.meta.env.VITE_API_CASES_URL;
 
 const BackgroundBox = styled(Box)({
@@ -28,8 +28,9 @@ const CreateCaseButton = styled(Button)({
 export default function Home() {
     const [cases, setCases] = useState([]);
     const navigate = useNavigate();
-    const currentUser = getCurrentUser()
-    const [authenticated, setauthenticated] = useState(null);
+    const currentUser = getCurrentUser();
+    const [authenticated, setAuthenticated] = useState(null);
+
     useEffect(() => {
         const fetchCases = async () => {
             try {
@@ -40,11 +41,11 @@ export default function Home() {
             }
             const loggedInUser = localStorage.getItem("authenticated");
             if (loggedInUser) {
-                setauthenticated(loggedInUser);
+                setAuthenticated(loggedInUser);
             }
         };
         fetchCases();
-    }, []); 
+    }, []);
 
     async function handleCreateCase() {
         const response = await fetch("src/assets/default_case_img.webp");
@@ -55,17 +56,16 @@ export default function Home() {
         formData.append('case[main_image]', defaultImg);
         try {
             const response = await createCase(formData);
-            
             const createdCase = response?.data?.info;
-            navigate(`/create_case/${createdCase.id}/text`)
-
+            navigate(`/create_case/${createdCase.id}/text`);
         } catch (error) {
             console.error("Error al crear el caso:", error);
         }
     }
+
     if (!authenticated) {
         <Navigate replace to="/login" />;
-        } else {
+    } else {
         return (
             <Container maxWidth="xl">
                 <BackgroundBox>
@@ -82,9 +82,14 @@ export default function Home() {
                 <Grid container spacing={2}>
                     {cases.map(caseData => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
-                            <ListItemButton onClick={() => navigate(`/create_case/${caseData.id}/text`)}>
-                                <CaseCard title={caseData.title} description={caseData.description} image_url={caseData.main_image_url} />
-                            </ListItemButton>
+                            <ListItem>
+                                <CaseCard
+                                    title={caseData.title}
+                                    description={caseData.description}
+                                    image_url={caseData.main_image_url}
+                                    onEdit={() => navigate(`/create_case/${caseData.id}/text`)}
+                                />
+                            </ListItem>
                         </Grid>
                     ))}
                 </Grid>
