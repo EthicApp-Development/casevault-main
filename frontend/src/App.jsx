@@ -8,6 +8,7 @@ import Navbar from './Components/Navbar.jsx';
 import UserCases from './MyCases/UserCases.jsx';
 import SearchResults from './SearchResults.jsx';
 import NotFound from './Components/404.jsx';
+import Forbidden from './Components/403.jsx';
 import AppContext from './Contexts/AppContext.jsx';
 import CreateCase from './CreationCases/CreateCase.jsx';
 import TextCreator from './CreationCases/Texto/TextCreator.jsx';

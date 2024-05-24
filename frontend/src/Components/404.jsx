@@ -9,7 +9,7 @@ const NotFound = () => {
                 <h1>¡Página no encontrada!</h1>
                 <img
                     src="src/assets/images/404.jpg"
-                    alt="Imagen Error"
+                    alt="Imagen Error 404"
                     style={{ width: '200px', height: '200px', objectFit: 'cover' }}
                 />
                 <Link to="/home">
