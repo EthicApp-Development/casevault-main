@@ -70,7 +70,7 @@ export default function Home() {
             <Container maxWidth="xl">
                 <BackgroundBox>
                     <img
-                        src="src/assets/Shutterstock_2072700533.jpg"
+                        src="src/assets/images/front_image.jpg"
                         alt="Imagen de fondo"
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
