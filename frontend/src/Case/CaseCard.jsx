@@ -21,7 +21,16 @@ export default function CaseCard({ title, description, image_url, onEdit }) {
                     <Typography gutterBottom variant="h5" component="div">
                         {title}
                     </Typography>
-                    <div dangerouslySetInnerHTML={{ __html: description }} style={{ marginTop: '8px' }} />
+                    <div dangerouslySetInnerHTML={{ __html: description }} 
+                        style={{
+                            marginTop: '8px',
+                            textAlign: 'justify',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 4,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                        }} />
                 </CardContent>
             </CardActionArea>
         </Card>
