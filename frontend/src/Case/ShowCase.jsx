@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { getCase } from '../API/cases';
-import { Box, Typography, TextField, Grid } from '@mui/material';
+import { Box, Typography, Grid } from '@mui/material';
 
 function ViewCase() {
     const [mainImage, setMainImage] = useState();
@@ -29,14 +29,17 @@ function ViewCase() {
 
     return (
         <Box marginTop={5}>
-            <Typography variant="h1" align='center' gutterBottom>
+            <Typography variant="h1" align='left' gutterBottom>
                 <strong>{title}</strong>
             </Typography>
             <Grid container spacing={2}>
                 <Grid item container xs={12}>
                     <Grid item xs={8}>
                         <Box marginTop={2}>
-                            <div dangerouslySetInnerHTML={{ __html: description }} />
+                            <div
+                                style={{ textAlign: 'justify' }}
+                                dangerouslySetInnerHTML={{ __html: description }}
+                            />
                         </Box>
                     </Grid>
                     <Grid item xs={4}>
