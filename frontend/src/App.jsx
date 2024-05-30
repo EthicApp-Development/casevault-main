@@ -4,13 +4,15 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { Box } from "@mui/material";
 import Home from './Home.jsx';
 import Login from './Session/Login.jsx';
-import ViewCase from './Case/ShowCase.jsx';
+import NotFound from './Components/404.jsx';
 import Navbar from './Components/Navbar.jsx';
+import Forbidden from './Components/403.jsx';
+import ShowCase from './ShowCase/ShowCase.jsx';
+import ShowCaseVideos from './ShowCase/ShowCaseVideos.jsx';
 import UserCases from './MyCases/UserCases.jsx';
 import SearchResults from './SearchResults.jsx';
-import NotFound from './Components/404.jsx';
-import Forbidden from './Components/403.jsx';
 import AppContext from './Contexts/AppContext.jsx';
+import ShowCaseText from './ShowCase/ShowCaseText.jsx';
 import CreateCase from './CreationCases/CreateCase.jsx';
 import TextCreator from './CreationCases/Texto/TextCreator.jsx';
 import VideoCreator from './CreationCases/Video/VideoCreator.jsx';
@@ -42,7 +44,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/search/:searchTerm" element={<SearchResults />} />
             <Route path="/mycases/" element={<UserCases />} />
-            <Route path="/show_case/:caseId" element={<ViewCase />} />
+            <Route path="/show_case/:caseId/" element={<ShowCase />}>
+              <Route path="text" element={<ShowCaseText />} />
+              <Route path="videos" element={<ShowCaseVideos />} />
+            </Route>
             <Route path="/create_case/:caseId/" element={<CreateCase />}>
               <Route path="text" element={<TextCreator />} />
               <Route path="videos" element={<VideoCreator />} />

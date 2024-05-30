@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { getCase } from '../API/cases';
 import { Box, Typography, Grid } from '@mui/material';
 
-function ViewCase() {
+function ShowCaseText() {
     const [mainImage, setMainImage] = useState();
     const [title, setTitle] = useState('');
     const { caseId } = useParams();
@@ -29,28 +29,26 @@ function ViewCase() {
 
     return (
         <Box marginTop={5}>
-            <Typography variant="h1" align='left' gutterBottom>
-                <strong>{title}</strong>
-            </Typography>
             <Grid container spacing={2}>
-                <Grid item container xs={12}>
-                    <Grid item xs={8}>
-                        <Box marginTop={2}>
-                            <div
-                                style={{ textAlign: 'justify' }}
-                                dangerouslySetInnerHTML={{ __html: description }}
-                            />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Box display="flex" justifyContent="center" marginTop={2}>
-                            <img src={mainImage} alt={title} style={{ width: '200px', height: '200px', objectFit: 'cover' }} />
-                        </Box>
-                    </Grid>
+                <Grid item xs={8}>
+                    <Typography variant="h1" align='left' gutterBottom>
+                        <strong>{title}</strong>
+                    </Typography>
+                    <Box marginTop={2}>
+                        <div
+                            style={{ textAlign: 'justify' }}
+                            dangerouslySetInnerHTML={{ __html: description }}
+                        />
+                    </Box>
+                </Grid>
+                <Grid item xs={4}>
+                    <Box display="flex">
+                        <img src={mainImage} alt={title} style={{ width: '200px', height: '200px', objectFit: 'cover' }} />
+                    </Box>
                 </Grid>
             </Grid>
         </Box>
     );
 }
 
-export default ViewCase;
+export default ShowCaseText;

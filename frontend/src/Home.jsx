@@ -81,7 +81,7 @@ export default function Home() {
                 <Grid container spacing={2}>
                     {cases.map(caseData => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
-                            <ListItem onClick={() => navigate(`/show_case/${caseData.id}`)}>
+                            <ListItem onClick={() => navigate(`/show_case/${caseData.id}/text`)}>
                                 <CaseCard
                                     title={caseData.title}
                                     description={caseData.description}

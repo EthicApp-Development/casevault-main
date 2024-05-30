@@ -9,7 +9,7 @@ export const useCaseContext = () => {
     return useContext(CaseContext);
 };
 
-function CreateCase() {
+function ShowCase() {
     const [selectedTab, setSelectedTab] = useState(0); // Inicializar en 0
     const [title, setTitle] = useState('');
     const [summary, setSummary] = useState('');
@@ -48,7 +48,8 @@ function CreateCase() {
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue)
-        navigate(`/create_case/${caseObject?.id}/${getTabSegment(newValue)}`)
+        console.log(getTabSegment(newValue));
+        navigate(`/show_case/${caseObject?.id}/${getTabSegment(newValue)}`)
     }
 
     const getTabSegment = (tabIndex) => {
@@ -132,4 +133,4 @@ function CreateCase() {
     )
 }
 
-export default CreateCase;
+export default ShowCase;
