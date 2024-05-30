@@ -11,7 +11,7 @@ function RTE() {
         setText(data);
     };
 
-    const initialData = text || '<br><br><br>';
+    const initialData = text || '<br><br>';
 
     return (
         <div>

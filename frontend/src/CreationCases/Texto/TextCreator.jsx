@@ -76,11 +76,8 @@ export default function TextCreator() {
     };
 
     return (
-        <Box marginTop={5}>
-            <Typography variant="h5" textAlign='center' gutterBottom>
-                Creación de casos
-            </Typography>
-            <Grid container spacing={2}>
+        <Box marginTop={4}>
+            <Grid container spacing={10} columns={16}>
                 <Grid item xs={12}>
                     <TextField
                         label="Título"
@@ -89,21 +86,21 @@ export default function TextCreator() {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
+                    <Typography variant="subtitle1" gutterBottom marginTop={2}>
+                        Descripción
+                    </Typography>
+                    <Box>
+                        <RTE text={text} setText={setText} />
+                    </Box>
                 </Grid>
-                <Grid item container xs={12}>
-                    <Grid item xs={8}>
-                        <Box marginTop={2}>
-                            <Typography variant="subtitle1" gutterBottom>
-                                Descripción
-                            </Typography>
-                        </Box>
-                        <Box marginTop={1}>
-                            <RTE text={text} setText={setText} />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Box display="flex" justifyContent="center" marginTop={2}>
-                            <img src={mainImage} alt={title} style={{ width: '200px', height: '200px', objectFit: 'cover' }} />
+                <Grid item xs={4}>
+                    <Box display="flex" flexDirection="column" alignItems="center">
+                        <Box>
+                            <img
+                                src={mainImage}
+                                alt={title}
+                                style={{ width: '200px', height: '200px', objectFit: 'cover' }}
+                            />
                         </Box>
                         <Box display="flex" justifyContent="center" marginTop={1}>
                             <input
@@ -114,15 +111,17 @@ export default function TextCreator() {
                                 onChange={handleImageChange}
                             />
                             <label htmlFor="image-input">
-                                <Button variant="subtitle1" component="span">
+                                <Button variant="contained" component="span">
                                     Cambiar Imagen
                                 </Button>
                             </label>
                         </Box>
-                    </Grid>
+                    </Box>
                 </Grid>
             </Grid>
-            <SaveCaseButton onClick={handleSave}>Guardar y salir</SaveCaseButton>
+            <Box marginTop={3}>
+                <SaveCaseButton onClick={handleSave}>Guardar y salir</SaveCaseButton>
+            </Box>
         </Box>
     );
 }
