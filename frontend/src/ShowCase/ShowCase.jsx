@@ -31,6 +31,7 @@ function ShowCase() {
                     const response = await getCase(caseId);
                     setCaseObject(response.data);
                     setVideos(response.data.videos);
+                    setDocuments(response.data.documents);
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
@@ -48,7 +49,6 @@ function ShowCase() {
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue)
-        console.log(getTabSegment(newValue));
         navigate(`/show_case/${caseObject?.id}/${getTabSegment(newValue)}`)
     }
 

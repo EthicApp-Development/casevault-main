@@ -1,7 +1,4 @@
-import { useState } from "react"
-import { Box, IconButton, Typography} from "@mui/material"
-import DeleteIcon from '@mui/icons-material/Delete'
-import { useParams } from 'react-router-dom'
+import { Box, Typography} from "@mui/material"
 import { useCaseContext } from "./ShowCase"
 import { dialog_style } from "../Utils/defaultStyles"
 

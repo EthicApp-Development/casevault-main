@@ -10,6 +10,7 @@ import Forbidden from './Components/403.jsx';
 import ShowCase from './ShowCase/ShowCase.jsx';
 import ShowCaseVideos from './ShowCase/ShowCaseVideos.jsx';
 import ShowCaseAudios from './ShowCase/ShowCaseAudios.jsx';
+import ShowCaseDocuments from './ShowCase/ShowCaseDocuments.jsx';
 import UserCases from './MyCases/UserCases.jsx';
 import SearchResults from './SearchResults.jsx';
 import AppContext from './Contexts/AppContext.jsx';
@@ -49,6 +50,7 @@ function App() {
               <Route path="text" element={<ShowCaseText />} />
               <Route path="videos" element={<ShowCaseVideos />} />
               <Route path="audios" element={<ShowCaseAudios />} />
+              <Route path='documents' element={<ShowCaseDocuments />} />
             </Route>
             <Route path="/create_case/:caseId/" element={<CreateCase />}>
               <Route path="text" element={<TextCreator />} />
