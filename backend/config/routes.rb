@@ -17,12 +17,22 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, only: [:index, :show, :create, :update, :destroy]
       resources :cases do
+        resources :tags, only: [:index, :destroy] do
+          collection do
+            post :add_tag
+          end
+        end
         resources :audios, only: [:index, :create, :update, :destroy]
         resources :videos, only: [:index, :create, :update, :destroy]
         resources :documents, only: [:index, :create, :destroy] do
           member do
             get :download_document
           end
+        end
+      end
+      resources :tags, only: [:all_tags, :create, :destroy] do
+        collection do
+          get :all_tags
         end
       end
     end

@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { getCaseVideos, createCaseVideo, deleteCaseVideo } from "../../API/cases"
 import { useParams } from 'react-router-dom'
 import { useCaseContext } from "../CreateCase"
-import { dialog_style } from "../../Utils/defaultStyles"
+import { dialog_style,inline_buttons } from "../../Utils/defaultStyles"
 const YT_API_KEY = "AIzaSyCRaU7KOSkcfLlK0ncd2732bcEYtBQDnxA"
 const css = {
   item:{
@@ -23,7 +23,7 @@ const VideoFields = ({open, toggleOpen}) => {
     const { caseId } = useParams()
     const {videos, setVideos, caseObject} = useCaseContext()
     
-
+    console.log(videos)
     const handleSave = async () => {
         let embedUrl = ''
         let videoTitle = ''
@@ -120,8 +120,8 @@ const VideoFields = ({open, toggleOpen}) => {
         </Collapse>
         {videos.map((video, index) => (
           <Box sx={{...dialog_style,marginTop: 5}} key={index}>
-              <Box sx={{...css.item_name, marginLeft: 2}}> 
-                <Typography variant='subtitle1'>Título</Typography>
+              <Box sx={{...css.item_name, marginLeft: 2,...inline_buttons}}> 
+                <Typography variant='subtitle1'>Título:</Typography>
                 <Typography variant='body1'>{video.title}</Typography>
               </Box>
             <Box sx={css.item}>

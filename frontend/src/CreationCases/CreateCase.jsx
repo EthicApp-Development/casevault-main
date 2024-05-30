@@ -22,19 +22,19 @@ function CreateCase() {
     const [caseObject, setCaseObject] = useState({});
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
-    const navigate = useNavigate();
-    const location = useLocation();
+    const navigate = useNavigate()
+    const location = useLocation()
+    const [tags, setTags] = useState([])
 
     useEffect(() => {
         async function fetchData() {
             if (!!caseObject) {
                 try {
                     const response = await getCase(caseId)
-                    console.log(caseId)
-                    console.log("respuesta", response.data)
                     setCaseObject(response.data)
                     setVideos(response.data.videos)
-                    console.log(response.data)
+                    setTags(response.data.tags)
+                
                 } catch (error) {
                     console.log("No se pudo obtener el caso")
                 }
@@ -50,7 +50,6 @@ function CreateCase() {
         setSelectedTab(tabValue); 
     }, [location.pathname]);
 
-    console.log(caseObject)
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue)
@@ -114,6 +113,8 @@ function CreateCase() {
         setMainImage,
         caseObject,
         setCaseObject,
+        tags,
+        setTags
 
     };
 
