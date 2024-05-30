@@ -149,9 +149,10 @@ export default function TextCreator() {
                 <Grid item xs={12}>
                     <Box sx={inline_buttons}>
                         <Typography variant="h3">Etiquetas</Typography>
-                        <Box>
+                        <Box >
                             {tags.map((tag, index) => (
                                 <Chip
+                                    sx={{marginLeft: 2, marginRight: 2}}
                                     key={tag.id}
                                     label={tag.name}
                                     onDelete={() => handleDeleteTag(tag.id)}
@@ -159,14 +160,14 @@ export default function TextCreator() {
                             ))}
                         </Box>
                     </Box>
-                    <Box sx={inline_buttons}>
+                    <Box sx={{...inline_buttons, marginBottom: 10}}>
                         <TextField
                             label="Buscar Etiqueta"
                             variant="outlined"
                             fullWidth
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            sx={{ marginTop: 2 }}
+                            sx={{ marginTop: 2, marginRight: 7}}
                         />
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, marginTop: 2 }}>
                             {filteredTags.map((tag) => (
@@ -185,7 +186,6 @@ export default function TextCreator() {
                             startIcon={<AddIcon />}
                             sx={{ marginTop: 2 }}
                         >
-                            Crear Etiqueta
                         </Button>
                     </Box>
                 </Grid>
