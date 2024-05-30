@@ -1,7 +1,8 @@
-import { useState, createContext, useContext } from "react";
-import { Typography, Box, Tab, Tabs, Button } from '@mui/material';
+import React, { useState, createContext, useContext, useEffect } from "react";
+import { Box, Tab, Tabs} from '@mui/material';
 import useToggle from "../Hooks/ToggleHook";
-import { Outlet, useNavigate, useParams, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
+import { getCase } from "../API/cases";
 
 const CaseContext = createContext();
 
@@ -9,49 +10,83 @@ export const useCaseContext = () => {
     return useContext(CaseContext);
 };
 
-
 function CreateCase() {
-    const [selectedTab, setSelectedTab] = useToggle(0);
+    const [selectedTab, setSelectedTab] = useState(0); // Inicializar en 0
     const [title, setTitle] = useState('');
     const [summary, setSummary] = useState('');
     const [text, setText] = useState('');
     const [documents, setDocuments] = useState([]);
     const [audios, setAudios] = useState([]);
-    const [videos, setVideos] = useState([]);
     const [visibility, setVisibility] = useState('');
     const [mainImage, setMainImage] = useState('');
     const [caseObject, setCaseObject] = useState({});
-    const { caseId, } = useParams();
-    const { caseId, } = useParams();
+    const { caseId } = useParams();
+    const [videos, setVideos] = useState([]);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        async function fetchData() {
+            if (!!caseObject) {
+                try {
+                    const response = await getCase(caseId);
+                    setCaseObject(response.data);
+                    setVideos(response.data.videos);
+                } catch (error) {
+                    console.log("No se pudo obtener el caso");
+                }
+            }
+        }
+        fetchData()
+    }, [caseId]);
+
+    useEffect(() => {
+        const segments = location.pathname.split('/');
+        const tabSegment = segments[segments.length - 1];
+        const tabValue = getTabValue(tabSegment);
+        setSelectedTab(tabValue); 
+    }, [location.pathname]);
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue)
+        navigate(`/create_case/${caseObject?.id}/${getTabSegment(newValue)}`)
+    }
 
-        switch (newValue) {
+    const getTabSegment = (tabIndex) => {
+        switch (tabIndex) {
             case 0:
-                navigate(`/create_case/${caseObject.id}/text`)
-                break
+                return 'text';
             case 1:
-                navigate(`/create_case/${caseObject.id}/videos`)
-                break
+                return 'videos';
             case 2:
-                navigate(`/create_case/${caseObject.id}/documents`)
-                break
+                return 'documents';
             case 3:
-                navigate(`/create_case/${caseObject.id}/images`)
-                break
+                return 'audios';
             case 4:
-                navigate(`/create_case/${caseObject.id}/audios`)
-                break
+                return 'visibility';
             case 5:
-                navigate(`/create_case/${caseObject.id}/visibility`)
-                break
-            case 6:
-                navigate(`/create_case/${caseObject.id}/information`)
-                break
+                return 'information';
             default:
-                break
+                return '';
+        }
+    }
+
+    const getTabValue = (tabSegment) => {
+        switch (tabSegment) {
+            case 'text':
+                return 0;
+            case 'videos':
+                return 1;
+            case 'documents':
+                return 2;
+            case 'audios':
+                return 3;
+            case 'visibility':
+                return 4;
+            case 'information':
+                return 5;
+            default:
+                return 0;
         }
     }
 
@@ -86,12 +121,10 @@ function CreateCase() {
                             <Tab label="Texto" value={0} />
                             <Tab label="Videos" value={1} />
                             <Tab label="Documentos" value={2} />
-                            <Tab label="Imágenes" value={3} />
-                            <Tab label="Audios" value={4} />
-                            <Tab label="Visibilidad" value={5} />
-                            <Tab label="Información" value={6} />
+                            <Tab label="Audios" value={3} />
+                            <Tab label="Visibilidad" value={4} />
+                            <Tab label="Información" value={5} />
                         </Tabs>
-                        <Button variant="contained" sx={{ minWidth: 120 }}>Send Case</Button>
                     </Box>
                     <Outlet />
                 </Box>

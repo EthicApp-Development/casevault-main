@@ -30,18 +30,17 @@ export default function Home() {
     const navigate = useNavigate();
     const currentUser = getCurrentUser()
     const [authenticated, setauthenticated] = useState(null);
-    
     useEffect(() => {
         const fetchCases = async () => {
             try {
                 const response = await axios.get(CASES_API);
-                setCases(response.data);
+                setCases(response.data.info);
             } catch (error) {
                 console.log(error);
             }
             const loggedInUser = localStorage.getItem("authenticated");
             if (loggedInUser) {
-              setauthenticated(loggedInUser);
+                setauthenticated(loggedInUser);
             }
         };
         fetchCases();
@@ -64,12 +63,10 @@ export default function Home() {
             console.error("Error al crear el caso:", error);
         }
     }
-    
     if (!authenticated) {
         <Navigate replace to="/login" />;
         } else {
         return (
-            
             <Container maxWidth="xl">
                 <BackgroundBox>
                     <img
