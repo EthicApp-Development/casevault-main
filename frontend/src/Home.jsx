@@ -8,15 +8,8 @@ import axios from "axios";
 import getCurrentUser from './Hooks/GetUser';
 import { Navigate } from 'react-router-dom';
 import { createCase } from './API/cases';
-const CASES_API = import.meta.env.VITE_API_CASES_URL;
 
-const BackgroundBox = styled(Box)({
-    position: 'relative',
-    width: '100%',
-    height: '233px',
-    backgroundColor: '#ccc',
-    overflow: 'hidden',
-});
+const CASES_API = import.meta.env.VITE_API_CASES_URL;
 
 const CreateCaseButton = styled(Button)({
     position: 'absolute',
@@ -25,6 +18,11 @@ const CreateCaseButton = styled(Button)({
     transform: 'translateX(-50%)',
 });
 
+const css = {
+    container:{
+        width: "100%"
+    }
+}
 export default function Home() {
     const [cases, setCases] = useState([]);
     const navigate = useNavigate();
@@ -70,17 +68,10 @@ export default function Home() {
         } else {
         return (
             
-            <Container maxWidth="xl">
-                <BackgroundBox>
-                    <img
-                        src="src/assets/Shutterstock_2072700533.jpg"
-                        alt="Imagen de fondo"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+            <Box sx={css.container}>
                     <CreateCaseButton variant="contained" onClick={handleCreateCase}>
                         Crear Caso
                     </CreateCaseButton>
-                </BackgroundBox>
 
                 <Grid container spacing={2}>
                     {cases.map(caseData => (
@@ -91,7 +82,7 @@ export default function Home() {
                         </Grid>
                     ))}
                 </Grid>
-            </Container>
+            </Box>
         );
     }
 }
