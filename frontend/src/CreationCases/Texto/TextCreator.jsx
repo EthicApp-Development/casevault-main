@@ -147,6 +147,16 @@ export default function TextCreator() {
             </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
+                    <TextField
+                        label="Título"
+                        variant="outlined"
+                        fullWidth
+                        sx={{marginBottom: 2}}
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={12}>
                     <Box sx={inline_buttons}>
                         <Typography variant="h3">Etiquetas</Typography>
                         <Box >
@@ -160,7 +170,7 @@ export default function TextCreator() {
                             ))}
                         </Box>
                     </Box>
-                    <Box sx={{...inline_buttons, marginBottom: 10}}>
+                    <Box sx={{...inline_buttons}}>
                         <TextField
                             label="Buscar Etiqueta"
                             variant="outlined"
@@ -188,15 +198,6 @@ export default function TextCreator() {
                         >
                         </Button>
                     </Box>
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        label="Título"
-                        variant="outlined"
-                        fullWidth
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
                 </Grid>
                 <Grid item container xs={12}>
                     <Grid item xs={8}>
