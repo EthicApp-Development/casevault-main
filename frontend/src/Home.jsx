@@ -63,7 +63,6 @@ export default function Home() {
             console.error("Error al crear el caso:", error);
         }
     }
-    console.log(cases)
     if (!authenticated) {
         <Navigate replace to="/login" />;
         } else {

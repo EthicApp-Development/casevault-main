@@ -34,9 +34,8 @@ function CreateCase() {
                     setCaseObject(response.data)
                     setVideos(response.data.videos)
                     setTags(response.data.tags)
-                
                 } catch (error) {
-                    console.log("No se pudo obtener el caso")
+                    console.log("No se pudo obtener el caso");
                 }
             }
         }
@@ -49,7 +48,6 @@ function CreateCase() {
         const tabValue = getTabValue(tabSegment);
         setSelectedTab(tabValue); 
     }, [location.pathname]);
-
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue)

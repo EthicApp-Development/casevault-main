@@ -58,7 +58,6 @@ export default function DocumentCreator() {
 
     async function handleDeleteDocument(documentId) {
       try {
-        console.log(documentId)
         const response = await deleteDocuments(caseId,documentId)
         setDocuments(response.data.info)
       } catch (error) {
