@@ -23,16 +23,18 @@ function CreateCase() {
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
 
-    const navigate = useNavigate();
-    const location = useLocation();
-
+    const navigate = useNavigate()
+    const location = useLocation()
+    const [tags, setTags] = useState([])
+    
     useEffect(() => {
         async function fetchData() {
             if (!!caseObject) {
                 try {
-                    const response = await getCase(caseId);
-                    setCaseObject(response.data);
-                    setVideos(response.data.videos);
+                    const response = await getCase(caseId)
+                    setCaseObject(response.data)
+                    setVideos(response.data.videos)
+                    setTags(response.data.tags)
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
@@ -110,6 +112,8 @@ function CreateCase() {
         setMainImage,
         caseObject,
         setCaseObject,
+        tags,
+        setTags
 
     };
 

@@ -23,6 +23,8 @@ class Api::V1::CasesController < ApplicationController
       images: { only: [:title, :description], methods: :image_url },
       documents: { only: [:title, :description], methods: :document_url },
       audios: { only: [:title, :url], methods: :file_url },
+      videos: { only: [:id, :url, :title, :description]},
+      tags: {only: [:name,:id]}
       videos: { only: [:id, :title, :url]}
     })
   
