@@ -12,6 +12,8 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
+  get 'cases/:id', to: 'static/static_cases#show', as: 'case'
+
   # Rutas del API
   namespace :api do
     namespace :v1 do
