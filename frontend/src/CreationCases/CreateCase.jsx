@@ -22,10 +22,11 @@ function CreateCase() {
     const [caseObject, setCaseObject] = useState({});
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
+
     const navigate = useNavigate()
     const location = useLocation()
     const [tags, setTags] = useState([])
-
+    
     useEffect(() => {
         async function fetchData() {
             if (!!caseObject) {
