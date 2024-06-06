@@ -3,7 +3,6 @@ import { getUser } from "../API/user";
 
 export default function getCurrentUser() {
     const [user, setUser] = useState(null);
-
     useEffect(() => {
         const fetchUser = async () => {
             const accountString = localStorage.getItem("account");

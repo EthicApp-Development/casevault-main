@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   # Rutas del API
 namespace :api do
   namespace :v1 do
+    resources :users, only: [:index, :show]
     resources :cases do
       resources :audios, only: [:index, :create, :update, :destroy]
       resources :documents, only: [:index, :create, :destroy] do
