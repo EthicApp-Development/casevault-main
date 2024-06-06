@@ -13,10 +13,33 @@ import DocumentCreator from './CreationCases/Documents/DocumentCreator.jsx';
 import AudioCreator from './CreationCases/Audios/AudioCreator.jsx';
 import Login from './Session/Login.jsx';
 import InfoCreator from './CreationCases/Information/InfoCreator.jsx';
-import { useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import { getUser } from './API/user.js';
+
 function App() {
   const location = useLocation();
+  const [user, setUser] = useState(null)
   const { pathname } = location
+
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const accountString = localStorage.getItem("account");
+            if (accountString) {
+                console.log("accountString", accountString);
+                const account = JSON.parse(accountString);
+                const userId = account.id;
+                try {
+                    const response = await getUser(userId);
+                    setUser(response.data.info);
+                } catch (error) {
+                    console.error("Error fetching user:", error);
+                }
+            }
+        };
+
+        fetchUser();
+    }, []);
 
   useEffect(() => {
     const accountInfo = localStorage.getItem('account');
@@ -29,7 +52,7 @@ function App() {
   return (
     <div>
       <AppContext.Provider value={{
-
+        user, setUser
       }}>
         {pathname !== "/login/" && pathname !== "/login" && <Navbar />}
         <Box marginTop={0} marginLeft={45}>

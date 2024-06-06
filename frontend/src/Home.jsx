@@ -1,35 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Grid, Container, Button } from "@mui/material";
+import React, { useState, useEffect, useContext } from 'react';
+import { Box, Grid, Container, Button, TextField, Avatar, Typography } from "@mui/material";
 import CaseCard from "./Case/CaseCard";
 import { styled } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import ListItemButton from '@mui/material/ListItemButton';
 import axios from "axios";
-import getCurrentUser from './Hooks/GetUser';
-import { Navigate } from 'react-router-dom';
 import { createCase } from './API/cases';
+import {inline_buttons, title_style} from  './Utils/defaultStyles'
+import AppContext from './Contexts/AppContext';
+
 const CASES_API = import.meta.env.VITE_API_CASES_URL;
 
-const BackgroundBox = styled(Box)({
+const CreateCaseButton = styled(Button)({
     position: 'relative',
-    width: '100%',
-    height: '233px',
-    backgroundColor: '#ccc',
-    overflow: 'hidden',
 });
 
-const CreateCaseButton = styled(Button)({
-    position: 'absolute',
-    bottom: '16px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-});
+const css = {
+    container: {
+        width: "100%"
+    },
+    createContainer: {
+ 
+    },
+    inputRounded: {
+        width: '70%',
+        borderRadius: '50px',
+        '& .MuiOutlinedInput-root': {
+            borderRadius: '50px',
+        },
+    },
+    centerAlign: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '10px', // Space between avatar and input
+    },
+};
+
+
+function stringToColor(string) {
+    let hash = 0;
+    let i;
+  
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+  
+    let color = '#';
+  
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+  
+    return color;
+  }
+
+
+function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+    };
+}
 
 export default function Home() {
     const [cases, setCases] = useState([]);
     const navigate = useNavigate();
-    const currentUser = getCurrentUser()
+    const {user} = useContext(AppContext)
     const [authenticated, setauthenticated] = useState(null);
+
+    const [caseTitle, setCaseTitle] = useState("");
+    
     useEffect(() => {
         const fetchCases = async () => {
             try {
@@ -40,7 +86,9 @@ export default function Home() {
             }
             const loggedInUser = localStorage.getItem("authenticated");
             if (loggedInUser) {
-                setauthenticated(loggedInUser);
+              setauthenticated(loggedInUser);
+            }else{
+                navigate("/login")
             }
         };
         fetchCases();
@@ -51,8 +99,9 @@ export default function Home() {
         const blob = await response.blob();
         const defaultImg = new File([blob], "default_case_img.webp");
         const formData = new FormData();
-        formData.append('case[user_id]', currentUser.id);
+        formData.append('case[user_id]', user.id);
         formData.append('case[main_image]', defaultImg);
+        formData.append('case[title]',caseTitle)
         try {
             const response = await createCase(formData);
             
@@ -63,32 +112,43 @@ export default function Home() {
             console.error("Error al crear el caso:", error);
         }
     }
-    if (!authenticated) {
-        <Navigate replace to="/login" />;
-        } else {
-        return (
-            <Container maxWidth="xl">
-                <BackgroundBox>
-                    <img
-                        src="src/assets/Shutterstock_2072700533.jpg"
-                        alt="Imagen de fondo"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                    <CreateCaseButton variant="contained" onClick={handleCreateCase}>
-                        Crear Caso
-                    </CreateCaseButton>
-                </BackgroundBox>
+  
+    const userName = user?.first_name +" "+ user?.last_name
 
-                <Grid container spacing={2}>
-                    {cases.map(caseData => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
-                            <ListItemButton onClick={() => navigate(`/create_case/${caseData.id}/text`)}>
-                                <CaseCard title={caseData.title} description={caseData.description} image_url={caseData.main_image_url} />
-                            </ListItemButton>
-                        </Grid>
-                    ))}
-                </Grid>
-            </Container>
+        return (
+            (user?  
+                <Box sx={css.container}>
+                    <Box sx={{ ...css.createContainer, height: 150 }}>
+                        <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Crear un caso nuevo</Typography>
+                    <Box sx={{...css.centerAlign, inline_buttons}}>
+                        <Avatar {...stringAvatar(userName)} />
+                        <TextField 
+                            required
+                            id="outlined-basic" 
+                            label="Título del caso..." 
+                            variant="outlined" 
+                            value={caseTitle}
+                            onChange={(e) => setCaseTitle(e.target.value)}
+                            sx={css.inputRounded} 
+                        />
+                        <CreateCaseButton variant="contained" onClick={handleCreateCase} disabled={caseTitle===""}>
+                            Crear Caso
+                        </CreateCaseButton>
+                    </Box>
+                </Box>
+                    <Grid container spacing={2}>
+                        {cases.map(caseData => (
+                            <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
+                                <ListItemButton onClick={() => navigate(`/create_case/${caseData.id}/text`)}>
+                                    <CaseCard title={caseData.title} description={caseData.description} image_url={caseData.main_image_url} />
+                                </ListItemButton>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
+            :
+        <Box>
+        </Box>)
         );
     }
-}
+

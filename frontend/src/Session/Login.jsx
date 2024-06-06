@@ -15,24 +15,29 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { authLogin } from '../API/login';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import AppContext from '../Contexts/AppContext';
 const defaultTheme = createTheme();
 
 export default function Login() {
     const navigate = useNavigate();
+    const {user, setUser} = useContext(AppContext)
 
     const handleSubmit = async (event) => {
         try {
             event.preventDefault();
             const data = new FormData(event.currentTarget);
-            const params = { "email": data.get("email"), "password": data.get("password") };
+            const params = { "email": data.get("email"), "password": data.get("password"), "first_name": data.get("first_name"), "last_name": data.get("last_name") }
             const response = await authLogin({ user: params });
 
             const account = {
                 id: response.data.data.id,
                 email: response.data.data.email,
-                jti: response.data.data.jti
+                jti: response.data.data.jti,
+                first_name: response.data.data.first_name,
+                last_name: response.data.data.last_name
             };
-            
+            setUser(account)
             localStorage.setItem("account", JSON.stringify(account));
             localStorage.setItem("authenticated", true)
            
@@ -61,6 +66,26 @@ export default function Login() {
                         Registrarse
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="first_name"
+                            label="Nombre"
+                            name="first_name"
+                            autoComplete="first name"
+                            autoFocus
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="last_name"
+                            label="Apellido"
+                            name="last_name"
+                            autoComplete="last name"
+                            autoFocus
+                        />
                         <TextField
                             margin="normal"
                             required
@@ -80,22 +105,6 @@ export default function Login() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="first_name"
-                            label="Nombre"
-                            id="first_name"
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="last_name"
-                            label="Apellido"
-                            id="last_name"
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
