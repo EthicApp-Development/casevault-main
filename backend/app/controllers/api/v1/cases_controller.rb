@@ -25,7 +25,6 @@ class Api::V1::CasesController < ApplicationController
       audios: { only: [:title, :url], methods: :file_url },
       videos: { only: [:id, :url, :title, :description]},
       tags: {only: [:name,:id]}
-      videos: { only: [:id, :title, :url]}
     })
   
     if @case.main_image.attached?
