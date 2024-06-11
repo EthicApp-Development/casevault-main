@@ -14,7 +14,7 @@ class Api::V1::CasesController < ApplicationController
       end
     end
 
-    render json: cases_with_images, include: [:images, :documents, :audios, :videos]
+    render json: {info: cases_with_images, include: [:images, :documents, :audios, :videos]}
   end
 
   # GET /cases/1
@@ -23,7 +23,9 @@ class Api::V1::CasesController < ApplicationController
       images: { only: [:title, :description], methods: :image_url },
       documents: { only: [:title, :description], methods: :document_url },
       audios: { only: [:title, :url], methods: :file_url },
-      videos: { only: [:title, :description]}
+      videos: { only: [:id, :url, :title, :description]},
+      tags: {only: [:name,:id]}
+      videos: { only: [:id, :title, :url]}
     })
   
     if @case.main_image.attached?

@@ -52,3 +52,21 @@ export function deleteDocuments(caseId,id) {
 export function deleteCaseVideo(caseId, videoId) {
 	return instance.delete(`api/v1/cases/${caseId}/videos/${videoId}`)
 }
+
+export function addTagToCase(caseId, tagId) {
+	return instance.post(`/api/v1/cases/${caseId}/tags/add_tag`, { tag_id: tagId });
+  }
+
+  export function deleteTagFromCase(caseId, tagId) {
+	return instance.delete(`/api/v1/cases/${caseId}/tags/${tagId}`);
+  }  
+
+export function createTag(tagName) {
+	return instance.post(`/api/v1/tags`, { name: tagName });
+}
+
+export function getAllTags() {
+	return instance.get(`/api/v1/tags/all_tags`);
+}
+
+  

@@ -22,7 +22,6 @@ function App() {
   const { pathname } = location
 
 
- 
     useEffect(() => {
         const fetchUser = async () => {
             const accountString = localStorage.getItem("account");
@@ -42,6 +41,13 @@ function App() {
         fetchUser();
     }, []);
 
+  useEffect(() => {
+    const accountInfo = localStorage.getItem('account');
+    if (!accountInfo && pathname !== "/login" && pathname !== "/login/") {
+      // Redirigir a la página de inicio de sesión si no hay información de cuenta en el almacenamiento local
+      window.location.href = "/login";
+    }
+  }, [pathname]);
 
   return (
     <div>
