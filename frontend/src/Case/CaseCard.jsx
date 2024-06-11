@@ -2,8 +2,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
-
-
+import TextEllipsis from '../Utils/Ellipsis';
+import InterpreterRichText from '../Utils/InterpreterRichText';
 export default function CaseCard({ title, description, image_url }) {
     return (
         <Card sx={{ maxWidth: 500 }}>
@@ -13,9 +13,7 @@ export default function CaseCard({ title, description, image_url }) {
                     <Typography gutterBottom variant="h5" component="div">
                         {title}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        {description}
-                    </Typography>
+                        <TextEllipsis text={description ? description : ""} variant="body2" showTooltip={true} lenght={8}></TextEllipsis>
                 </CardContent>
             </CardActionArea>
         </Card>

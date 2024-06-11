@@ -113,6 +113,12 @@ export default function Home() {
             console.error("Error al crear el caso:", error);
         }
     }
+    
+    const handleClick = (caseId) => (event) => {
+        event.stopPropagation();
+        navigate(`/create_case/${caseId}/text`);
+    };
+    
   
     const userName = user?.first_name +" "+ user?.last_name
 
@@ -140,7 +146,7 @@ export default function Home() {
                 <Grid container spacing={2}>
                     {cases?.map(caseData => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
-                            <ListItemButton onClick={() => navigate(`/create_case/${caseData.id}/text`)}>
+                            <ListItemButton onClick={handleClick(caseData.id)}>
                                 <CaseCard
                                     title={caseData.title}
                                     description={caseData.description}
