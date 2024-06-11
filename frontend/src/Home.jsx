@@ -73,13 +73,14 @@ export default function Home() {
     const navigate = useNavigate();
     const {user} = useContext(AppContext)
     const [authenticated, setauthenticated] = useState(null);
+
     const [caseTitle, setCaseTitle] = useState("");
     
     useEffect(() => {
         const fetchCases = async () => {
             try {
                 const response = await axios.get(CASES_API);
-                setCases(response.data);
+                setCases(response.data.info);
             } catch (error) {
                 console.log(error);
             }
@@ -111,7 +112,7 @@ export default function Home() {
             console.error("Error al crear el caso:", error);
         }
     }
-
+  
     const userName = user?.first_name +" "+ user?.last_name
 
         return (
@@ -136,7 +137,7 @@ export default function Home() {
                     </Box>
                 </Box>
                     <Grid container spacing={2}>
-                        {cases.map(caseData => (
+                        {cases?.map(caseData => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
                                 <ListItemButton onClick={() => navigate(`/create_case/${caseData.id}/text`)}>
                                     <CaseCard title={caseData.title} description={caseData.description} image_url={caseData.main_image_url} />
@@ -147,7 +148,6 @@ export default function Home() {
                 </Box>
             :
         <Box>
-
         </Box>)
         );
     }
