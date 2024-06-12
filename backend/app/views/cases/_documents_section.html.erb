@@ -1,0 +1,14 @@
+<div id="documents-section" class="content-section" style="display:none;">
+    <% @case.documents.each do |document| %>
+        <div>
+        <% if document.file.attached? %>
+            <h2>
+            <%= link_to document.title, url_for(document.file), download: document.title %>
+            </h2>
+        <% else %>
+            <h2><%= document.title %></h2>
+            <p>No document available.</p>
+        <% end %>
+        </div>
+    <% end %>
+</div>

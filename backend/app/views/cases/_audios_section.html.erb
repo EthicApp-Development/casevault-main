@@ -1,0 +1,15 @@
+<div id="audios-section" class="content-section" style="display:none;">
+    <% @case.audios.each do |audio| %>
+        <div>
+        <% if audio.url.present? %>
+            <iframe src="<%= audio.url %>" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        <% elsif audio.file.attached? %>
+            <p>
+            <%= link_to audio.title, url_for(audio.file), download: audio.title %>
+            </p>
+        <% else %>
+            <p>No audio available.</p>
+        <% end %>
+        </div>
+    <% end %>
+</div>

@@ -1,156 +1,93 @@
-<!-- app/views/cases/show.html.erb -->
-<h1><%= @case.title %></h1>
-
 <!-- Navbar -->
-<nav>
-  <ul>
-    <li><a href="#" class="nav-link" data-section="text-section">Texto</a></li>
-    <li><a href="#" class="nav-link" data-section="videos-section">Videos</a></li>
-    <li><a href="#" class="nav-link" data-section="documents-section">Documentos</a></li>
-    <li><a href="#" class="nav-link" data-section="audios-section">Audios</a></li>
-  </ul>
-</nav>
+<%= render 'cases/navbar' %>
 
 <!-- Sections -->
-<div id="text-section" class="content-section">
-  <div class="justified-text">
-    <p><%= sanitize @case.description, tags: %w(p strong em a ul ol li) %></p>
-  </div>
-  <p>
-    <% if @case.main_image.attached? %>
-      <%= image_tag url_for(@case.main_image), alt: @case.title %>
-    <% end %>
-  </p>
-</div>
-
-<div id="videos-section" class="content-section" style="display:none;">
-  <% @case.videos.each do |video| %>
-    <div>
-      <body1><%= video.title %></body1>
-      <div class="video-container">
-        <iframe width="560" height="315" src="<%= video.url %>" frameborder="0" allowfullscreen></iframe>
-      </div>
-    </div>
-  <% end %>
-</div>
-
-<div id="documents-section" class="content-section" style="display:none;">
-  <% @case.documents.each do |document| %>
-    <div>
-      <% if document.file.attached? %>
-        <h2>
-          <%= link_to document.title, url_for(document.file), download: document.title %>
-        </h2>
-      <% else %>
-        <h2><%= document.title %></h2>
-        <p>No document available.</p>
-      <% end %>
-    </div>
-  <% end %>
-</div>
-
-<div id="audios-section" class="content-section" style="display:none;">
-  <% @case.audios.each do |audio| %>
-    <div>
-      <% if audio.url.present? %>
-        <iframe src="<%= audio.url %>" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-      <% elsif audio.file.attached? %>
-        <p>
-          <%= link_to audio.title, url_for(audio.file), download: audio.title %>
-        </p>
-      <% else %>
-        <p>No audio available.</p>
-      <% end %>
-    </div>
-  <% end %>
-</div>
+<%= render 'cases/text_section' %>
+<%= render 'cases/videos_section' %>
+<%= render 'cases/documents_section' %>
+<%= render 'cases/audios_section' %>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const navLinks = document.querySelectorAll(".nav-link");
-    const sections = document.querySelectorAll(".content-section");
+      const navLinks = document.querySelectorAll(".nav-link");
+      const sections = document.querySelectorAll(".content-section");
 
-    navLinks.forEach(link => {
-      link.addEventListener("click", function(event) {
-        event.preventDefault();
-        const sectionId = this.getAttribute("data-section");
+      navLinks.forEach(link => {
+          link.addEventListener("click", function(event) {
+              event.preventDefault();
+              const sectionId = this.getAttribute("data-section");
 
-        sections.forEach(section => {
-          section.style.display = "none";
-        });
+              sections.forEach(section => {
+              section.style.display = "none";
+              });
 
-        document.getElementById(sectionId).style.display = "block";
+              document.getElementById(sectionId).style.display = "block";
+          });
       });
-    });
   });
 </script>
 
 <style>
   body {
-    font-family: 'Poppins', sans-serif;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
   }
 
   nav {
-    margin-bottom: 20px;
+      margin-bottom: 20px;
+      width: 100%;
   }
+
   nav ul {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+      list-style-type: none;
+      padding: 0;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      margin: 0;
   }
+
   nav ul li {
-    display: inline;
+      flex: 1;
   }
+
   nav ul li a {
-    text-decoration: none;
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 4px;
-    display: block;
-  }
+      text-decoration: none;
+      padding: 16px 0;
+      background-color: #007bff;
+      color: white;
+      border-radius: 0;
+      display: block;
+      text-align: center;
+      font-size: 1.2rem; /* Aumenta el tamaño del texto */
+      font-weight: 600; /* Hace el texto más grueso */
+      }
+
   nav ul li a:hover {
-    background-color: #0056b3;
+      background-color: #0056b3;
   }
 
-  .justified-text {
-    text-align: justify;
-  }
-
-  .video-container {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
-  }
-  .video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  .content-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
   }
 
   h1 {
-    color: #6C6C6C;
-    font-size: 2.2rem;
-    font-weight: 600;
-  }
-
-  body1 {
-    color: "#7fab3a";
-    font-size: 0.9rem;
-    font-weight: 400;
+      color: #6C6C6C;
+      font-size: 2.2rem;
+      font-weight: 600;
   }
 
   @media (max-width: 768px) {
-    nav ul {
-      flex-direction: column;
-      gap: 5px;
-    }
-    nav ul li a {
-      text-align: center;
-    }
+      nav ul {
+          flex-direction: column;
+      }
+      nav ul li a {
+          text-align: center;
+      }
   }
 </style>

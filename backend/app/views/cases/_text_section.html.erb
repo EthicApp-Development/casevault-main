@@ -1,0 +1,11 @@
+<div id="text-section" class="content-section">
+    <h1><%= @case.title %></h1>
+    <div>
+        <p><%= sanitize @case.description, tags: %w(p strong em a ul ol li) %></p>
+    </div>
+    <p>
+        <% if @case.main_image.attached? %>
+        <%= image_tag url_for(@case.main_image), alt: @case.title %>
+        <% end %>
+    </p>
+</div>
