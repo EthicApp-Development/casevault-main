@@ -124,6 +124,13 @@ export const labeless = {
 
 export const dialog_style = {
     padding: 3,
+    background: "#eeeeee",
+    borderRadius: 5,
+    marginBottom: 3,
+}
+
+export const dialog_style_white = {
+    padding: 3,
     borderRadius: 5,
     marginBottom: 3,
 }

@@ -24,7 +24,8 @@ import FolderIcon from '@mui/icons-material/Folder';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Menu, Avatar } from '@mui/material';
 import Logout from '../Session/Logout';
-import { dialog_style, inline_buttons } from '../Utils/defaultStyles';
+import { dialog_style_white, inline_buttons } from '../Utils/defaultStyles';
+
 import AppContext from '../Contexts/AppContext';
 const drawerWidth = 240;
 const Search = styled('div')(({ theme }) => ({
@@ -207,7 +208,7 @@ function Navbar(props) {
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
         >
-          <Box sx={dialog_style}>
+          <Box sx={dialog_style_white}>
             <Box sx={inline_buttons}> 
               <Avatar {...avatar}/>
               <Box>
