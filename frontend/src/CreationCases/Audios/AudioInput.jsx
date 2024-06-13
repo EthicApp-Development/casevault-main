@@ -1,54 +1,36 @@
-import { Box, TextField, IconButton, ToggleButtonGroup, ToggleButton, Button } from '@mui/material';
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { getCaseAudios, createCaseAudio, deleteCaseAudio } from '../../API/cases';
-import AudioShow from './AudioShow';
+import { TextField, Button, Typography,Box, IconButton, Collapse, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { useState } from "react";
+import { Backup } from "@mui/icons-material";
+import { addDocumentToCase } from "../../API/cases";
+import { useParams } from "react-router-dom";
+import CloseIcon from '@mui/icons-material/Close';
+import { inline_buttons } from '../../Utils/defaultStyles';
 
 const CLIENT_ID = import.meta.env.VITE_SPOTIFY_API_CLIENT_ID;
 const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_API_CLIENT_SECRET;
 
-const AudioFields = () => {
-    const [accessToken, setAccessToken] = useState('');
-    const [url, setUrl] = useState('');
-    const [audios, setAudios] = useState([]);
-    const [title, setTitle] = useState('');
-    const [file, setFile] = useState(null);
-    const [fileName, setFileName] = useState('');
-    const [selectedOption, setSelectedOption] = useState('url');
-    const { caseId } = useParams();
 
-    useEffect(() => {
-        var authParameters = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: 'grant_type=client_credentials&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET
-        }
-        fetch('https://accounts.spotify.com/api/token', authParameters)
-            .then(result => result.json())
-            .then(data => setAccessToken(data.access_token))
-    }, {})
+export function AudioCreatorField({setAudios,open, accessToken}) {
 
-    useEffect(() => {
-        fetchCaseAudios();
-    }, []);
+  const [title, setTitle] = useState("");
+  const [audio, setAudio] = useState(null);
+  const { caseId} = useParams()
+  const [selectedOption, setSelectedOption] = useState('url')
+  const [fileName, setFileName] = useState('');
+  const [url, setUrl] = useState('');
+  const [file, setFile] = useState(null);
 
-    const fetchCaseAudios = async () => {
-        try {
-            const response = await getCaseAudios(caseId);
-            if (response.status === 200) {
-                setAudios(response.data);
-            } else {
-                alert("Error al obtener los videos del caso");
-            }
-        } catch (error) {
-            alert("Error al procesar la solicitud");
-        }
+
+  const handleChange = (e) => {
+    const selectedAudio = e.target.files[0];
+    if (selectedAudio) {
+        setFile(selectedAudio);
+        setFileName(selectedAudio.name);
+    }
     };
 
-    const handleOptionChange = (event, newOption) => {
-        setSelectedOption(newOption);
+  const handleOptionChange = (event, newOption) => {
+    setSelectedOption(newOption);
     };
 
     const handleSave = async () => {
@@ -130,29 +112,31 @@ const AudioFields = () => {
         }
     };
 
-
-    const handleChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            setFile(selectedFile);
-            setFileName(selectedFile.name);
-        }
-    };
-
-    return (
-            <Box sx={{ border: '1px solid black', padding: '10px', marginBottom: '10px', width: '800px' }}>
-                <ToggleButtonGroup
-                    value={selectedOption}
-                    exclusive
-                    onChange={handleOptionChange}
-                    aria-label="Elija la opción"
-                    size="small"
-                    sx={{ marginBottom: '10px' }}
-                >
-                    <ToggleButton value="url">Desde URL</ToggleButton>
-                    <ToggleButton value="file">Desde Archivo</ToggleButton>
-                </ToggleButtonGroup>
-                {selectedOption === 'url' ? (
+  return (
+    <Collapse in={open} unmountOnExit>
+        <TextField
+            label="Título Alternativo"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            variant="outlined"
+            size="small"
+            rows={4}
+            fullWidth
+            margin="normal"
+            sx={{ marginBottom: '10px' }}
+        />
+        <ToggleButtonGroup
+            value={selectedOption}
+            exclusive
+            onChange={handleOptionChange}
+            aria-label="Elija la opción"
+            size="small"
+            sx={{ marginBottom: '10px' }}
+        >
+            <ToggleButton value="url">Desde URL</ToggleButton>
+            <ToggleButton value="file">Desde Archivo</ToggleButton>
+        </ToggleButtonGroup>
+        {selectedOption === 'url' ? (
                     <TextField
                         label="URL"
                         value={url}
@@ -184,30 +168,9 @@ const AudioFields = () => {
                         </div>
                     </>
                 )}
-                <TextField
-                    label="Título Alternativo"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    variant="outlined"
-                    size="small"
-                    rows={4}
-                    fullWidth
-                    margin="normal"
-                    sx={{ marginBottom: '10px' }}
-                />
-                <Button
-                    onClick={handleSave}
-                    variant="contained"
-                    style={{ display: 'flex', marginLeft: 'auto' }}
-                >
-                    Guardar
-                </Button>
-                {audios.map((data,index) => (
-                    <AudioShow data={data} key={data.id}/>
-                ))}
-            </Box>
-    
-    );
-};
-
-export default AudioFields;
+      <Button onClick={handleSave} sx={{ marginLeft: 10, marginTop: 5 }} variant="outlined">
+        Agregar
+      </Button>
+      </Collapse>
+  );
+}

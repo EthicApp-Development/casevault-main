@@ -22,6 +22,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import SchoolIcon from '@mui/icons-material/School';
 import FolderIcon from '@mui/icons-material/Folder';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { Menu } from '@mui/material';
+import Logout from '../Session/Logout';
 
 const drawerWidth = 240;
 const Search = styled('div')(({ theme }) => ({
@@ -64,7 +66,7 @@ function Navbar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
-
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const [searchValue, setSearchValue] = useState("")
   const navigate = useNavigate()
 
@@ -75,6 +77,14 @@ function Navbar(props) {
 
   const handleDrawerTransitionEnd = () => {
     setIsClosing(false);
+  };
+
+  const handleMenuClick = (event) => {
+      setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+      setAnchorEl(null);
   };
 
   const drawer = (
@@ -171,14 +181,30 @@ function Navbar(props) {
                         </Search>
                     </Box>
                     <IconButton
-                        size="large"
-                        edge="end"
-                        aria-label="account of current user"
-                        aria-haspopup="true"
-                        color="inherit"
-                    >
-                        <AccountCircle />
-                    </IconButton>
+                            size="large"
+                            edge="end"
+                            aria-label="account of current user"
+                            aria-haspopup="true"
+                            onClick={handleMenuClick} // Maneja el clic en el icono
+                            color="inherit"
+                        >
+                            <AccountCircle />
+                        </IconButton>
+                    
+                        <Menu
+                            id="menu-appbar"
+                            anchorEl={anchorEl}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            open={Boolean(anchorEl)}
+                            onClose={handleMenuClose}
+                        >
+                            <Logout /> 
+                        </Menu>
+                    
         </Toolbar>
       </AppBar>
       <Box

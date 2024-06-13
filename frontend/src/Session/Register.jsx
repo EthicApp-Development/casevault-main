@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { redirect } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,39 +12,41 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { authLogin } from '../API/login';
+import {authRegister} from '../API/login';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import AppContext from '../Contexts/AppContext';
 
 const defaultTheme = createTheme();
 
-export default function Login() {
+export default function Register() {
     const navigate = useNavigate();
-    const { setUser } = useContext(AppContext);
+    const {user, setUser} = useContext(AppContext)
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
         try {
+            event.preventDefault();
             const data = new FormData(event.currentTarget);
-            const params = { email: data.get('email'), password: data.get('password') };
-            const response = await authLogin({ user: params });
-            console.log(response.data.status.data)
+            const params = { "email": data.get("email"), "password": data.get("password"), "first_name": data.get("first_name"), "last_name": data.get("last_name") }
+            const response = await authRegister({ user: params });
+
             const account = {
-                id: response.data.status.data.id,
-                email: response.data.status.data.email,
-                jti: response.data.status.data.jti,
-                first_name: response.data.status.data.first_name,
-                last_name: response.data.status.data.last_name
+                id: response.data.data.id,
+                email: response.data.data.email,
+                jti: response.data.data.jti,
+                first_name: response.data.data.first_name,
+                last_name: response.data.data.last_name
             };
-            setUser(account);
-            localStorage.setItem('account', JSON.stringify(account));
-            localStorage.setItem('authenticated', true);
-            navigate('/home');
+            setUser(account)
+            localStorage.setItem("account", JSON.stringify(account));
+            localStorage.setItem("authenticated", true)
+            localStorage.setItem('token', response.headers.get("Authorization"))
+           
+            navigate("/home");
         } catch (error) {
-            console.error('Error during authentication:', error);
+            console.error("Error during authentication:", error);
         }
-    };
+    }
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -63,9 +64,29 @@ export default function Login() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Iniciar sesión
+                        Registrarse
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="first_name"
+                            label="Nombre"
+                            name="first_name"
+                            autoComplete="first name"
+                            autoFocus
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="last_name"
+                            label="Apellido"
+                            name="last_name"
+                            autoComplete="last name"
+                            autoFocus
+                        />
                         <TextField
                             margin="normal"
                             required
@@ -96,7 +117,7 @@ export default function Login() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Iniciar sesión
+                            Registrarme
                         </Button>
                         <Grid container>
                             <Grid item xs>
@@ -105,7 +126,7 @@ export default function Login() {
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="/register" variant="body2">
+                                <Link href="#" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>

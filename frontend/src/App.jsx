@@ -15,6 +15,7 @@ import Login from './Session/Login.jsx';
 import InfoCreator from './CreationCases/Information/InfoCreator.jsx';
 import { useState, useContext, useEffect } from 'react';
 import { getUser } from './API/user.js';
+import Register from './Session/Register.jsx';
 
 function App() {
   const location = useLocation();
@@ -43,7 +44,7 @@ function App() {
 
   useEffect(() => {
     const accountInfo = localStorage.getItem('account');
-    if (!accountInfo && pathname !== "/login" && pathname !== "/login/") {
+    if (!accountInfo && pathname !== "/login" && pathname !== "/login/" && pathname !== "/register" && pathname !== "/register/"){
       // Redirigir a la página de inicio de sesión si no hay información de cuenta en el almacenamiento local
       window.location.href = "/login";
     }
@@ -59,6 +60,7 @@ function App() {
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/search/:searchTerm" element={<SearchResults />} />
             <Route path="/mycases/" element={<UserCases />} />
             <Route path="/create_case/:caseId/" element={<CreateCase />}>

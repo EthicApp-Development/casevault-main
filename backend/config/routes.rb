@@ -7,10 +7,17 @@ Rails.application.routes.draw do
   get 'users/update'
   get 'users/destroy'
   # Rutas para usuarios generadas por Devise
-  devise_for :users, controllers: { 
-    sessions: 'users/sessions',
-    registrations: 'users/registrations'
-  }
+  devise_for :users, 
+    path: '',
+    path_names: {
+      sign_in: 'login',
+      sign_out: 'logout',
+      registration: 'signup'
+    },
+    controllers: { 
+      sessions: 'users/sessions',
+      registrations: 'users/registrations'
+    }
 
   # Rutas del API
   namespace :api do
