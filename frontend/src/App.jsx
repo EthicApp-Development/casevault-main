@@ -55,7 +55,7 @@ function App() {
       <AppContext.Provider value={{
         user, setUser, avatar, setAvatar
       }}>
-        {pathname !== "/login/" && pathname !== "/login" && <Navbar />}
+        {pathname !== "/login/" && pathname !== "/login" && pathname !== "/register" && pathname !== "/register/" && <Navbar />}
         <Box marginTop={0} marginLeft={45}>
           <Routes>
             <Route path="/home" element={<Home />} />
