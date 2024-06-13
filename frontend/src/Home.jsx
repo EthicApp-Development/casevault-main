@@ -71,13 +71,14 @@ function stringAvatar(name) {
 export default function Home() {
     const [cases, setCases] = useState([]);
     const navigate = useNavigate();
-    const {user} = useContext(AppContext)
+    const {user, setAvatar,avatar} = useContext(AppContext)
     const [authenticated, setauthenticated] = useState(null);
 
     const [caseTitle, setCaseTitle] = useState("");
     
     useEffect(() => {
         const fetchCases = async () => {
+            setAvatar(stringAvatar(user?.first_name +" "+ user?.last_name))
             try {
                 const response = await axios.get(CASES_API);
                 setCases(response.data.info);
@@ -118,9 +119,6 @@ export default function Home() {
         event.stopPropagation();
         navigate(`/create_case/${caseId}/text`);
     };
-    
-  
-    const userName = user?.first_name +" "+ user?.last_name
 
         return (
             (user?  
@@ -128,7 +126,7 @@ export default function Home() {
                     <Box sx={{ ...css.createContainer, height: 150 }}>
                         <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Crear un caso nuevo</Typography>
                     <Box sx={{...css.centerAlign, inline_buttons}}>
-                        <Avatar {...stringAvatar(userName)} />
+                        <Avatar {...avatar} />
                         <TextField 
                             required
                             id="outlined-basic" 

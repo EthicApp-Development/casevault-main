@@ -21,7 +21,7 @@ function App() {
   const location = useLocation();
   const [user, setUser] = useState(null)
   const { pathname } = location
-
+  const [avatar, setAvatar] = useState()
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -53,7 +53,7 @@ function App() {
   return (
     <div>
       <AppContext.Provider value={{
-        user, setUser
+        user, setUser, avatar, setAvatar
       }}>
         {pathname !== "/login/" && pathname !== "/login" && <Navbar />}
         <Box marginTop={0} marginLeft={45}>

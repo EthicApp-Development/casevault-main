@@ -22,9 +22,10 @@ import HomeIcon from '@mui/icons-material/Home';
 import SchoolIcon from '@mui/icons-material/School';
 import FolderIcon from '@mui/icons-material/Folder';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { Menu } from '@mui/material';
+import { Menu, Avatar } from '@mui/material';
 import Logout from '../Session/Logout';
-
+import { dialog_style, inline_buttons } from '../Utils/defaultStyles';
+import AppContext from '../Contexts/AppContext';
 const drawerWidth = 240;
 const Search = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -68,6 +69,7 @@ function Navbar(props) {
   const [isClosing, setIsClosing] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [searchValue, setSearchValue] = useState("")
+  const { setUser, avatar,user } = React.useContext(AppContext);
   const navigate = useNavigate()
 
   const handleDrawerClose = () => {
@@ -181,29 +183,42 @@ function Navbar(props) {
                         </Search>
                     </Box>
                     <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-haspopup="true"
-                            onClick={handleMenuClick} // Maneja el clic en el icono
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
-                    
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorEl}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            open={Boolean(anchorEl)}
-                            onClose={handleMenuClose}
-                        >
-                            <Logout /> 
-                        </Menu>
+            size="large"
+            edge="end"
+            aria-label="account of current user"
+            aria-haspopup="true"
+            onClick={handleMenuClick}
+            color="inherit"
+        >
+            <AccountCircle />
+        </IconButton>
+        <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+                vertical: 'bottom', // Coloca el menú abajo del icono
+                horizontal: 'right',
+            }}
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            getContentAnchorEl={null} // Evita que el menú se desplace
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+        >
+          <Box sx={dialog_style}>
+            <Box sx={inline_buttons}> 
+              <Avatar {...avatar}/>
+              <Box>
+                <Typography variant='h7'>{user?.first_name.toUpperCase()} {user?.last_name.toUpperCase()}</Typography>
+                <Typography variant='h3'>{user?.email}</Typography>
+              </Box>
+            </Box>
+          
+          </Box>
+          <Logout />
+        </Menu>
                     
         </Toolbar>
       </AppBar>

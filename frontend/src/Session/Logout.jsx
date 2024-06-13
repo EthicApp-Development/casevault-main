@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import AppContext from '../Contexts/AppContext';
 import { MenuItem } from '@mui/material';
-
+import LogoutIcon from '@mui/icons-material/Logout';
+import { inline_buttons } from '../Utils/defaultStyles';
+import {Box } from '@mui/material';
 const defaultTheme = createTheme();
 
 export default function Logout() {
@@ -26,7 +28,11 @@ export default function Logout() {
 
     return (
         <MenuItem onClick={handleLogout}>
-            <Typography>Cerrar sesión</Typography>
+            <Box sx={inline_buttons}>
+                <LogoutIcon/>
+                <Typography variant='h3'>Cerrar sesión</Typography>
+            </Box>
+
         </MenuItem>
     );
 }
