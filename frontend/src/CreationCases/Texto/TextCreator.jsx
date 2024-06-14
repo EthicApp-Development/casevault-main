@@ -22,7 +22,7 @@ const SaveCaseButton = styled(Button)({
 });
 
 export default function TextCreator() {
-    const { text, setText, title, setTitle, mainImage, setMainImage, setCaseObject, setTags, tags } = useCaseContext();
+    const { text, setText, title, setTitle, mainImage, setMainImage, setCaseObject, setTags, tags, description, setDescription } = useCaseContext();
     const { caseId } = useParams();
     const navigate = useNavigate();
     const [allTags, setAllTags] = useState([]);
@@ -33,8 +33,9 @@ export default function TextCreator() {
             try {
                 const response = await getCase(caseId);
                 if (response.status === 200) {
-                    setText(response.data.description || '');
+                    setText(response.data.text || '');
                     setTitle(response.data.title);
+                    setDescription(response.data.description || '')
                     setMainImage(response.data.main_image_url);
                     setCaseObject(response.data);
                 } else {
@@ -125,7 +126,8 @@ export default function TextCreator() {
     async function handleSave() {
         const formData = new FormData();
         formData.append('case[title]', title);
-        formData.append('case[description]', text);
+        formData.append('case[description]', description);
+        formData.append('case[text]', text);
         const blob = await fetch(mainImage).then((response) => response.blob());
         formData.append('case[main_image]', blob);
         try {
@@ -141,28 +143,28 @@ export default function TextCreator() {
     }
 
     return (
-        <Box marginTop={5}>
+        <Box marginTop={5} marginRight={2}>
             <Typography variant="h5" textAlign='center' gutterBottom>
                 Creación de casos
             </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
+                    <Typography variant="subtitle1">Título</Typography>
                     <TextField
-                        label="Título"
                         variant="outlined"
                         fullWidth
-                        sx={{marginBottom: 2}}
+                        sx={{marginBottom: 2, marginTop: 2}}
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <Box sx={inline_buttons}>
-                        <Typography variant="h3">Etiquetas</Typography>
+                    <Typography variant="subtitle1">Etiquetas</Typography>
                         <Box >
                             {tags.map((tag, index) => (
                                 <Chip
-                                    sx={{marginLeft: 2, marginRight: 2}}
+                                    sx={{marginLeft: 0, marginRight: 2}}
                                     key={tag.id}
                                     label={tag.name}
                                     onDelete={() => handleDeleteTag(tag.id)}
@@ -177,7 +179,7 @@ export default function TextCreator() {
                             fullWidth
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            sx={{ marginTop: 2, marginRight: 7}}
+                            sx={{ marginTop: 2, marginRight: 8}}
                         />
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, marginTop: 2 }}>
                             {filteredTags.map((tag) => (
@@ -207,7 +209,16 @@ export default function TextCreator() {
                             </Typography>
                         </Box>
                         <Box marginTop={1}>
-                            <RTE text={text} setText={setText} />
+                            <TextField
+                            label="Descripción del caso"
+                            variant='outlined'
+                            fullWidth
+                            multiline
+                            rows={7}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            sx={{ marginTop: 2, marginRight: 7}}
+                            />
                         </Box>
                     </Grid>
                     <Grid item xs={4}>
@@ -231,6 +242,14 @@ export default function TextCreator() {
                     </Grid>
                 </Grid>
             </Grid>
+            <Box marginTop={2}>
+                <Typography variant="subtitle1" gutterBottom>
+                    Texto del caso
+                </Typography>
+            </Box>
+            <Box marginTop={2}>
+                <RTE text={text} setText={setText} />
+            </Box>
             <SaveCaseButton onClick={handleSave}>Guardar y salir</SaveCaseButton>
         </Box>
     );

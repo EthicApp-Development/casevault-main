@@ -71,16 +71,18 @@ function stringAvatar(name) {
 export default function Home() {
     const [cases, setCases] = useState([]);
     const navigate = useNavigate();
-    const {user} = useContext(AppContext)
+    const {user, setAvatar,avatar} = useContext(AppContext)
     const [authenticated, setauthenticated] = useState(null);
 
     const [caseTitle, setCaseTitle] = useState("");
     
     useEffect(() => {
         const fetchCases = async () => {
+            setAvatar(stringAvatar(user?.first_name +" "+ user?.last_name))
             try {
                 const response = await axios.get(CASES_API);
                 setCases(response.data.info);
+                console.log(response)
             } catch (error) {
                 console.log(error);
             }
@@ -95,9 +97,9 @@ export default function Home() {
     }, []); 
 
     async function handleCreateCase() {
-        const response = await fetch("src/assets/default_case_img.webp");
+        const response = await fetch("src/assets/default_case_img.png");
         const blob = await response.blob();
-        const defaultImg = new File([blob], "default_case_img.webp");
+        const defaultImg = new File([blob], "default_case_img.png");
         const formData = new FormData();
         formData.append('case[user_id]', user.id);
         formData.append('case[main_image]', defaultImg);
@@ -112,8 +114,11 @@ export default function Home() {
             console.error("Error al crear el caso:", error);
         }
     }
-  
-    const userName = user?.first_name +" "+ user?.last_name
+    
+    const handleClick = (caseId) => (event) => {
+        event.stopPropagation();
+        navigate(`/create_case/${caseId}/text`);
+    };
 
         return (
             (user?  
@@ -121,7 +126,7 @@ export default function Home() {
                     <Box sx={{ ...css.createContainer, height: 150 }}>
                         <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Crear un caso nuevo</Typography>
                     <Box sx={{...css.centerAlign, inline_buttons}}>
-                        <Avatar {...stringAvatar(userName)} />
+                        <Avatar {...avatar} />
                         <TextField 
                             required
                             id="outlined-basic" 
@@ -136,15 +141,21 @@ export default function Home() {
                         </CreateCaseButton>
                     </Box>
                 </Box>
-                    <Grid container spacing={2}>
-                        {cases.map(caseData => (
-                            <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
-                                <ListItemButton onClick={() => navigate(`/create_case/${caseData.id}/text`)}>
-                                    <CaseCard title={caseData.title} description={caseData.description} image_url={caseData.main_image_url} />
-                                </ListItemButton>
-                            </Grid>
-                        ))}
-                    </Grid>
+                <Grid container spacing={2}>
+                    {cases?.map(caseData => (
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
+                            <ListItemButton onClick={handleClick(caseData.id)}>
+                                <CaseCard
+                                    title={caseData.title}
+                                    description={caseData.description}
+                                    image_url={caseData.main_image_url}
+                                    sx={{ height: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                                />
+                            </ListItemButton>
+                        </Grid>
+                    ))}
+                </Grid>
+
                 </Box>
             :
         <Box>

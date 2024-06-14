@@ -15,6 +15,7 @@ function CreateCase() {
     const [title, setTitle] = useState('');
     const [summary, setSummary] = useState('');
     const [text, setText] = useState('');
+    const [description, setDescription] = useState('');
     const [documents, setDocuments] = useState([]);
     const [audios, setAudios] = useState([]);
     const [visibility, setVisibility] = useState('');
@@ -113,8 +114,9 @@ function CreateCase() {
         caseObject,
         setCaseObject,
         tags,
-        setTags
-
+        setTags,
+        description,
+        setDescription
     };
 
     return (

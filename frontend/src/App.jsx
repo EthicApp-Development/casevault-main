@@ -15,12 +15,13 @@ import Login from './Session/Login.jsx';
 import InfoCreator from './CreationCases/Information/InfoCreator.jsx';
 import { useState, useContext, useEffect } from 'react';
 import { getUser } from './API/user.js';
+import Register from './Session/Register.jsx';
 
 function App() {
   const location = useLocation();
   const [user, setUser] = useState(null)
   const { pathname } = location
-
+  const [avatar, setAvatar] = useState()
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -43,7 +44,7 @@ function App() {
 
   useEffect(() => {
     const accountInfo = localStorage.getItem('account');
-    if (!accountInfo && pathname !== "/login" && pathname !== "/login/") {
+    if (!accountInfo && pathname !== "/login" && pathname !== "/login/" && pathname !== "/register" && pathname !== "/register/"){
       // Redirigir a la página de inicio de sesión si no hay información de cuenta en el almacenamiento local
       window.location.href = "/login";
     }
@@ -52,13 +53,14 @@ function App() {
   return (
     <div>
       <AppContext.Provider value={{
-        user, setUser
+        user, setUser, avatar, setAvatar
       }}>
-        {pathname !== "/login/" && pathname !== "/login" && <Navbar />}
+        {pathname !== "/login/" && pathname !== "/login" && pathname !== "/register" && pathname !== "/register/" && <Navbar />}
         <Box marginTop={0} marginLeft={45}>
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/search/:searchTerm" element={<SearchResults />} />
             <Route path="/mycases/" element={<UserCases />} />
             <Route path="/create_case/:caseId/" element={<CreateCase />}>

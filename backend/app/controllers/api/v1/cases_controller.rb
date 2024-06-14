@@ -25,7 +25,6 @@ class Api::V1::CasesController < ApplicationController
       audios: { only: [:title, :url], methods: :file_url },
       videos: { only: [:id, :url, :title, :description]},
       tags: {only: [:name,:id]}
-      videos: { only: [:id, :title, :url]}
     })
   
     if @case.main_image.attached?
@@ -70,6 +69,6 @@ class Api::V1::CasesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def case_params
-      params.require(:case).permit(:user_id, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
+      params.require(:case).permit(:user_id, :text, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
     end
 end
