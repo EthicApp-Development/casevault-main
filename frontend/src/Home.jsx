@@ -90,6 +90,7 @@ export default function Home() {
                                         e.stopPropagation();
                                         navigate(`/create_case/${caseData.id}/text`);
                                     }}
+                                    caseId={caseData.id}
                                 />
                             </ListItem>
                         </Grid>

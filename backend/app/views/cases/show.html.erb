@@ -8,86 +8,100 @@
 <%= render 'cases/audios_section' %>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-      const navLinks = document.querySelectorAll(".nav-link");
-      const sections = document.querySelectorAll(".content-section");
+    document.addEventListener("DOMContentLoaded", function() {
+        const navLinks = document.querySelectorAll(".nav-link");
+        const sections = document.querySelectorAll(".content-section");
 
-      navLinks.forEach(link => {
-          link.addEventListener("click", function(event) {
-              event.preventDefault();
-              const sectionId = this.getAttribute("data-section");
+        sections.forEach(section => {
+            section.style.display = "none";
+        });
+        document.getElementById("text-section").style.display = "block";
 
-              sections.forEach(section => {
-              section.style.display = "none";
-              });
+        navLinks.forEach(link => {
+            link.addEventListener("click", function(event) {
+                event.preventDefault();
+                const sectionId = this.getAttribute("data-section");
 
-              document.getElementById(sectionId).style.display = "block";
-          });
-      });
-  });
+                sections.forEach(section => {
+                    section.style.display = "none";
+                });
+
+                document.getElementById(sectionId).style.display = "block";
+
+                navLinks.forEach(link => {
+                    link.classList.remove("active");
+                });
+                this.classList.add("active");
+            });
+        });
+    });
 </script>
 
 <style>
-  body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-  }
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
 
-  nav {
-      margin-bottom: 20px;
-      width: 100%;
-  }
+    nav {
+        margin-bottom: 20px;
+        width: 100%;
+    }
 
-  nav ul {
-      list-style-type: none;
-      padding: 0;
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid #ddd;
-      margin: 0;
-  }
+    nav ul {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #ddd;
+        margin: 0;
+    }
 
-  nav ul li {
-      flex: 1;
-  }
+    nav ul li {
+        flex: 1;
+    }
 
-  nav ul li a {
-      text-decoration: none;
-      padding: 16px 0;
-      background-color: #007bff;
-      color: white;
-      border-radius: 0;
-      display: block;
-      text-align: center;
-      font-size: 1.2rem; /* Aumenta el tamaño del texto */
-      font-weight: 600; /* Hace el texto más grueso */
-      }
+    nav ul li a {
+        text-decoration: none;
+        padding: 16px 0;
+        background-color: #007bff;
+        color: white;
+        border-radius: 0;
+        display: block;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 600;
+        }
 
-  nav ul li a:hover {
-      background-color: #0056b3;
-  }
+    nav ul li a:hover {
+        background-color: #0056b3;
+    }
 
-  .content-section {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f0f0f0;
-  }
+    .nav-link.active {
+        background-color: #0056b3;
+        }
 
-  h1 {
-      color: #6C6C6C;
-      font-size: 2.2rem;
-      font-weight: 600;
-  }
+    .content-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+    }
 
-  @media (max-width: 768px) {
-      nav ul {
-          flex-direction: column;
-      }
-      nav ul li a {
-          text-align: center;
-      }
-  }
+    h1 {
+        color: #6C6C6C;
+        font-size: 2.2rem;
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        nav ul {
+            flex-direction: column;
+        }
+        nav ul li a {
+            text-align: center;
+        }
+    }
 </style>
