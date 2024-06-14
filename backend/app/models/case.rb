@@ -7,6 +7,9 @@ class Case < ApplicationRecord
     has_many :case_tags
     has_many :tags, through: :case_tags
     has_one_attached :main_image
+    has_many :users_with_access, through: :authorships, source: :user
+
+    enum visibility: [:privado, :publico, :sin_listar], _default: :privado
 
     accepts_nested_attributes_for :images, :documents, :audios, :videos, allow_destroy: true
 
