@@ -4,8 +4,7 @@ class Api::V1::CasesController < ApplicationController
 
   # GET /cases
   def index
-    @cases = Case.all
-
+    @cases = Case.where("visibility = ? OR user_id = ?", Case.visibilities[:public_status], params[:user_id])
     cases_with_images = @cases.map do |c|
       if c.main_image.attached?
         c.as_json.merge(main_image_url: url_for(c.main_image))
@@ -69,6 +68,6 @@ class Api::V1::CasesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def case_params
-      params.require(:case).permit(:user_id, :text, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
+      params.require(:case).permit(:user_id,:visibility, :text, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
     end
 end

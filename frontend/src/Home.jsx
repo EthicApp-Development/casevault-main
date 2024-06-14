@@ -80,7 +80,11 @@ export default function Home() {
         const fetchCases = async () => {
             setAvatar(stringAvatar(user?.first_name +" "+ user?.last_name))
             try {
-                const response = await axios.get(CASES_API);
+                const response = await axios.get(CASES_API, {
+                    params: {
+                        user_id: user?.id 
+                    }
+                });
                 setCases(response.data.info);
                 console.log(response)
             } catch (error) {
