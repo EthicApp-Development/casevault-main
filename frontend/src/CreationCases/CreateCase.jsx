@@ -23,7 +23,6 @@ function CreateCase() {
     const [caseObject, setCaseObject] = useState({});
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
-
     const navigate = useNavigate()
     const location = useLocation()
     const [tags, setTags] = useState([])
@@ -36,6 +35,7 @@ function CreateCase() {
                     setCaseObject(response.data)
                     setVideos(response.data.videos)
                     setTags(response.data.tags)
+                    setVisibility(response.data.visibility)
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }

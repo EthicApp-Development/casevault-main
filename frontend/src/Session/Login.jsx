@@ -35,14 +35,20 @@ export default function Login() {
             const account = {
                 id: response.data.user.id,
                 email: response.data.user.email,
-                jti: response.data.user.jti,
                 first_name: response.data.user.first_name,
                 last_name: response.data.user.last_name
             };
-            setUser(account);
-            localStorage.setItem('account', JSON.stringify(account));
-            localStorage.setItem('authenticated', true);
-            navigate('/home');
+            const authorizationHeader = response.headers.get("Authorization");
+            if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
+              const token = authorizationHeader.split(' ')[1];
+      
+              setUser(account);
+              localStorage.setItem("account", JSON.stringify(account));
+              localStorage.setItem("authenticated", true);
+              localStorage.setItem('token', token);
+      
+              navigate("/home");
+            }
         } catch (error) {
             console.error('Error during authentication:', error);
         }

@@ -9,6 +9,7 @@ class Case < ApplicationRecord
     has_one_attached :main_image
 
     accepts_nested_attributes_for :images, :documents, :audios, :videos, allow_destroy: true
+    enum visibility: { private_status: 0, public_status: 1, unlisted_status: 2 }, _default: :private_status
 
     before_destroy :purge_attachments
 

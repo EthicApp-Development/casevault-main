@@ -16,6 +16,7 @@ import InfoCreator from './CreationCases/Information/InfoCreator.jsx';
 import { useState, useContext, useEffect } from 'react';
 import { getUser } from './API/user.js';
 import Register from './Session/Register.jsx';
+import Visibility from './CreationCases/Visibility.jsx';
 
 function App() {
   const location = useLocation();
@@ -70,6 +71,7 @@ function App() {
               {/* <Route path="images" element={<ImageCreator />} /> */}
               <Route path="audios" element={<AudioCreator />} />
               <Route path="information" element={<InfoCreator />} />
+              <Route path="visibility" element= {<Visibility/>} />
             </Route>
           </Routes>
         </Box>

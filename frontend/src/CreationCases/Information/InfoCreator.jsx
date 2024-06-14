@@ -30,35 +30,6 @@ export default function InfoCreator() {
 
     return (
         <Box marginTop={3}>
-            <Typography variant='h2' sx={title_style}>Información</Typography>
-            <Paper>
-                <TextField
-                    id="standard-basic"
-                    label="Título"
-                    variant="standard"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-                <TextField
-                    id="standard-multiline-static"
-                    label="Resumen"
-                    multiline
-                    rows={4}
-                    defaultValue="Default Value"
-                    variant="standard"
-                    value={summary}
-                    onChange={(e) => setSummary(e.target.value)}
-                />
-            </Paper>
-            <Box marginTop={10}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<CloudUploadIcon />}
-                >
-                    Upload
-                </Button>
-            </Box>
         </Box>
     );
 }
