@@ -24,29 +24,50 @@ export default function Register() {
     const {user, setUser} = useContext(AppContext)
 
     const handleSubmit = async (event) => {
+        event.preventDefault();
         try {
-            event.preventDefault();
-            const data = new FormData(event.currentTarget);
-            const params = { "email": data.get("email"), "password": data.get("password"), "first_name": data.get("first_name"), "last_name": data.get("last_name") }
-            const response = await authRegister({ user: params });
-
+          const data = new FormData(event.currentTarget);
+          const params = { 
+            "email": data.get("email"), 
+            "password": data.get("password"), 
+            "first_name": data.get("first_name"), 
+            "last_name": data.get("last_name")
+          };
+      
+          const response = await authRegister({ user: params });
+      
+          if (response.status === 200) {
             const account = {
-                id: response.data.data.id,
-                email: response.data.data.email,
-                jti: response.data.data.jti,
-                first_name: response.data.data.first_name,
-                last_name: response.data.data.last_name
+              id: response.data.data.id,
+              email: response.data.data.email,
+              first_name: response.data.data.first_name,
+              last_name: response.data.data.last_name
             };
-            setUser(account)
-            localStorage.setItem("account", JSON.stringify(account));
-            localStorage.setItem("authenticated", true)
-            localStorage.setItem('token', response.headers.get("Authorization"))
-           
-            navigate("/home");
+      
+            // Asegúrate de obtener el token correctamente
+            const authorizationHeader = response.headers.get("Authorization");
+            if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
+              const token = authorizationHeader.split(' ')[1];
+      
+              setUser(account);
+              localStorage.setItem("account", JSON.stringify(account));
+              localStorage.setItem("authenticated", true);
+              localStorage.setItem('token', token);
+      
+              navigate("/home");
+            } else {
+              console.error("Authorization header is missing or malformed");
+            }
+          } else {
+            console.error("Failed to register:", response.data.status.errors);
+          }
         } catch (error) {
-            console.error("Error during authentication:", error);
+          console.error("Error during authentication:", error);
         }
-    }
+      };
+      
+      
+      
 
     return (
         <ThemeProvider theme={defaultTheme}>

@@ -4,6 +4,28 @@ class Users::SessionsController < Devise::SessionsController
 
   respond_to :json
 
+
+  def create
+    user = User.find_for_database_authentication(email: params[:user][:email])
+
+    if user && user.valid_password?(params[:user][:password])
+      token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
+      response.headers['Authorization'] = "Bearer #{token[0]}"
+      render json: { message: "Inicio de sesión exitoso", user: user }, status: :ok
+    else
+      render json: { error: "Credenciales inválidas" }, status: :unauthorized
+    end
+  end
+
+  def destroy
+    # Devise maneja la lógica de cerrar sesión, solo necesitas limpiar la sesión actual
+    signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
+    render json: {
+      status: signed_out ? 200 : 401,
+      message: signed_out ? 'User signed out successfully' : 'User has no active session'
+    }, status: signed_out ? :ok : :unauthorized
+  end
+
   private
 
   def respond_with(resource, options = {})
@@ -21,7 +43,7 @@ class Users::SessionsController < Devise::SessionsController
       render json: {
         status: 200,
         message: 'User signed out successfully'
-      }, status: :ok
+      }, status: :ok, data: current_user
     else
       render json: {
         status: 401,

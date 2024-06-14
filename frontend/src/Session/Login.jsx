@@ -30,13 +30,14 @@ export default function Login() {
             const data = new FormData(event.currentTarget);
             const params = { email: data.get('email'), password: data.get('password') };
             const response = await authLogin({ user: params });
-            console.log(response.data.status.data)
+        
+            
             const account = {
-                id: response.data.status.data.id,
-                email: response.data.status.data.email,
-                jti: response.data.status.data.jti,
-                first_name: response.data.status.data.first_name,
-                last_name: response.data.status.data.last_name
+                id: response.data.user.id,
+                email: response.data.user.email,
+                jti: response.data.user.jti,
+                first_name: response.data.user.first_name,
+                last_name: response.data.user.last_name
             };
             setUser(account);
             localStorage.setItem('account', JSON.stringify(account));

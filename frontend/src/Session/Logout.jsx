@@ -8,6 +8,7 @@ import { MenuItem } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { inline_buttons } from '../Utils/defaultStyles';
 import {Box } from '@mui/material';
+import { authLogout } from '../API/login';
 const defaultTheme = createTheme();
 
 export default function Logout() {
@@ -17,6 +18,8 @@ export default function Logout() {
     const handleLogout = async (event) => {
         event.preventDefault();
         try {
+            const response = await authLogout()
+            console.log(response)
             localStorage.removeItem("account")
             localStorage.setItem("authenticated",false)
             setUser(null)
