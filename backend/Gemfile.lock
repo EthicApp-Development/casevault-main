@@ -251,6 +251,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  actionview (~> 7.1)
   bootsnap
   debug
   devise
