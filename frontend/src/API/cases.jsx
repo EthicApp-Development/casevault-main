@@ -39,15 +39,15 @@ export function deleteCaseAudio(caseId, audioId) {
 
 export function addDocumentToCase(caseId, documentData) {
 	return instance.post(`api/v1/cases/${caseId}/documents`, documentData);
-  }
+}
 
 export function getDocuments(caseId) {
 	return instance.get(`/api/v1/cases/${caseId}/documents`);
-  }
+}
 
 export function deleteDocuments(caseId,id) {
 	return instance.delete(`/api/v1/cases/${caseId}/documents/${id}`);
-  }
+}
 
 export function deleteCaseVideo(caseId, videoId) {
 	return instance.delete(`api/v1/cases/${caseId}/videos/${videoId}`)
@@ -55,11 +55,11 @@ export function deleteCaseVideo(caseId, videoId) {
 
 export function addTagToCase(caseId, tagId) {
 	return instance.post(`/api/v1/cases/${caseId}/tags/add_tag`, { tag_id: tagId });
-  }
+}
 
-  export function deleteTagFromCase(caseId, tagId) {
-	return instance.delete(`/api/v1/cases/${caseId}/tags/${tagId}`);
-  }  
+export function deleteTagFromCase(caseId, tagId) {
+return instance.delete(`/api/v1/cases/${caseId}/tags/${tagId}`);
+}  
 
 export function createTag(tagName) {
 	return instance.post(`/api/v1/tags`, { name: tagName });
@@ -68,5 +68,3 @@ export function createTag(tagName) {
 export function getAllTags() {
 	return instance.get(`/api/v1/tags/all_tags`);
 }
-
-  
