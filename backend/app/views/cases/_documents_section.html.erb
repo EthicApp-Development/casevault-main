@@ -1,0 +1,61 @@
+<div id="documents-section" class="content-section" style="display:none;">
+    <% if @case.documents.any? %>
+        <% @case.documents.each do |document| %>
+            <div class="document-container">
+                <% if document.file.attached? %>
+                    <h2><%= link_to document.title, url_for(document.file), download: document.title %></h2>
+                    <a href="<%= url_for(document.file) %>" download="<%= document.title %>" class="download-icon">⬇️</a>
+                <% else %>
+                    <h2><%= document.title %></h2>
+                    <p>No document available.</p>
+                <% end %>
+            </div>
+        <% end %>
+    <% else %>
+        <div id="no-documents-message" class="no-documents-message">
+            <p>Este caso no tiene documentos asociados.</p>
+        </div>
+    <% end %>
+</div>
+
+<style>
+    .document-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #eeeeee;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 95%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .document-container h2 {
+        margin: 0;
+        font-size: 1.4em;
+        flex-grow: 1;
+    }
+    .download-icon {
+        font-size: 3em;
+        color: #000;
+        text-decoration: none;
+    }
+    .no-documents-message {
+        text-align: center;
+        font-size: 1.5em;
+        margin-top: 20px;
+        color: #555;
+    }
+    @media (max-width: 600px) {
+        .document-container {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .download-icon {
+            margin-top: 10px;
+            font-size: 1.5em;
+        }
+    }
+</style>

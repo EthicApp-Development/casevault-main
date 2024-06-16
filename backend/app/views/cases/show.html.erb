@@ -1,0 +1,109 @@
+<!-- Navbar -->
+<%= render 'cases/navbar' %>
+
+<!-- Sections -->
+<%= render 'cases/text_section' %>
+<%= render 'cases/videos_section' %>
+<%= render 'cases/documents_section' %>
+<%= render 'cases/audios_section' %>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const navLinks = document.querySelectorAll(".nav-link");
+        const sections = document.querySelectorAll(".content-section");
+
+        sections.forEach(section => {
+            section.style.display = "none";
+        });
+        document.getElementById("text-section").style.display = "block";
+
+        navLinks.forEach(link => {
+            link.addEventListener("click", function(event) {
+                event.preventDefault();
+                const sectionId = this.getAttribute("data-section");
+
+                sections.forEach(section => {
+                    section.style.display = "none";
+                });
+
+                document.getElementById(sectionId).style.display = "block";
+
+                navLinks.forEach(link => {
+                    link.classList.remove("active");
+                });
+                this.classList.add("active");
+            });
+        });
+    });
+</script>
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    nav {
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    nav ul {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #ddd;
+        margin: 0;
+        flex-wrap: wrap; /* Permite que los elementos se envuelvan si es necesario */
+    }
+
+    nav ul li {
+        flex: 1;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        padding: 16px 0;
+        background-color: #007bff;
+        color: white;
+        border-radius: 0;
+        display: block;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    nav ul li a:hover {
+        background-color: #0056b3;
+    }
+
+    .nav-link.active {
+        background-color: #0056b3;
+    }
+
+    .content-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #ffffff;
+    }
+
+    h1 {
+        color: #6C6C6C;
+        font-size: 2.2rem;
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        nav ul {
+            justify-content: space-around; /* Ajusta el espacio entre elementos en pantallas pequeñas */
+        }
+
+        nav ul li a {
+            font-size: 1rem; /* Disminuye el tamaño de la fuente en pantallas pequeñas */
+        }
+    }
+</style>
