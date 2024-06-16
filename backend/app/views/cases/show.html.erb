@@ -56,6 +56,7 @@
         justify-content: space-between;
         border-bottom: 1px solid #ddd;
         margin: 0;
+        flex-wrap: wrap; /* Permite que los elementos se envuelvan si es necesario */
     }
 
     nav ul li {
@@ -72,7 +73,7 @@
         text-align: center;
         font-size: 1.2rem;
         font-weight: 600;
-        }
+    }
 
     nav ul li a:hover {
         background-color: #0056b3;
@@ -80,14 +81,14 @@
 
     .nav-link.active {
         background-color: #0056b3;
-        }
+    }
 
     .content-section {
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
-        background-color: #f0f0f0;
+        background-color: #ffffff;
     }
 
     h1 {
@@ -98,10 +99,11 @@
 
     @media (max-width: 768px) {
         nav ul {
-            flex-direction: column;
+            justify-content: space-around; /* Ajusta el espacio entre elementos en pantallas pequeñas */
         }
+
         nav ul li a {
-            text-align: center;
+            font-size: 1rem; /* Disminuye el tamaño de la fuente en pantallas pequeñas */
         }
     }
 </style>

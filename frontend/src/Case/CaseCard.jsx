@@ -21,7 +21,7 @@ export default function CaseCard({ title, description, image_url, onEdit, onCard
 
     const handleCopyIframeCode = (e) => {
         e.stopPropagation();
-        const iframeCode = `<iframe src="http://localhost:3000/cases/${caseId}" width="700" height="800"></iframe>`;
+        const iframeCode = `<iframe id="casevault-iframe" src="http://localhost:3000/cases/${caseId}" width="800px" height="900px"></iframe>`;
         navigator.clipboard.writeText(iframeCode)
             .then(() => alert('Código del iframe copiado al portapapeles'))
             .catch(err => console.error('Error al copiar el código del iframe', err));
@@ -84,7 +84,7 @@ export default function CaseCard({ title, description, image_url, onEdit, onCard
                     <TextField
                         multiline
                         fullWidth
-                        value={`<iframe src="http://localhost:3000/cases/${caseId}" width="700" height="800"></iframe>`}
+                        value={`<iframe id="casevault-iframe" src="http://localhost:3000/cases/${caseId}" width="800px" height="900px"></iframe>`}
                         variant="outlined"
                         InputProps={{
                             readOnly: true,
