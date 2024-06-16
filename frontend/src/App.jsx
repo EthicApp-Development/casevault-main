@@ -17,6 +17,7 @@ import { useState, useEffect } from 'react';
 import { getUser } from './API/user.js';
 import Register from './Session/Register.jsx';
 import NotFound from './Components/404.jsx';
+import Forbidden from './Components/403.jsx';
 
 function App() {
   const location = useLocation();
