@@ -3,7 +3,7 @@
         <div class="text-content">
             <h1><%= @case.title %></h1>
             <div>
-                <p><%= sanitize @case.description, tags: %w(p strong em a ul ol li) %></p>
+                <p><%= sanitize @case.text, tags: %w(p strong em a ul ol li) %></p>
             </div>
         </div>
         <div class="image-content">
