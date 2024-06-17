@@ -20,7 +20,7 @@ const css = {
         width: "100%"
     },
     createContainer: {
- 
+
     },
     inputRounded: {
         width: '70%',
@@ -41,30 +41,28 @@ const css = {
 function stringToColor(string) {
     let hash = 0;
     let i;
-  
-    /* eslint-disable no-bitwise */
+
     for (i = 0; i < string.length; i += 1) {
-      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+        hash = string.charCodeAt(i) + ((hash << 5) - hash);
     }
-  
+
     let color = '#';
-  
+
     for (i = 0; i < 3; i += 1) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
+        const value = (hash >> (i * 8)) & 0xff;
+        color += `00${value.toString(16)}`.slice(-2);
     }
-    /* eslint-enable no-bitwise */
-  
+
     return color;
-  }
+}
 
 
 function stringAvatar(name) {
     return {
-      sx: {
-        bgcolor: stringToColor(name),
-      },
-      children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+        sx: {
+            bgcolor: stringToColor(name),
+        },
+        children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
     };
 }
 
@@ -73,7 +71,6 @@ export default function Home() {
     const navigate = useNavigate();
     const {user, setAvatar,avatar} = useContext(AppContext)
     const [authenticated, setauthenticated] = useState(null);
-
     const [caseTitle, setCaseTitle] = useState("");
     
     useEffect(() => {
@@ -88,7 +85,7 @@ export default function Home() {
             }
             const loggedInUser = localStorage.getItem("authenticated");
             if (loggedInUser) {
-              setauthenticated(loggedInUser);
+                setauthenticated(loggedInUser);
             }else{
                 navigate("/login")
             }
@@ -120,11 +117,11 @@ export default function Home() {
         navigate(`/create_case/${caseId}/text`);
     };
 
-        return (
-            (user?  
-                <Box sx={css.container}>
-                    <Box sx={{ ...css.createContainer, height: 150 }}>
-                        <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Crear un caso nuevo</Typography>
+    return (
+        (user?  
+            <Box sx={css.container}>
+                <Box sx={{ ...css.createContainer, height: 150 }}>
+                    <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Crear un caso nuevo</Typography>
                     <Box sx={{...css.centerAlign, inline_buttons}}>
                         <Avatar {...avatar} />
                         <TextField 
@@ -149,17 +146,17 @@ export default function Home() {
                                     title={caseData.title}
                                     description={caseData.description}
                                     image_url={caseData.main_image_url}
+                                    case_id={caseData.id}
                                     sx={{ height: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                                 />
                             </ListItemButton>
                         </Grid>
                     ))}
                 </Grid>
-
-                </Box>
-            :
+            </Box>
+        :
         <Box>
         </Box>)
-        );
-    }
+    );
+}
 

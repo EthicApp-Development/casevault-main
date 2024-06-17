@@ -13,9 +13,11 @@ import DocumentCreator from './CreationCases/Documents/DocumentCreator.jsx';
 import AudioCreator from './CreationCases/Audios/AudioCreator.jsx';
 import Login from './Session/Login.jsx';
 import InfoCreator from './CreationCases/Information/InfoCreator.jsx';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getUser } from './API/user.js';
 import Register from './Session/Register.jsx';
+import NotFound from './Components/404.jsx';
+import Forbidden from './Components/403.jsx';
 
 function App() {
   const location = useLocation();
@@ -71,6 +73,7 @@ function App() {
               <Route path="audios" element={<AudioCreator />} />
               <Route path="information" element={<InfoCreator />} />
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Box>
       </AppContext.Provider>

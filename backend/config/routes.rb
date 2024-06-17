@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get 'users/edit'
   get 'users/update'
   get 'users/destroy'
+
   # Rutas para usuarios generadas por Devise
   devise_for :users, 
     path: '',
@@ -18,6 +19,8 @@ Rails.application.routes.draw do
       sessions: 'users/sessions',
       registrations: 'users/registrations'
     }
+
+  get 'cases/:id', to: 'static/static_cases#show', as: 'case'
 
   # Rutas del API
   namespace :api do
@@ -44,6 +47,7 @@ Rails.application.routes.draw do
       end
     end
   end
+  
   # Ruta para comprobar el estado de la aplicación
   get "up" => "rails/health#show", as: :rails_health_check
 end
