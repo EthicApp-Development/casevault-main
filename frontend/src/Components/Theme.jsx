@@ -104,8 +104,8 @@ const newTheme = createTheme({
     typography: {
         fontFamily: "'Poppins', sans-serif",
         h1: {
-            color: "#efefef",
-            fontSize: "1.4rem",
+            color: "#6C6C6C",
+            fontSize: "2.2rem",
             fontWeight: 600,
         },
         h2: {
