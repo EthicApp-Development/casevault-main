@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { getCase } from '../API/cases';
-import { Box, Typography, Chip } from '@mui/material';
 import InterpreterRichText from '../Utils/InterpreterRichText';
+import { Box, Typography, Chip } from '@mui/material';
 
 function ShowCaseText() {
     const [mainImage, setMainImage] = useState();
