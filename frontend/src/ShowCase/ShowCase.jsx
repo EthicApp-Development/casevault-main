@@ -1,7 +1,7 @@
 import React, { useState, createContext, useContext, useEffect } from "react";
-import { Box, Tab, Tabs} from '@mui/material';
 import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
 import { getCase } from "../API/cases";
+import { Box, Tab, Tabs} from '@mui/material';
 
 const CaseContext = createContext();
 
