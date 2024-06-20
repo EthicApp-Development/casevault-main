@@ -63,10 +63,6 @@ function ShowCase() {
                 return 'documents';
             case 3:
                 return 'audios';
-            case 4:
-                return 'visibility';
-            case 5:
-                return 'information';
             default:
                 return '';
         }
@@ -82,10 +78,6 @@ function ShowCase() {
                 return 2;
             case 'audios':
                 return 3;
-            case 'visibility':
-                return 4;
-            case 'information':
-                return 5;
             default:
                 return 0;
         }
@@ -123,8 +115,6 @@ function ShowCase() {
                             <Tab label="Videos" value={1} />
                             <Tab label="Documentos" value={2} />
                             <Tab label="Audios" value={3} />
-                            <Tab label="Visibilidad" value={4} />
-                            <Tab label="Información" value={5} />
                         </Tabs>
                     </Box>
                     <Outlet />
