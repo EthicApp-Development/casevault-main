@@ -30,6 +30,7 @@ function ShowCase() {
                 try {
                     const response = await getCase(caseId);
                     setCaseObject(response.data);
+                    setAudios(response.data.audios);
                     setVideos(response.data.videos);
                     setDocuments(response.data.documents);
                 } catch (error) {
