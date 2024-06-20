@@ -20,6 +20,7 @@ import NotFound from './Components/404.jsx';
 import Forbidden from './Components/403.jsx';
 import ShowCase from './ShowCase/ShowCase.jsx';
 import ShowCaseText from './ShowCase/ShowCaseText.jsx';
+import ShowCaseVideos from './ShowCase/ShowCaseVideos.jsx';
 
 function App() {
   const location = useLocation();
@@ -69,8 +70,8 @@ function App() {
             <Route path="/mycases/" element={<UserCases />} />
             <Route path="/show_case/:caseId/" element={<ShowCase />}>
               <Route path="text" element={<ShowCaseText />} />
-              {/* <Route path="videos" element={<ShowCaseVideos />} />
-              <Route path="audios" element={<ShowCaseAudios />} />
+              <Route path="videos" element={<ShowCaseVideos />} />
+              {/* <Route path="audios" element={<ShowCaseAudios />} />
               <Route path='documents' element={<ShowCaseDocuments />} /> */}
             </Route>
             <Route path="/create_case/:caseId/" element={<CreateCase />}>
