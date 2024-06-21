@@ -9,16 +9,13 @@ import { inline_buttons } from "../../Utils/defaultStyles";
 import AddIcon from '@mui/icons-material/Add';
 
 const SaveCaseButton = styled(Button)({
-    position: 'absolute',
-    bottom: '16px',
-    left: '50%',
-    transform: 'translateX(-50%)',
     color: 'white',
     backgroundColor: '#282828',
     '&:hover': {
         color: '#282828',
         backgroundColor: 'white',
     },
+    marginTop: '16px'
 });
 
 export default function TextCreator() {
@@ -107,16 +104,16 @@ export default function TextCreator() {
 
     const handleDeleteTag = async (tagId) => {
         try {
-          const response = await deleteTagFromCase(caseId, tagId);
-          if (response.status === 200) {
-            setTags((prevTags) => prevTags.filter(tag => tag.id !== tagId));
-          } else {
-            console.error('Error al eliminar la etiqueta:', response.statusText);
-          }
+            const response = await deleteTagFromCase(caseId, tagId);
+            if (response.status === 200) {
+                setTags((prevTags) => prevTags.filter(tag => tag.id !== tagId));
+            } else {
+                console.error('Error al eliminar la etiqueta:', response.statusText);
+            }
         } catch (error) {
-          console.error('Error al procesar la solicitud:', error);
+            console.error('Error al procesar la solicitud:', error);
         }
-      };
+    };
 
     const filteredTags = allTags
         .filter(tag => tag.name.toLowerCase().includes(search.toLowerCase()))
@@ -133,7 +130,7 @@ export default function TextCreator() {
         try {
             const response = await updateCase(caseId, formData);
             if (response.status === 200) {
-                navigate('/home');
+                alert('Datos guardados correctamente');
             } else {
                 console.error('Error al guardar:', response.statusText);
             }
@@ -145,109 +142,131 @@ export default function TextCreator() {
     return (
         <Box marginTop={5} marginRight={2}>
             <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Typography variant="subtitle1">Título</Typography>
-                    <TextField
-                        variant="outlined"
-                        fullWidth
-                        sx={{marginBottom: 2, marginTop: 2}}
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Box sx={inline_buttons}>
-                    <Typography variant="subtitle1">Etiquetas</Typography>
-                        <Box >
-                            {tags.map((tag, index) => (
-                                <Chip
-                                    sx={{marginLeft: 0, marginRight: 2}}
-                                    key={tag.id}
-                                    label={tag.name}
-                                    onDelete={() => handleDeleteTag(tag.id)}
-                                />
-                            ))}
-                        </Box>
-                    </Box>
-                    <Box sx={{...inline_buttons}}>
-                        <TextField
-                            label="Buscar Etiqueta"
-                            variant="outlined"
-                            fullWidth
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            sx={{ marginTop: 2, marginRight: 8}}
-                        />
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, marginTop: 2 }}>
-                            {filteredTags.map((tag) => (
-                                <Chip
-                                    key={tag.id}
-                                    label={tag.name}
-                                    onClick={() => handleAddTag(tag)}
-                                />
-                            ))}
-                        </Box>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleCreateTag}
-                            disabled={!search}
-                            startIcon={<AddIcon />}
-                            sx={{ marginTop: 2 }}
-                        >
-                        </Button>
-                    </Box>
-                </Grid>
-                <Grid item container xs={12}>
-                    <Grid item xs={8}>
-                        <Box marginTop={2}>
-                            <Typography variant="subtitle1" gutterBottom>
-                                Descripción
-                            </Typography>
-                        </Box>
-                        <Box marginTop={1}>
+                {/* Left Column */}
+                <Grid item xs={8}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
                             <TextField
-                            label="Descripción del caso"
-                            variant='outlined'
-                            fullWidth
-                            multiline
-                            rows={7}
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            sx={{ marginTop: 2, marginRight: 7}}
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                label={
+                                    <Typography sx={{ fontWeight: 600 }} color={"primary"}>
+                                        Título
+                                    </Typography>
+                                }
+                                variant="outlined"
+                                fullWidth
+                                style={{ margin: "12px 0" }}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                margin="normal"
                             />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Box display="flex" justifyContent="center" marginTop={2}>
-                            <img src={mainImage} alt={title} style={{ width: '200px', height: '200px', objectFit: 'cover' }} />
-                        </Box>
-                        <Box display="flex" justifyContent="center" marginTop={1}>
-                            <input
-                                id="image-input"
-                                type="file"
-                                accept="image/*"
-                                style={{ display: 'none' }}
-                                onChange={handleImageChange}
-                            />
-                            <label htmlFor="image-input">
-                                <Button variant="subtitle1" component="span">
-                                    Cambiar Imagen
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Box sx={inline_buttons}>
+                                <Box >
+                                    {tags.map((tag, index) => (
+                                        <Chip
+                                            sx={{marginLeft: 0, marginRight: 2}}
+                                            key={tag.id}
+                                            label={tag.name}
+                                            onDelete={() => handleDeleteTag(tag.id)}
+                                        />
+                                    ))}
+                                </Box>
+                            </Box>
+                            <Box sx={{...inline_buttons}}>
+                                <TextField
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    label={
+                                        <Typography sx={{ fontWeight: 600 }} color={"primary"}>
+                                            Etiquetas
+                                        </Typography>
+                                    }
+                                    variant="outlined"
+                                    fullWidth
+                                    style={{ margin: "12px 0" }}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    margin="normal"
+                                />
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, marginTop: 2 }}>
+                                    {filteredTags.map((tag) => (
+                                        <Chip
+                                            key={tag.id}
+                                            label={tag.name}
+                                            onClick={() => handleAddTag(tag)}
+                                        />
+                                    ))}
+                                </Box>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleCreateTag}
+                                    disabled={!search}
+                                    startIcon={<AddIcon />}
+                                    sx={{ marginTop: 2 }}
+                                >
+                                    Añadir etiqueta
                                 </Button>
-                            </label>
-                        </Box>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                label={
+                                    <Typography sx={{ fontWeight: 600 }} color={"primary"}>
+                                        Descripción del caso
+                                    </Typography>
+                                }
+                                variant='outlined'
+                                fullWidth
+                                multiline
+                                style={{ margin: "12px 0" }}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                margin="normal"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="subtitle1" gutterBottom>
+                                Texto del caso
+                            </Typography>
+                            <Box marginTop={2}>
+                                <RTE text={text} setText={setText} />
+                            </Box>
+                        </Grid>
                     </Grid>
+                </Grid>
+                {/* Right Column */}
+                <Grid item xs={4} sx={{ position: 'fixed', top: '80px', right: '20px', width: '320px' }}>
+                    <Box display="flex" justifyContent="center" marginTop={16}>
+                        <img src={mainImage} alt={title} style={{ width: '200px', height: '200px', objectFit: 'cover' }} />
+                    </Box>
+                    <Box display="flex" justifyContent="center" marginTop={1}>
+                        <input
+                            id="image-input"
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={handleImageChange}
+                        />
+                        <label htmlFor="image-input">
+                            <Button variant="contained" component="span">
+                                Cambiar Imagen
+                            </Button>
+                        </label>
+                    </Box>
+                    <Box display="flex" justifyContent="center" marginTop={2}>
+                        <SaveCaseButton onClick={handleSave}>Guardar datos</SaveCaseButton>
+                    </Box>
                 </Grid>
             </Grid>
-            <Box marginTop={2}>
-                <Typography variant="subtitle1" gutterBottom>
-                    Texto del caso
-                </Typography>
-            </Box>
-            <Box marginTop={2}>
-                <RTE text={text} setText={setText} />
-            </Box>
-            <SaveCaseButton onClick={handleSave}>Guardar y salir</SaveCaseButton>
         </Box>
     );
 }
