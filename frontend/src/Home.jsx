@@ -79,7 +79,6 @@ export default function Home() {
             try {
                 const response = await axios.get(CASES_API);
                 setCases(response.data.info);
-                console.log(response)
             } catch (error) {
                 console.log(error);
             }
@@ -114,7 +113,7 @@ export default function Home() {
     
     const handleClick = (caseId) => (event) => {
         event.stopPropagation();
-        navigate(`/create_case/${caseId}/text`);
+        navigate(`/show_case/${caseId}/text`);
     };
 
     return (

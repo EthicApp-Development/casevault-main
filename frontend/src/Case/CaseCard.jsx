@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextEllipsis from '../Utils/Ellipsis';
+import { useNavigate } from "react-router-dom";
 
 const modalStyle = {
     position: 'absolute',
@@ -50,7 +51,8 @@ const tabsContainerStyle = {
 
 export default function CaseCard({ title, description, image_url, case_id }) {
     const [open, setOpen] = useState(false);
-
+    const navigate = useNavigate();
+    
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -58,6 +60,10 @@ export default function CaseCard({ title, description, image_url, case_id }) {
         const codeToCopy = `<iframe id="casevault-iframe" src="http://localhost:3000/cases/${case_id}" width="800px" height="900px"></iframe>`;
         navigator.clipboard.writeText(codeToCopy);
         alert('Código embebido copiado al portapapeles');
+    };
+
+    const handleEdit = () => {
+        navigate(`/create_case/${case_id}/text`);
     };
 
     return (
@@ -81,7 +87,7 @@ export default function CaseCard({ title, description, image_url, case_id }) {
                     indicatorColor="primary"
                     textColor="primary"
                 >
-                    <Tab label="Editar" sx={tabStyle} />
+                    <Tab label="Editar" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleEdit(); }} />
                     <Tab label="Compartir" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleOpen(); }} />
                 </Tabs>
             </Box>

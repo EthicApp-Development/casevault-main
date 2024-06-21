@@ -23,7 +23,6 @@ const VideoFields = ({open, toggleOpen}) => {
     const { caseId } = useParams()
     const {videos, setVideos} = useCaseContext()
     
-    console.log(videos)
     const handleSave = async () => {
         let embedUrl = ''
         let videoTitle = ''
