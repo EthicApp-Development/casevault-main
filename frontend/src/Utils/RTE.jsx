@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useCaseContext } from '../CreationCases/CreateCase';
-
+import './RTE.css';
 
 function RTE() {
-    const { text, setText } = useCaseContext()
+    const { text, setText } = useCaseContext();
 
     const handleCKEditorChange = (event, editor) => {
-        const data = editor.getData()
-        setText(data)
-    }
+        const data = editor.getData();
+        setText(data);
+    };
 
     return (
         <div>
