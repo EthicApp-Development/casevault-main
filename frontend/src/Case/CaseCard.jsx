@@ -9,7 +9,8 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextEllipsis from '../Utils/Ellipsis';
-
+import { useContext} from 'react';
+import AppContext from '../Contexts/AppContext';
 const modalStyle = {
     position: 'absolute',
     top: '50%',
@@ -48,9 +49,9 @@ const tabsContainerStyle = {
     borderBottom: '1px solid #ddd'
 };
 
-export default function CaseCard({ title, description, image_url, case_id }) {
+export default function CaseCard({ title, description, image_url, case_id, owner }) {
     const [open, setOpen] = useState(false);
-
+    const {user, setAvatar,avatar} = useContext(AppContext)
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -60,6 +61,9 @@ export default function CaseCard({ title, description, image_url, case_id }) {
         alert('Código embebido copiado al portapapeles');
     };
 
+    const ownerSession = owner == user.id 
+    console.log(title)
+    console.log(ownerSession)
     return (
         <Card sx={{ maxWidth: 700 }}>
             <CardActionArea>
@@ -81,7 +85,9 @@ export default function CaseCard({ title, description, image_url, case_id }) {
                     indicatorColor="primary"
                     textColor="primary"
                 >
+                    {ownerSession && 
                     <Tab label="Editar" sx={tabStyle} />
+                    }
                     <Tab label="Compartir" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleOpen(); }} />
                 </Tabs>
             </Box>

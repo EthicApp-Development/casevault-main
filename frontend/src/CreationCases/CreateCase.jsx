@@ -36,6 +36,7 @@ function CreateCase() {
                     setCaseObject(response.data)
                     setVideos(response.data.videos)
                     setTags(response.data.tags)
+                    setVisibility(response.data.visibility)
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }

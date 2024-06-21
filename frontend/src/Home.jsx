@@ -73,15 +73,22 @@ export default function Home() {
     const [authenticated, setauthenticated] = useState(null);
     const [caseTitle, setCaseTitle] = useState("");
     
+    console.log("USUARIO EN HOME", user)
     useEffect(() => {
         const fetchCases = async () => {
             setAvatar(stringAvatar(user?.first_name +" "+ user?.last_name))
-            try {
-                const response = await axios.get(CASES_API);
-                setCases(response.data.info);
-                console.log(response)
-            } catch (error) {
-                console.log(error);
+            if (user){
+                try {
+                    const response = await axios.get(CASES_API, {
+                        params: {
+                            user_id: user.id // Enviar user_id como parámetro
+                        }
+                    });
+                    setCases(response.data.info);
+                    console.log(response)
+                } catch (error) {
+                    console.log(error);
+                }
             }
             const loggedInUser = localStorage.getItem("authenticated");
             if (loggedInUser) {
@@ -118,7 +125,7 @@ export default function Home() {
     };
 
     return (
-        (user?  
+        (user?.first_name?  
             <Box sx={css.container}>
                 <Box sx={{ ...css.createContainer, height: 150 }}>
                     <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Crear un caso nuevo</Typography>
@@ -147,6 +154,7 @@ export default function Home() {
                                     description={caseData.description}
                                     image_url={caseData.main_image_url}
                                     case_id={caseData.id}
+                                    owner = {caseData.user_id}
                                     sx={{ height: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                                 />
                             </ListItemButton>

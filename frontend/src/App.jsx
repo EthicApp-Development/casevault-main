@@ -18,6 +18,7 @@ import { getUser } from './API/user.js';
 import Register from './Session/Register.jsx';
 import NotFound from './Components/404.jsx';
 import Forbidden from './Components/403.jsx';
+import Visibility from './CreationCases/Visibility.jsx';
 
 function App() {
   const location = useLocation();
@@ -31,18 +32,14 @@ function App() {
             if (accountString) {
                 console.log("accountString", accountString);
                 const account = JSON.parse(accountString);
-                const userId = account.id;
-                try {
-                    const response = await getUser(userId);
-                    setUser(response.data.info);
-                } catch (error) {
-                    console.error("Error fetching user:", error);
-                }
+                setUser(account)
             }
         };
 
         fetchUser();
     }, []);
+
+  console.log("user", user)
 
   useEffect(() => {
     const accountInfo = localStorage.getItem('account');
@@ -72,6 +69,7 @@ function App() {
               {/* <Route path="images" element={<ImageCreator />} /> */}
               <Route path="audios" element={<AudioCreator />} />
               <Route path="information" element={<InfoCreator />} />
+              <Route path="visibility" element= {<Visibility/>} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

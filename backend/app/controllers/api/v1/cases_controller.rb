@@ -1,10 +1,11 @@
 
 class Api::V1::CasesController < ApplicationController
   before_action :set_case, only: %i[ show update destroy ]
-
+  before_action :authenticate_user_from_token!
   # GET /cases
   def index
-    @cases = Case.where("visibility = ? OR user_id = ?", Case.visibilities[:public_status], current_user.id)
+    puts "este es el index del cases controller"
+    @cases = Case.where("visibility = ? OR user_id = ?", Case.visibilities[:public_status], params[:user_id])
 
     cases_with_images = @cases.map do |c|
       if c.main_image.attached?
@@ -19,23 +20,17 @@ class Api::V1::CasesController < ApplicationController
 
   # GET /cases/1
   def show
-    case_json = @case.as_json(include: {
-      images: { only: [:title, :description], methods: :image_url },
-      documents: { only: [:title, :description], methods: :document_url },
-      audios: { only: [:title, :url], methods: :file_url },
-      videos: { only: [:id, :url, :title, :description]},
-      tags: {only: [:name,:id]}
-    })
-  
-    if @case.main_image.attached?
-      case_json.merge!(main_image_url: url_for(@case.main_image))
+    if @case.public_status? || @case.unlisted_status?
+      render_case
+    elsif @case.private_status? && @case.user_id == params[:user_id].to_i
+      render_case
     else
-      case_json.merge!(main_image_url: nil)
+      render_unauthorized
     end
-  
-    render json: case_json
   end
-  
+
+
+
 
   # POST /cases
   def create
@@ -65,6 +60,28 @@ class Api::V1::CasesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_case
       @case = Case.find(params[:id])
+    end
+
+    def render_case
+      case_json = @case.as_json(include: {
+        images: { only: [:title, :description], methods: :image_url },
+        documents: { only: [:title, :description], methods: :document_url },
+        audios: { only: [:title, :url], methods: :file_url },
+        videos: { only: [:id, :url, :title, :description] },
+        tags: { only: [:name, :id] }
+      })
+  
+      if @case.main_image.attached?
+        case_json.merge!(main_image_url: url_for(@case.main_image))
+      else
+        case_json.merge!(main_image_url: nil)
+      end
+  
+      render json: case_json
+    end
+  
+    def render_unauthorized
+      render json: { error: 'Unauthorized' }, status: :unauthorized
     end
 
     # Only allow a list of trusted parameters through.
