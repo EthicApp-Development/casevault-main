@@ -144,9 +144,6 @@ export default function TextCreator() {
 
     return (
         <Box marginTop={5} marginRight={2}>
-            <Typography variant="h5" textAlign='center' gutterBottom>
-                Creación de casos
-            </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Typography variant="subtitle1">Título</Typography>

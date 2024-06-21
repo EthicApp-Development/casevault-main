@@ -22,7 +22,7 @@ class Api::V1::CasesController < ApplicationController
     case_json = @case.as_json(include: {
       images: { only: [:title, :description], methods: :image_url },
       documents: { only: [:id, :title, :description], methods: :document_url },
-      audios: { only: [:title, :url], methods: :file_url },
+      audios: { only: [:id, :title, :url], methods: :file_url },
       videos: { only: [:id, :url, :title, :description]},
       tags: {only: [:name,:id]}
     })

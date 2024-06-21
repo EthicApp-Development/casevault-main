@@ -37,6 +37,7 @@ function CreateCase() {
                     setVideos(response.data.videos)
                     setTags(response.data.tags)
                     setDocuments(response.data.documents)
+                    setAudios(response.data.audios)
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
