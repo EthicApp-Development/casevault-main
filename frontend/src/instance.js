@@ -12,7 +12,8 @@ instance.interceptors.request.use((config) => {
     const newConfig = { ...config }
     const token = localStorage.getItem("token");
     if (token) {
-        newConfig.headers["Authorization"] = `Bearer ${token}`;
+        console.log("TOKEN", token)
+        newConfig.headers["Authorization"] =  token;
     }
     const accountString = localStorage.getItem("account");
     if (accountString) {
