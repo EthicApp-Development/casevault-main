@@ -1,56 +1,107 @@
 # frozen_string_literal: true
 
 class Users::SessionsController < Devise::SessionsController
-
+  include RackSessionFix
   respond_to :json
+  # before_action :configure_sign_up_params, only: [:create]
+  # before_action :configure_account_update_params, only: [:update]
+
+  # GET /resource/sign_up
+  # def new
+  #   super
+  # end
+
+  # POST /resource
+  # def create
+  #   super
+  # end
+
+  # GET /resource/edit
+  # def edit
+  #   super
+  # end
+
+  # PUT /resource
+  # def update
+  #   super
+  # end
+
+  # DELETE /resource
+  # def destroy
+  #   super
+  # end
+
+  # GET /resource/cancel
+  # Forces the session data which is usually expired after sign
+  # in to be expired now. This is useful if the user wants to
+  # cancel oauth signing in/up in the middle of the process,
+  # removing all OAuth session data.
+  # def cancel
+  #   super
+  # end
+
+  # protected
+
+  # If you have extra params to permit, append them to the sanitizer.
+  # def configure_sign_up_params
+  #   devise_parameter_sanitizer.permit(:sign_up, keys: [:attribute])
+  # end
+
+  # If you have extra params to permit, append them to the sanitizer.
+  # def configure_account_update_params
+  #   devise_parameter_sanitizer.permit(:account_update, keys: [:attribute])
+  # end
+
+  # The path used after sign up.
+  # def after_sign_up_path_for(resource)
+  #   super(resource)
+  # end
+
+  # The path used after sign up for inactive accounts.
+  # def after_inactive_sign_up_path_for(resource)
+  #   super(resource)
+  # end
+  before_action :configure_sign_in_params, only: [:create]
 
 
   def create
-    user = User.find_for_database_authentication(email: params[:user][:email])
-
-    if user && user.valid_password?(params[:user][:password])
-      token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
-      response.headers['Authorization'] = "Bearer #{token[0]}"
-      render json: { message: "Inicio de sesión exitoso", user: user }, status: :ok
-    else
-      render json: { error: "Credenciales inválidas" }, status: :unauthorized
-    end
-  end
-
-  def destroy
-    # Devise maneja la lógica de cerrar sesión, solo necesitas limpiar la sesión actual
-    signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
-    render json: {
-      status: signed_out ? 200 : 401,
-      message: signed_out ? 'User signed out successfully' : 'User has no active session'
-    }, status: signed_out ? :ok : :unauthorized
+    logger.debug "Received params: #{params.inspect}"
+    logger.debug "Sign ip params: #{sign_in_params.inspect}"
+    super
   end
 
   private
 
-  def respond_with(resource, options = {})
+  def configure_sign_in_params
+    devise_parameter_sanitizer.permit(:sign_ip, keys: [:email, :password])
+  end
+
+
+  def respond_with(resource, _opts = {})
     render json: {
-      status: { code: 200, message: 'User signed in successfully.', data: current_user }, 
-    }, status: :ok
+      status: {
+        code: 200, 
+        message: 'Logged in successfully'
+      }, 
+      data: resource
+    }
   end
 
   def respond_to_on_destroy
-    jwt_payload = JWT.decode(request.headers['Authorization'].split(' ')[1], 
-      Rails.application.credentials.fetch(:secret_key_base)).first
-    current_user = User.find(jwt_payload['sub'])
-
     if current_user
       render json: {
         status: 200,
-        message: 'User signed out successfully'
-      }, status: :ok, data: current_user
+        message: "logged out successfully"
+      }, status: :ok
     else
       render json: {
         status: 401,
-        message: 'User has no active session'
+        message: "Couldn't find an active session."
       }, status: :unauthorized
     end
   end
+
+end
   # before_action :configure_sign_in_params, only: [:create]
 
   # GET /resource/sign_in
@@ -74,4 +125,3 @@ class Users::SessionsController < Devise::SessionsController
   # def configure_sign_in_params
   #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
   # end
-end
