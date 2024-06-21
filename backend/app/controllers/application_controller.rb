@@ -1,6 +1,29 @@
 class ApplicationController < ActionController::API
     before_action :configure_permitted_parameters, if: :devise_controller?
 
+    before_action :authenticate_user_from_token!
+
+    private
+  
+    def authenticate_user_from_token!
+      token = request.headers['Authorization']&.split(' ')&.last
+      if token
+        begin
+          decoded_token = JWT.decode(token, Rails.application.credentials.fetch(:secret_key_base), true, { algorithm: 'HS256' })
+          payload = decoded_token.first
+          user_id = payload['sub'] # Assuming 'sub' in payload represents user id
+          @current_user = User.find_by(id: user_id)
+        rescue JWT::DecodeError => e
+          Rails.logger.error "JWT Decode Error: #{e.message}"
+          @current_user = nil
+        end
+      end
+    end
+  
+    def current_user
+      @current_user
+    end
+
     protected
   
     def configure_permitted_parameters

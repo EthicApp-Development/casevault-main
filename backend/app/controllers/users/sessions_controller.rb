@@ -66,7 +66,8 @@ class Users::SessionsController < Devise::SessionsController
 
   def create
     logger.debug "Received params: #{params.inspect}"
-    logger.debug "Sign ip params: #{sign_in_params.inspect}"
+    logger.debug "Sign in params: #{sign_in_params.inspect}"
+    # Puedes imprimir el contenido del payload para ver qué datos están presentes en el token
     super
   end
 
@@ -78,6 +79,7 @@ class Users::SessionsController < Devise::SessionsController
 
 
   def respond_with(resource, _opts = {})
+  @current_user = current_user
     render json: {
       status: {
         code: 200, 
