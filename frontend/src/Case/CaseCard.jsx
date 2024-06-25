@@ -11,6 +11,8 @@ import Box from '@mui/material/Box';
 import TextEllipsis from '../Utils/Ellipsis';
 import { useContext} from 'react';
 import AppContext from '../Contexts/AppContext';
+import { useNavigate } from "react-router-dom";
+
 const modalStyle = {
     position: 'absolute',
     top: '50%',
@@ -52,6 +54,8 @@ const tabsContainerStyle = {
 export default function CaseCard({ title, description, image_url, case_id, owner }) {
     const [open, setOpen] = useState(false);
     const {user, setAvatar,avatar} = useContext(AppContext)
+    const navigate = useNavigate();
+    
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -61,9 +65,14 @@ export default function CaseCard({ title, description, image_url, case_id, owner
         alert('Código embebido copiado al portapapeles');
     };
 
+
     const ownerSession = owner == user.id 
-    console.log(title)
-    console.log(ownerSession)
+
+
+    const handleEdit = () => {
+        navigate(`/create_case/${case_id}/text`);
+    };
+
     return (
         <Card sx={{ maxWidth: 700 }}>
             <CardActionArea>
@@ -86,8 +95,9 @@ export default function CaseCard({ title, description, image_url, case_id, owner
                     textColor="primary"
                 >
                     {ownerSession && 
-                    <Tab label="Editar" sx={tabStyle} />
+                    <Tab label="Editar" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleEdit(); }} />
                     }
+
                     <Tab label="Compartir" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleOpen(); }} />
                 </Tabs>
             </Box>
