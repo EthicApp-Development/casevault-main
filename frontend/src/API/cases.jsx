@@ -17,14 +17,19 @@ export function getCases() {
 	return instance.get("api/v1/cases");
 }
 
-export function getCase(caseId) {
-	return instance.get(`api/v1/cases/${caseId}`);
+export function getCase(caseId, userId) {
+	return instance.get(`api/v1/cases/${caseId}`, {
+		params: {
+			user_id: userId
+		}
+	});
 }
 
-export function searchCases(searchTerm) {
+export function searchCases(searchTerm,userId) {
 	return instance.get(`api/v1/cases/search`,{
 		params: {
-			search: searchTerm
+			search: searchTerm,
+			user_id: userId
 		}
 	} );
 }

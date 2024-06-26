@@ -13,9 +13,8 @@ class ApplicationController < ActionController::API
           payload = decoded_token.first
           user_id = payload['sub'] # Assuming 'sub' in payload represents user id
           @current_user = User.find_by(id: user_id)
-        rescue JWT::DecodeError => e
-          Rails.logger.error "JWT Decode Error: #{e.message}"
-          @current_user = nil
+          puts "#{@current_user}"
+          puts "SI SE ENCONTRO UN USUARIO CON EL TOKEN"
         end
       end
     end

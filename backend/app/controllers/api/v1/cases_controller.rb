@@ -1,7 +1,7 @@
 
 class Api::V1::CasesController < ApplicationController
   before_action :set_case, only: %i[ show update destroy ]
-  before_action :authenticate_user_from_token!
+
   # GET /cases
   def index
  
@@ -32,7 +32,9 @@ class Api::V1::CasesController < ApplicationController
   def get_searched_cases 
     search_param = params[:search] 
     @cases = Case.where("(visibility = ? OR user_id = ?) AND (title LIKE ? OR description LIKE ?)", 
-    Case.visibilities[:public_status], params[:user_id], "%#{search_param}%", "%#{search_param}%") 
+    Case.visibilities[:public_status], params[:user_id], "%#{search_param}%", "%#{search_param}%")
+    puts "SE ESTA MANDANDO ESTO COMO PARAMETRO"
+    puts "#{params[:user_id]}" 
     cases_with_images = @cases.map do |c| 
       if c.main_image.attached? 
         c.as_json.merge(main_image_url: url_for(c.main_image)) 

@@ -1,12 +1,13 @@
 import { Box, Button, Typography, TextField, Grid, Chip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import RTE from '../../Utils/RTE';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useCaseContext } from '../CreateCase';
 import { useNavigate, useParams } from 'react-router-dom';
 import { updateCase, getCase, getAllTags, createTag, addTagToCase, deleteTagFromCase } from '../../API/cases';
 import { inline_buttons } from "../../Utils/defaultStyles";
 import AddIcon from '@mui/icons-material/Add';
+import AppContext from '../../Contexts/AppContext';
 
 const SaveCaseButton = styled(Button)({
     position: 'absolute',
@@ -24,14 +25,16 @@ const SaveCaseButton = styled(Button)({
 export default function TextCreator() {
     const { text, setText, title, setTitle, mainImage, setMainImage, setCaseObject, setTags, tags, description, setDescription } = useCaseContext();
     const { caseId } = useParams();
+    const {user} = useContext(AppContext)
     const navigate = useNavigate();
     const [allTags, setAllTags] = useState([]);
     const [search, setSearch] = useState('');
 
     useEffect(() => {
         async function fetchCase() {
+            if(user) {
             try {
-                const response = await getCase(caseId);
+                const response = await getCase(caseId, user.id);
                 if (response.status === 200) {
                     setText(response.data.text || '');
                     setTitle(response.data.title);
@@ -44,6 +47,7 @@ export default function TextCreator() {
             } catch (error) {
                 console.error('Error al procesar la solicitud:', error);
             }
+        }
         }
         fetchCase();
     }, [caseId]);

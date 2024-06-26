@@ -72,8 +72,6 @@ export default function Home() {
     const {user, setAvatar,avatar} = useContext(AppContext)
     const [authenticated, setauthenticated] = useState(null);
     const [caseTitle, setCaseTitle] = useState("");
-    
-    console.log("USUARIO EN HOME", user)
     useEffect(() => {
         const fetchCases = async () => {
             setAvatar(stringAvatar(user?.first_name +" "+ user?.last_name))
@@ -125,7 +123,7 @@ export default function Home() {
     };
 
     return (
-        (user?.first_name?  
+        (user?.first_name? 
             <Box sx={css.container}>
                 <Box sx={{ ...css.createContainer, height: 150 }}>
                     <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Crear un caso nuevo</Typography>
@@ -145,9 +143,9 @@ export default function Home() {
                         </CreateCaseButton>
                     </Box>
                 </Box>
-                <Grid container spacing={2}>
+                <Grid container spacing={8}>
                     {cases?.map(caseData => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
+                        <Grid item xs={12} sm={6} md={4} lg={4} key={caseData.id}>
                             <ListItemButton onClick={handleClick(caseData.id)}>
                                 <CaseCard
                                     title={caseData.title}
@@ -155,7 +153,14 @@ export default function Home() {
                                     image_url={caseData.main_image_url}
                                     case_id={caseData.id}
                                     owner = {caseData.user_id}
-                                    sx={{ height: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                                     sx={{
+                                        height: '100%', 
+                                        display: 'flex', 
+                                        flexDirection: 'column',
+                                        overflow: 'hidden', 
+                                        textOverflow: 'ellipsis', 
+                                        whiteSpace: 'nowrap',
+                                      }}
                                 />
                             </ListItemButton>
                         </Grid>

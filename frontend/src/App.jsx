@@ -65,7 +65,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/search/:searchTerm" element={<SearchResults />} />
+            <Route path="/search/:searchTerm/" element={<SearchResults />} />
             <Route path="/mycases/" element={<UserCases />} />
             <Route path="/show_case/:caseId/" element={<ShowCase />}>
               <Route path="text" element={<ShowCaseText />} />

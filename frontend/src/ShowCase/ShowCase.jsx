@@ -2,6 +2,7 @@ import React, { useState, createContext, useContext, useEffect } from "react";
 import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
 import { getCase } from "../API/cases";
 import { Box, Tab, Tabs} from '@mui/material';
+import AppContext from "../Contexts/AppContext";
 
 const CaseContext = createContext();
 
@@ -21,14 +22,14 @@ function ShowCase() {
     const [caseObject, setCaseObject] = useState({});
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
-
+    const {user} = useContext(AppContext)
     const navigate = useNavigate();
     const location = useLocation();
     useEffect(() => {
         async function fetchData() {
             if (!!caseObject) {
                 try {
-                    const response = await getCase(caseId);
+                    const response = await getCase(caseId, user.id);
                     setCaseObject(response.data);
                     setAudios(response.data.audios);
                     setVideos(response.data.videos);

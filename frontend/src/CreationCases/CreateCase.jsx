@@ -3,6 +3,7 @@ import { Box, Tab, Tabs} from '@mui/material';
 import useToggle from "../Hooks/ToggleHook";
 import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
 import { getCase } from "../API/cases";
+import AppContext from "../Contexts/AppContext";
 
 const CaseContext = createContext();
 
@@ -23,16 +24,16 @@ function CreateCase() {
     const [caseObject, setCaseObject] = useState({});
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
-
+    const {user} = useContext(AppContext)
     const navigate = useNavigate()
     const location = useLocation()
     const [tags, setTags] = useState([])
     
     useEffect(() => {
         async function fetchData() {
-            if (!!caseObject) {
+            if (!!caseObject && user) {
                 try {
-                    const response = await getCase(caseId)
+                    const response = await getCase(caseId, user.id)
                     setCaseObject(response.data)
                     setVideos(response.data.videos)
                     setTags(response.data.tags)
