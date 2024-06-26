@@ -74,46 +74,42 @@ export default function CaseCard({ title, description, image_url, case_id, owner
     };
 
     return (
-        <Card sx={{ maxWidth: 700 }}>
-            <CardActionArea>
-                <CardContent>
-                    <img src={image_url} alt={title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
-                    <Typography gutterBottom variant="h5" component="div">
-                        {title}
-                    </Typography>
-                    <TextEllipsis 
-                        text={description ? description : ""} 
-                        variant="body1" 
-                        showTooltip={true} 
-                        maxLines={5} 
-                    />
-                </CardContent>
-            </CardActionArea>
-            <Box sx={tabsContainerStyle}>
-                <Tabs
-                    indicatorColor="primary"
-                    textColor="primary"
-                >
-                    {ownerSession && 
-                    <Tab label="Editar" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleEdit(); }} />
-                    }
-
-                    <Tab label="Compartir" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleOpen(); }} />
-                </Tabs>
+        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', minWidth: '100%'}}>
+        <CardActionArea sx={{ flexGrow: 1 }}>
+          <CardContent sx={{minHeight: '23vw'}}>
+            <img src={image_url} alt={title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+            <Typography gutterBottom variant="h5" component="div" sx={{marginTop:1}}>
+              {title}
+            </Typography>
+            <TextEllipsis 
+              text={description ? description : ""} 
+              variant="body1" 
+              showTooltip={true} 
+              maxLines={5} 
+            />
+          </CardContent>
+        </CardActionArea>
+        <Box sx={tabsContainerStyle}>
+          <Tabs indicatorColor="primary" textColor="primary">
+            {ownerSession && 
+            <Tab label="Editar" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleEdit(); }} />
+            }
+            <Tab label="Compartir" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleOpen(); }} />
+          </Tabs>
+        </Box>
+        <Modal open={open} onClose={(e) => { e.stopPropagation(); handleClose(); }}>
+          <Box sx={modalStyle}>
+            <Typography variant="h6" component="h2">
+              Código embebido
+            </Typography>
+            <Box sx={codeBoxStyle}>
+              {`<iframe id="casevault-iframe" src="http://localhost:3000/cases/${case_id}" width="800px" height="900px"></iframe>`}
             </Box>
-            <Modal open={open} onClose={(e) => { e.stopPropagation(); handleClose(); }}>
-                <Box sx={modalStyle}>
-                    <Typography variant="h6" component="h2">
-                        Código embebido
-                    </Typography>
-                    <Box sx={codeBoxStyle}>
-                        {`<iframe id="casevault-iframe" src="http://localhost:3000/cases/${case_id}" width="800px" height="900px"></iframe>`}
-                    </Box>
-                    <Button variant="contained" color="primary" onClick={(e) => {e.stopPropagation(); handleCopy(); }} sx={{ mt: 2 }}>
-                        Copiar
-                    </Button>
-                </Box>
-            </Modal>
-        </Card>
+            <Button variant="contained" color="primary" onClick={(e) => { e.stopPropagation(); handleCopy(); }} sx={{ mt: 2 }}>
+              Copiar
+            </Button>
+          </Box>
+        </Modal>
+      </Card>
     );
 }

@@ -21,6 +21,14 @@ export function getCase(caseId) {
 	return instance.get(`api/v1/cases/${caseId}`);
 }
 
+export function searchCases(searchTerm) {
+	return instance.get(`api/v1/cases/search`,{
+		params: {
+			search: searchTerm
+		}
+	} );
+}
+
 export function getCaseAudios(caseId) {
 	return instance.get(`api/v1/cases/${caseId}/audios`);
 }

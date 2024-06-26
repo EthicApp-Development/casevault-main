@@ -25,6 +25,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, only: [:index, :show, :create, :update, :destroy]
       resources :cases do
+        collection do
+          get :search, to: 'cases#get_searched_cases'          
+        end
         resources :tags, only: [:index, :destroy] do
           collection do
             post :add_tag

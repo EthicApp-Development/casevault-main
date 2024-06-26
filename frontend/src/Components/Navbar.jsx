@@ -38,7 +38,7 @@ const Search = styled('div')(({ theme }) => ({
         backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: theme.spacing(2),
-    width: '400px',
+    width: '450px',
     [theme.breakpoints.down('md')]: {
         width: 'auto',
     },
@@ -51,6 +51,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
+    padding: 5,
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -204,7 +205,6 @@ function Navbar(props) {
                 vertical: 'top',
                 horizontal: 'right',
             }}
-            getContentAnchorEl={null} // Evita que el menú se desplace
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
         >
