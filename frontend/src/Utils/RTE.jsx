@@ -4,7 +4,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useCaseContext } from '../CreationCases/CreateCase';
 import './RTE.css';
 
-function RTE() {
+function RTE({ onBlur }) {
     const { text, setText } = useCaseContext();
 
     const handleCKEditorChange = (event, editor) => {
@@ -18,6 +18,7 @@ function RTE() {
                 editor={ClassicEditor}
                 data={text}
                 onChange={handleCKEditorChange}
+                onBlur={onBlur}
             />
         </div>
     );

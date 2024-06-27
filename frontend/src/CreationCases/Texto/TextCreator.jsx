@@ -1,5 +1,4 @@
 import { Box, Button, Typography, TextField, Grid, Chip } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import RTE from '../../Utils/RTE';
 import React, { useEffect, useState } from 'react';
 import { useCaseContext } from '../CreateCase';
@@ -7,16 +6,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { updateCase, getCase, getAllTags, createTag, addTagToCase, deleteTagFromCase } from '../../API/cases';
 import { inline_buttons } from "../../Utils/defaultStyles";
 import AddIcon from '@mui/icons-material/Add';
-
-const SaveCaseButton = styled(Button)({
-    color: 'white',
-    backgroundColor: '#282828',
-    '&:hover': {
-        color: '#282828',
-        backgroundColor: 'white',
-    },
-    marginTop: '16px'
-});
 
 export default function TextCreator() {
     const { text, setText, title, setTitle, mainImage, setMainImage, setCaseObject, setTags, tags, description, setDescription } = useCaseContext();
@@ -89,12 +78,14 @@ export default function TextCreator() {
         }
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = async (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
 
-        reader.onloadend = () => {
-            setMainImage(reader.result);
+        reader.onloadend = async () => {
+            const imageUrl = reader.result;
+            setMainImage(imageUrl);
+            await handleImageSave(imageUrl);
         };
 
         if (file) {
@@ -125,14 +116,28 @@ export default function TextCreator() {
         formData.append('case[title]', title);
         formData.append('case[description]', description);
         formData.append('case[text]', text);
-        const blob = await fetch(mainImage).then((response) => response.blob());
+        try {
+            const response = await updateCase(caseId, formData);
+            if (response.status === 200) {
+                console.log('Datos guardados correctamente');
+            } else {
+                console.error('Error al guardar:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error al procesar la solicitud:', error);
+        }
+    }
+
+    async function handleImageSave(imageUrl) {
+        const formData = new FormData();
+        const blob = await fetch(imageUrl).then((response) => response.blob());
         formData.append('case[main_image]', blob);
         try {
             const response = await updateCase(caseId, formData);
             if (response.status === 200) {
-                alert('Datos guardados correctamente');
+                console.log('Imagen guardada correctamente');
             } else {
-                console.error('Error al guardar:', response.statusText);
+                console.error('Error al guardar la imagen:', response.statusText);
             }
         } catch (error) {
             console.error('Error al procesar la solicitud:', error);
@@ -149,6 +154,7 @@ export default function TextCreator() {
                             <TextField
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
+                                onBlur={handleSave}
                                 label={
                                     <Typography sx={{ fontWeight: 600 }} color={"primary"}>
                                         Título
@@ -180,6 +186,7 @@ export default function TextCreator() {
                                 <TextField
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
+                                    onBlur={handleSave}
                                     label={
                                         <Typography sx={{ fontWeight: 600 }} color={"primary"}>
                                             Etiquetas
@@ -218,6 +225,7 @@ export default function TextCreator() {
                             <TextField
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
+                                onBlur={handleSave}
                                 label={
                                     <Typography sx={{ fontWeight: 600 }} color={"primary"}>
                                         Descripción del caso
@@ -238,7 +246,7 @@ export default function TextCreator() {
                                 Texto del caso
                             </Typography>
                             <Box marginTop={2}>
-                                <RTE text={text} setText={setText} />
+                                <RTE text={text} setText={setText} onBlur={handleSave} />
                             </Box>
                         </Grid>
                     </Grid>
@@ -257,13 +265,14 @@ export default function TextCreator() {
                             onChange={handleImageChange}
                         />
                         <label htmlFor="image-input">
-                            <Button variant="contained" component="span">
-                                Cambiar Imagen
+                            <Button 
+                                variant="contained" 
+                                component="span"
+                                sx={{ textTransform: 'none' }}
+                            >
+                                Cambiar imagen
                             </Button>
                         </label>
-                    </Box>
-                    <Box display="flex" justifyContent="center" marginTop={2}>
-                        <SaveCaseButton onClick={handleSave}>Guardar datos</SaveCaseButton>
                     </Box>
                 </Grid>
             </Grid>
