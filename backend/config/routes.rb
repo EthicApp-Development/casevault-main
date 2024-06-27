@@ -25,6 +25,8 @@ Rails.application.routes.draw do
       resources :users, only: [:index, :show, :create, :update, :destroy]
       resources :cases do
         collection do
+          get :user_cases, to: 'cases#get_user_cases'
+          get :saved_cases, to: 'cases#get_saved_cases'
           get :search, to: 'cases#get_searched_cases' 
           post :save_case, to: 'cases#save_case' 
           delete :unsave_case, to: 'cases#unsave_case' 

@@ -65,11 +65,40 @@ class Api::V1::CasesController < ApplicationController
     end
   end
 
+  def get_saved_cases
+    user_id = params[:user_id]
+    saved_case_ids = SavedCase.where(user_id: user_id).pluck(:case_id)
+    @cases = Case.where(id: saved_case_ids)
+  
+    cases_with_images = @cases.map do |c|
+      case_json = c.as_json
+      if c.main_image.attached?
+        case_json.merge!(main_image_url: url_for(c.main_image))
+      else
+        case_json.merge!(main_image_url: nil)
+      end
+      case_json
+    end
+    
+    render json: { saved_cases: cases_with_images }
+  end
+
+  def get_user_cases
+    user_id = params[:user_id]
+    @cases = Case.where(user_id: user_id)
+    cases_with_images = @cases.map do |c|
+      if c.main_image.attached?
+        c.as_json.merge(main_image_url: url_for(c.main_image))
+      else
+        c.as_json.merge(main_image_url: nil)
+      end
+    end
+    render json: { cases: cases_with_images }
+  end
+
   def get_searched_cases
     search_param = params[:search]
     user_id = params[:user_id]
-    puts "EMPIEZA CON"
-    puts "#{search_param}"
     if search_param.start_with?("#")
       
       # Búsqueda por tag

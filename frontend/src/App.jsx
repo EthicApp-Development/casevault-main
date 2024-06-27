@@ -2,7 +2,6 @@ import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './Components/Navbar.jsx';
 import Home from './Home.jsx';
-import UserCases from './MyCases/UserCases.jsx';
 import SearchResults from './SearchResults.jsx';
 import AppContext from './Contexts/AppContext.jsx';
 import { Box } from "@mui/material";
@@ -24,7 +23,8 @@ import ShowCaseVideos from './ShowCase/ShowCaseVideos.jsx';
 import ShowCaseAudios from './ShowCase/ShowCaseAudios.jsx';
 import ShowCaseDocuments from './ShowCase/ShowCaseDocuments.jsx';
 import Visibility from './CreationCases/Visibility.jsx';
-
+import UserCases from './MyCases/UserCases.jsx';
+import SavedCases from './MyCases/SavedCases.jsx';
 function App() {
   const location = useLocation();
   const [user, setUser] = useState(null)
@@ -66,7 +66,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/search/:searchTerm/" element={<SearchResults />} />
-            <Route path="/mycases/" element={<UserCases />} />
+            <Route path="/my_cases/" element={<UserCases />} />
+            <Route path="/saved_cases/" element={<SavedCases />} />
             <Route path="/show_case/:caseId/" element={<ShowCase />}>
               <Route path="text" element={<ShowCaseText />} />
               <Route path="videos" element={<ShowCaseVideos />} />

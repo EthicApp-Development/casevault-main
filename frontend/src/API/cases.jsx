@@ -17,6 +17,22 @@ export function getCases() {
 	return instance.get("api/v1/cases");
 }
 
+export function getUserCases(userId) {
+	return instance.get(`api/v1/cases/user_cases`, {
+		params: {
+		user_id: userId
+		}
+	});
+}
+
+export function getUserSavedCases(userId) {
+	return instance.get(`/api/v1/cases/saved_cases`, {
+		params: {
+		user_id: userId
+		}
+	});
+}
+
 export function getCase(caseId, userId) {
 	return instance.get(`api/v1/cases/${caseId}`, {
 		params: {

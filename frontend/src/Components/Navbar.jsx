@@ -98,8 +98,8 @@ function Navbar(props) {
         <List>
             {[
             { text: 'Home', icon: <HomeIcon />, route: '/home'},
-            { text: 'Mis casos', icon: <SchoolIcon /> },
-            { text: 'Casos guardados', icon: <FolderIcon /> },
+            { text: 'Mis casos', icon: <SchoolIcon />, route: '/my_cases' },
+            { text: 'Casos guardados', icon: <FolderIcon />, route: '/saved_cases' },
             { text: 'Ajustes', icon: <SettingsIcon /> },
             ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
