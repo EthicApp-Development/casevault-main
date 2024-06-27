@@ -1,8 +1,7 @@
 import React, { useState, createContext, useContext, useEffect } from "react";
 import { Box, Tab, Tabs, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import useToggle from "../Hooks/ToggleHook";
 import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
-import { getCase, deleteCase } from "../API/cases"; // Importa la función deleteCase
+import { getCase, deleteCase } from "../API/cases";
 
 const CaseContext = createContext();
 
@@ -28,7 +27,7 @@ function CreateCase() {
     const [tags, setTags] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [caseIdToDelete, setCaseIdToDelete] = useState(null);
-    
+
     useEffect(() => {
         async function fetchData() {
             if (!!caseObject) {
@@ -117,6 +116,10 @@ function CreateCase() {
         }
     };
 
+    const handleSave = () => {
+        navigate('/home');
+    };
+
     const contextValue = {
         title,
         setTitle,
@@ -155,7 +158,8 @@ function CreateCase() {
                             <Tab label="Visibilidad" value={4} />
                             <Tab label="Información" value={5} />
                         </Tabs>
-                        <Button sx={{ textTransform: 'none', zIndex: 100 }} variant="contained" color="error" onClick={() => openModal(caseObject.id)}>Eliminar caso</Button>
+                        <Button sx={{ textTransform: 'none', zIndex: 100, }} variant="contained" onClick={handleSave}>Guardar</Button>
+                        <Button sx={{ textTransform: 'none', zIndex: 100, marginRight: 2  }} variant="contained" color="error" onClick={() => openModal(caseObject.id)}>Eliminar caso</Button>
                     </Box>
                     <Outlet />
                 </Box>
