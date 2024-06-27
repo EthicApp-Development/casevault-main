@@ -26,13 +26,13 @@ const SearchResults = () => {
 
     return (
         <Box>
-          <Typography variant="h1">Resultados de búsqueda para "{searchTerm}"</Typography>
+          <Typography variant="h6">Resultados de búsqueda para "{searchTerm}"</Typography>
           {cases.length == 0 ? (
             <Typography>No hay casos</Typography>
           ) : (
             <Grid container spacing={2} direction="column">
               {cases.map(caseData => (
-                <Grid item xs={12} key={caseData.id}> 
+                <Grid item xs={12} key={caseData.id} sx={{paddingRight: 5}}> 
                   <CaseCardSearch
                     title={caseData.title}
                     description={caseData.description}

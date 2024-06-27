@@ -129,6 +129,7 @@ function Navbar(props) {
   const onSearch = (searchTerm) => {
         if (searchTerm.trim() !== "") {
             navigate(`/search/${encodeURIComponent(searchTerm)}`);
+            setSearchValue("")
         }
     };
 

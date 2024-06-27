@@ -158,6 +158,11 @@ const newTheme = createTheme({
             fontWeight: 600,
             margin: 24
         },
+        h7: {
+            color: "#202D4C",
+            fontSize: "1.3rem",
+            fontWeight: 550,
+        },
         subtitle: {
             color: "#6A6A6A",
             fontSize: "1rem",
