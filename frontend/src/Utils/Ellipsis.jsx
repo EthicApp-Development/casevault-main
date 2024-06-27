@@ -1,19 +1,20 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Typography, Tooltip, IconButton, Box } from '@mui/material';
 import PropTypes from 'prop-types';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import HelpIcon from '@mui/icons-material/Help';
 import useToggle from '../Hooks/ToggleHook';
 
 const TextEllipsis = ({ text, variant, showTooltip, maxLines, color }) => {
     const [showFullText, toggleShowFullText] = useToggle(false);
-    const tooltipRef = useRef(null);
+    const [isTruncated, setIsTruncated] = useState(false);
+    const textRef = useRef(null);
     const iconRef = useRef(null);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
-                tooltipRef.current &&
-                !tooltipRef.current.contains(event.target) &&
+                textRef.current &&
+                !textRef.current.contains(event.target) &&
                 iconRef.current &&
                 !iconRef.current.contains(event.target)
             ) {
@@ -27,22 +28,29 @@ const TextEllipsis = ({ text, variant, showTooltip, maxLines, color }) => {
         };
     }, []);
 
+    useEffect(() => {
+        if (textRef.current) {
+            const { scrollHeight, clientHeight } = textRef.current;
+            setIsTruncated(scrollHeight > clientHeight);
+        }
+    }, [text, maxLines]);
+
     const handleTooltipOpen = (event) => {
         event.stopPropagation();
         toggleShowFullText();
     };
 
     const handleTooltipClose = () => {
-        toggleShowFullText(false); // Asegurarse de que se cierre el tooltip al hacer clic fuera de él
+        toggleShowFullText(false);
     };
 
-    const shouldShowTooltip = showTooltip && text.length > 0;
+    const shouldShowTooltip = showTooltip && isTruncated;
 
     return (
-        <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 0}}>
+        <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 0 }}>
             <Typography
                 variant={variant}
-                ref={tooltipRef}
+                ref={textRef}
                 sx={{
                     flexGrow: 1,
                     display: '-webkit-box',
@@ -83,7 +91,7 @@ const TextEllipsis = ({ text, variant, showTooltip, maxLines, color }) => {
                     title={text}
                 >
                     <IconButton ref={iconRef} onClick={handleTooltipOpen} aria-label="show-more">
-                        <HelpOutlineIcon />
+                        <HelpIcon />
                     </IconButton>
                 </Tooltip>
             )}

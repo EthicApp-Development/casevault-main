@@ -25,9 +25,10 @@ function ShowCase() {
     const {user} = useContext(AppContext)
     const navigate = useNavigate();
     const location = useLocation();
+    console.log(caseId)
     useEffect(() => {
         async function fetchData() {
-            if (!!caseObject) {
+            if (!!caseObject && user) {
                 try {
                     const response = await getCase(caseId, user.id);
                     setCaseObject(response.data);
