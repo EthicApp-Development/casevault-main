@@ -74,7 +74,7 @@ export default function CaseCard({ title, description, image_url, case_id, owner
     };
 
     return (
-        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', minWidth: '100%', minHeight: '30vw'}}>
+        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', minWidth: '100%', minHeight: '32vw'}}>
         <CardActionArea sx={{ flexGrow: 1 }}>
           <CardContent sx={{minHeight: '23vw'}}>
             <img src={image_url} alt={title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />

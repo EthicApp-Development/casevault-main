@@ -25,6 +25,32 @@ export function getCase(caseId, userId) {
 	});
 }
 
+export function saveCase(caseId,userId){
+	return instance.post('api/v1/cases/save_case/',{
+			case_id: caseId,
+			user_id: userId
+		}
+	)
+}
+
+export function unsaveCase(caseId,userId){
+	return instance.delete('api/v1/cases/unsave_case/',{
+		params: {
+			case_id: caseId,
+			user_id: userId
+		}
+		
+	})
+}
+
+export function savedCase(caseId,userId){
+	return instance.post('api/v1/cases/saved_case/',{
+			case_id: caseId,
+			user_id: userId
+		
+	})
+}
+
 export function searchCases(searchTerm,userId) {
 	return instance.get(`api/v1/cases/search`,{
 		params: {

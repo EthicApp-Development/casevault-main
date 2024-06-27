@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { CardContent, Card, Typography, Box, CardMedia, IconButton } from '@mui/material';
 import TextEllipsis from '../Utils/Ellipsis';
 import { useNavigate } from "react-router-dom";
@@ -6,9 +6,12 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import IosShareIcon from '@mui/icons-material/IosShare';
+import AppContext from '../Contexts/AppContext';
+import { saveCase, unsaveCase, savedCase } from '../API/cases';
 
-export default function CaseCardSearch({ title, description, image_url, case_id, owner }) {
-    const [saved, setSaved] = useState(false);
+export default function CaseCardSearch({ title, description, image_url, case_id, owner, saved }) {
+    const [localSaved, setLocalSaved] = useState(saved)
+    const {user} = useContext(AppContext)
     const navigate = useNavigate();
 
     const handleCopy = () => {
@@ -19,6 +22,24 @@ export default function CaseCardSearch({ title, description, image_url, case_id,
 
     const handleEdit = () => {
         navigate(`/create_case/${case_id}/text`);
+    };
+
+    const handleSaveToggle = async () => {
+        if (user) {
+            try {
+                if (!saved) {
+                    await saveCase(case_id, user.id);
+                    setLocalSaved(true)
+                } else {
+                    await unsaveCase(case_id, user.id);
+                    setLocalSaved(false)
+                }
+            } catch (error) {
+                console.error('Error al guardar o desguardar el caso:', error.message);
+            }
+        } else {
+            alert('Debes iniciar sesión para guardar el caso.');
+        }
     };
 
     const handleCopyLink = () => {
@@ -48,14 +69,14 @@ export default function CaseCardSearch({ title, description, image_url, case_id,
                     </CardContent>
                 </Box>
                 <Box sx={{ position: 'absolute', top: '50%', right: 16, transform: 'translateY(-50%)' }}>
-                    <IconButton onClick={() => setSaved(!saved)}>
-                        {saved ? <BookmarkIcon fontSize='2'/> : <BookmarkBorderIcon fontSize='large' color='primary'/>}
+                    <IconButton onClick={handleSaveToggle}>
+                        {localSaved ? <BookmarkIcon fontSize='large'/> : <BookmarkBorderIcon fontSize='large' color='primary'/>}
                     </IconButton>
                 </Box>
             </Box>
             <Box sx={{ height: '10%', width: '100%',display: 'flex', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 2  }} >
                     <IconButton>
-                        <IosShareIcon/>
+                        <IosShareIcon onClick={handleCopy}/>
                     </IconButton>
                     <IconButton onClick={handleCopyLink}>
                         <InsertLinkIcon/>

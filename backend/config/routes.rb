@@ -18,7 +18,6 @@ Rails.application.routes.draw do
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
-  get 'cases/:id', to: 'static/static_cases#show', as: 'case'
 
   # Rutas del API
   namespace :api do
@@ -26,7 +25,10 @@ Rails.application.routes.draw do
       resources :users, only: [:index, :show, :create, :update, :destroy]
       resources :cases do
         collection do
-          get :search, to: 'cases#get_searched_cases'          
+          get :search, to: 'cases#get_searched_cases' 
+          post :save_case, to: 'cases#save_case' 
+          delete :unsave_case, to: 'cases#unsave_case' 
+          get :saved, to: 'cases#saved_case'       
         end
         resources :tags, only: [:index, :destroy] do
           collection do

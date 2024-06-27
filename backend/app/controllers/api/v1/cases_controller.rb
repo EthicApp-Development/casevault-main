@@ -18,6 +18,42 @@ class Api::V1::CasesController < ApplicationController
     render json: {info: cases_with_images, include: [:images, :documents, :audios, :videos]}
   end
 
+  def save_case
+    user = User.find(params[:user_id])
+    case_record = Case.find(params[:case_id])
+    saved_case = SavedCase.new(user: user, case: case_record)
+    if saved_case.save
+      render json: {message: "caso guardado exitosamente"}, status: :ok
+    else
+      render json: {message: "No se pudo guardar el caso"}, status: :unprocessable_entity
+    end
+  end
+
+  def unsave_case 
+    @case = Case.find(params[:case_id]) 
+    @user = User.find(params[:user_id]) 
+    @saved_case = SavedCase.find_by(user_id: @user.id, case_id: @case.id) 
+    if @saved_case 
+      if @saved_case.destroy 
+        render json: { message: 'Caso desguardado correctamente.' }, status: :ok 
+      else 
+        render json: { error: 'No se pudo desguardar el caso.' }, status: :unprocessable_entity 
+      end 
+    else 
+      render json: { error: 'La asociación usuario-caso no existe.' }, status: :not_found 
+    end 
+  end
+
+  def saved_by_user 
+    @case = Case.find(params[:case_id]) 
+    @user = User.find(params[:user_id]) 
+    if @user.saved_cases.exists?(case_id: @case.id) 
+      render json: { saved: true }, status: :ok 
+    else 
+      render json: { saved: false }, status: :ok 
+    end 
+  end
+
   # GET /cases/1
   def show
     if @case.public_status? || @case.unlisted_status?
@@ -31,18 +67,20 @@ class Api::V1::CasesController < ApplicationController
 
   def get_searched_cases 
     search_param = params[:search] 
+    user_id = params[:user_id] # Buscar casos según los criterios de búsqueda y visibilidad 
     @cases = Case.where("(visibility = ? OR user_id = ?) AND (title LIKE ? OR description LIKE ?)", 
-    Case.visibilities[:public_status], params[:user_id], "%#{search_param}%", "%#{search_param}%")
-    puts "SE ESTA MANDANDO ESTO COMO PARAMETRO"
-    puts "#{params[:user_id]}" 
+    Case.visibilities[:public_status], user_id, "%#{search_param}%", "%#{search_param}%") # Mapear los casos encontrados para incluir la URL de la imagen principal si está adjunta 
     cases_with_images = @cases.map do |c| 
+      case_json = c.as_json 
       if c.main_image.attached? 
-        c.as_json.merge(main_image_url: url_for(c.main_image)) 
+        case_json.merge!(main_image_url: url_for(c.main_image)) 
       else 
-        c.as_json.merge(main_image_url: nil) 
-      end 
+        case_json.merge!(main_image_url: nil) 
+      end # Verificar si el caso está guardado por el usuario actual 
+      saved = SavedCase.exists?(user_id: user_id, case_id: c.id) 
+      case_json.merge(saved: saved) 
     end 
-    render json: {info: cases_with_images, include: [:images, :documents, :audios, :videos]} 
+    render json: { info: cases_with_images, include: [:images, :documents, :audios, :videos] } 
   end
 
   # POST /cases
@@ -99,6 +137,6 @@ class Api::V1::CasesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def case_params
-      params.require(:case).permit(:user_id,:visibility, :text, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
+      params.require(:case).permit(:user_id,:case_id,:visibility, :text, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
     end
 end
