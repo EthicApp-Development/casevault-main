@@ -1,8 +1,9 @@
 import { useParams } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { getCase } from '../API/cases';
 import InterpreterRichText from '../Utils/InterpreterRichText';
 import { Box, Typography, Chip } from '@mui/material';
+import AppContext from '../Contexts/AppContext';
 
 function ShowCaseText() {
     const [mainImage, setMainImage] = useState();
@@ -10,11 +11,12 @@ function ShowCaseText() {
     const { caseId } = useParams();
     const [text, setText] = useState('');
     const [tags, setTags] = useState([]);
-
+    const {user} = useContext(AppContext)
     useEffect(() => {
         async function fetchCase() {
+            if(user) {
             try {
-                const response = await getCase(caseId);
+                const response = await getCase(caseId, user.id);
                 if (response.status === 200) {
                     setTitle(response.data.title);
                     setMainImage(response.data.main_image_url);
@@ -26,6 +28,7 @@ function ShowCaseText() {
             } catch (error) {
                 console.error('Error al procesar la solicitud:', error);
             }
+        }
         }
         fetchCase();
     }, [caseId]);

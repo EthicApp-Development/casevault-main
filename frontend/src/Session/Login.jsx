@@ -30,16 +30,18 @@ export default function Login() {
             const data = new FormData(event.currentTarget);
             const params = { email: data.get('email'), password: data.get('password') };
             const response = await authLogin({ user: params });
-        
             
             const account = {
-                id: response.data.user.id,
-                email: response.data.user.email,
-                jti: response.data.user.jti,
-                first_name: response.data.user.first_name,
-                last_name: response.data.user.last_name
+                id: response.data.data.id,
+                email: response.data.data.email,
+                jti: response.data.data.jti,
+                first_name: response.data.data.first_name,
+                last_name: response.data.data.last_name
             };
+            console.log(response)
             setUser(account);
+            const token = response.headers['authorization'];
+            localStorage.setItem('token', token);
             localStorage.setItem('account', JSON.stringify(account));
             localStorage.setItem('authenticated', true);
             navigate('/home');

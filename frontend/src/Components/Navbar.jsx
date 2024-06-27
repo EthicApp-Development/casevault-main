@@ -38,7 +38,7 @@ const Search = styled('div')(({ theme }) => ({
         backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: theme.spacing(2),
-    width: '400px',
+    width: '450px',
     [theme.breakpoints.down('md')]: {
         width: 'auto',
     },
@@ -51,6 +51,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
+    padding: 5,
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -97,8 +98,8 @@ function Navbar(props) {
         <List>
             {[
             { text: 'Home', icon: <HomeIcon />, route: '/home'},
-            { text: 'Mis casos', icon: <SchoolIcon /> },
-            { text: 'Casos guardados', icon: <FolderIcon /> },
+            { text: 'Mis casos', icon: <SchoolIcon />, route: '/my_cases' },
+            { text: 'Casos guardados', icon: <FolderIcon />, route: '/saved_cases' },
             { text: 'Ajustes', icon: <SettingsIcon /> },
             ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
@@ -128,6 +129,7 @@ function Navbar(props) {
   const onSearch = (searchTerm) => {
         if (searchTerm.trim() !== "") {
             navigate(`/search/${encodeURIComponent(searchTerm)}`);
+            setSearchValue("")
         }
     };
 
@@ -204,7 +206,6 @@ function Navbar(props) {
                 vertical: 'top',
                 horizontal: 'right',
             }}
-            getContentAnchorEl={null} // Evita que el menú se desplace
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
         >

@@ -18,8 +18,6 @@ export default function Logout() {
     const handleLogout = async (event) => {
         event.preventDefault();
         try {
-            const response = await authLogout()
-            console.log(response)
             localStorage.removeItem("account")
             localStorage.setItem("authenticated",false)
             setUser(null)

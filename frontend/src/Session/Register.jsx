@@ -35,29 +35,24 @@ export default function Register() {
           };
       
           const response = await authRegister({ user: params });
-      
+          console.log(response)
           if (response.status === 200) {
             const account = {
               id: response.data.data.id,
               email: response.data.data.email,
+              jti: response.data.data.jti,
               first_name: response.data.data.first_name,
               last_name: response.data.data.last_name
             };
-      
-            // Asegúrate de obtener el token correctamente
-            const authorizationHeader = response.headers.get("Authorization");
-            if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
-              const token = authorizationHeader.split(' ')[1];
-      
+    
               setUser(account);
+              const token = response.headers['authorization'];
+              localStorage.setItem('token', token);
               localStorage.setItem("account", JSON.stringify(account));
               localStorage.setItem("authenticated", true);
-              localStorage.setItem('token', token);
+   
       
               navigate("/home");
-            } else {
-              console.error("Authorization header is missing or malformed");
-            }
           } else {
             console.error("Failed to register:", response.data.status.errors);
           }

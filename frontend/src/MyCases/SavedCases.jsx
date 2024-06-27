@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import ListItemButton from '@mui/material/ListItemButton';
 import AppContext from '../Contexts/AppContext';
-import { getUserCases } from '../API/cases';
+import { getUserSavedCases } from '../API/cases';
 import { title_style } from '../Utils/defaultStyles';
 const css = {
     container: {
@@ -29,7 +29,7 @@ const css = {
     },
 };
 
-export default function UserCases() {
+export default function SavedCases() {
     const [cases, setCases] = useState([]);
     const navigate = useNavigate();
     const {user} = useContext(AppContext)
@@ -38,8 +38,8 @@ export default function UserCases() {
         const fetchCases = async () => {
             if (user){
                 try {
-                    const response = await getUserCases(user.id)
-                    setCases(response.data.cases)
+                    const response = await getUserSavedCases(user.id)
+                    setCases(response.data.saved_cases)
                     
                 } catch (error) {
                     console.log(error);
@@ -57,7 +57,7 @@ export default function UserCases() {
     return (
         (user?.first_name? 
             <Box sx={css.container}>
-                <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Mis Casos</Typography>
+                <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Mis Casos Guardados</Typography>
                 <Grid container spacing={8}>
                     {cases?.map(caseData => (
                         <Grid item xs={12} sm={6} md={4} lg={4} key={caseData.id}>

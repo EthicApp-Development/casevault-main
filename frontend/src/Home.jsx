@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Grid, Container, Button, TextField, Avatar, Typography } from "@mui/material";
+import { Box, Grid, Container, Button, TextField, Avatar, Typography, Chip } from "@mui/material";
 import CaseCard from "./Case/CaseCard";
 import { styled } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import ListItemButton from '@mui/material/ListItemButton';
 import axios from "axios";
-import { createCase } from './API/cases';
+import { createCase, getAllTags } from './API/cases';
 import {inline_buttons, title_style} from  './Utils/defaultStyles'
 import AppContext from './Contexts/AppContext';
 
@@ -72,15 +72,23 @@ export default function Home() {
     const {user, setAvatar,avatar} = useContext(AppContext)
     const [authenticated, setauthenticated] = useState(null);
     const [caseTitle, setCaseTitle] = useState("");
-    
+    const [tags, setTags] = useState([])
+
     useEffect(() => {
         const fetchCases = async () => {
-            setAvatar(stringAvatar(user?.first_name +" "+ user?.last_name))
-            try {
-                const response = await axios.get(CASES_API);
-                setCases(response.data.info);
-            } catch (error) {
-                console.log(error);
+            if (user){
+                setAvatar(stringAvatar(user?.first_name +" "+ user?.last_name))
+                try {
+                    const response = await axios.get(CASES_API, {
+                        params: {
+                            user_id: user.id // Enviar user_id como parámetro
+                        }
+                    });
+                    setCases(response.data.info);
+                    
+                } catch (error) {
+                    console.log(error);
+                }
             }
             const loggedInUser = localStorage.getItem("authenticated");
             if (loggedInUser) {
@@ -90,6 +98,20 @@ export default function Home() {
             }
         };
         fetchCases();
+    }, []); 
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            
+                try {
+                    const response = await getAllTags()
+                    setTags(response.data);
+                    
+                } catch (error) {
+                    console.log(error);
+                }
+        };
+        fetchTags();
     }, []); 
 
     async function handleCreateCase() {
@@ -116,8 +138,14 @@ export default function Home() {
         navigate(`/show_case/${caseId}/text`);
     };
 
+    const handleClickTag = (tag) => {
+        const tagNameWithHash = `${encodeURIComponent("#"+tag.name)}`;
+        navigate(`/search/${tagNameWithHash}`);
+    };
+    
+
     return (
-        (user?  
+        (user?.first_name? 
             <Box sx={css.container}>
                 <Box sx={{ ...css.createContainer, height: 150 }}>
                     <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Crear un caso nuevo</Typography>
@@ -137,16 +165,34 @@ export default function Home() {
                         </CreateCaseButton>
                     </Box>
                 </Box>
-                <Grid container spacing={2}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginTop: 2, width: '100%', marginLeft: 5 }}>
+            {tags.slice(0, 10).map((tag) => (
+                <Chip
+                    key={tag.id}
+                    label={tag.name}
+                    onClick={() => handleClickTag(tag)}
+                    sx={{ marginBottom: 1 }}
+                />
+            ))}
+        </Box>
+                <Grid container spacing={8}>
                     {cases?.map(caseData => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={caseData.id}>
+                        <Grid item xs={12} sm={6} md={4} lg={4} key={caseData.id}>
                             <ListItemButton onClick={handleClick(caseData.id)}>
                                 <CaseCard
                                     title={caseData.title}
                                     description={caseData.description}
                                     image_url={caseData.main_image_url}
                                     case_id={caseData.id}
-                                    sx={{ height: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                                    owner = {caseData.user_id}
+                                     sx={{
+                                        height: '100%', 
+                                        display: 'flex', 
+                                        flexDirection: 'column',
+                                        overflow: 'hidden', 
+                                        textOverflow: 'ellipsis', 
+                                        whiteSpace: 'nowrap',
+                                      }}
                                 />
                             </ListItemButton>
                         </Grid>
