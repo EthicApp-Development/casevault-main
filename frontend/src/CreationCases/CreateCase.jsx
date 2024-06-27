@@ -1,8 +1,8 @@
 import React, { useState, createContext, useContext, useEffect } from "react";
-import { Box, Tab, Tabs} from '@mui/material';
+import { Box, Tab, Tabs, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import useToggle from "../Hooks/ToggleHook";
 import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
-import { getCase } from "../API/cases";
+import { getCase, deleteCase } from "../API/cases"; // Importa la función deleteCase
 
 const CaseContext = createContext();
 
@@ -23,27 +23,28 @@ function CreateCase() {
     const [caseObject, setCaseObject] = useState({});
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
-
-    const navigate = useNavigate()
-    const location = useLocation()
-    const [tags, setTags] = useState([])
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [tags, setTags] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [caseIdToDelete, setCaseIdToDelete] = useState(null);
     
     useEffect(() => {
         async function fetchData() {
             if (!!caseObject) {
                 try {
-                    const response = await getCase(caseId)
-                    setCaseObject(response.data)
-                    setVideos(response.data.videos)
-                    setTags(response.data.tags)
-                    setDocuments(response.data.documents)
-                    setAudios(response.data.audios)
+                    const response = await getCase(caseId);
+                    setCaseObject(response.data);
+                    setVideos(response.data.videos);
+                    setTags(response.data.tags);
+                    setDocuments(response.data.documents);
+                    setAudios(response.data.audios);
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
             }
         }
-        fetchData()
+        fetchData();
     }, [caseId]);
 
     useEffect(() => {
@@ -54,9 +55,9 @@ function CreateCase() {
     }, [location.pathname]);
 
     const handleTabChange = (event, newValue) => {
-        setSelectedTab(newValue)
-        navigate(`/create_case/${caseObject?.id}/${getTabSegment(newValue)}`)
-    }
+        setSelectedTab(newValue);
+        navigate(`/create_case/${caseObject?.id}/${getTabSegment(newValue)}`);
+    };
 
     const getTabSegment = (tabIndex) => {
         switch (tabIndex) {
@@ -75,7 +76,7 @@ function CreateCase() {
             default:
                 return '';
         }
-    }
+    };
 
     const getTabValue = (tabSegment) => {
         switch (tabSegment) {
@@ -94,7 +95,27 @@ function CreateCase() {
             default:
                 return 0;
         }
-    }
+    };
+
+    const openModal = (caseId) => {
+        setIsModalOpen(true);
+        setCaseIdToDelete(caseId);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setCaseIdToDelete(null);
+    };
+
+    const handleDeleteCase = async () => {
+        try {
+            await deleteCase(caseIdToDelete);
+            closeModal();
+            navigate('/home');
+        } catch (error) {
+            console.error("Error al eliminar el caso:", error);
+        }
+    };
 
     const contextValue = {
         title,
@@ -134,12 +155,35 @@ function CreateCase() {
                             <Tab label="Visibilidad" value={4} />
                             <Tab label="Información" value={5} />
                         </Tabs>
+                        <Button sx={{ textTransform: 'none', zIndex: 100 }} variant="contained" color="error" onClick={() => openModal(caseObject.id)}>Eliminar caso</Button>
                     </Box>
                     <Outlet />
                 </Box>
+
+                <Dialog
+                    open={isModalOpen}
+                    onClose={closeModal}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Eliminar caso"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            ¿Estás seguro de que deseas eliminar este caso?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={closeModal} color="primary">
+                            Cancelar
+                        </Button>
+                        <Button onClick={handleDeleteCase} color="error" autoFocus>
+                            Eliminar
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Box>
         </CaseContext.Provider>
-    )
+    );
 }
 
 export default CreateCase;
