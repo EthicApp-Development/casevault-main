@@ -173,10 +173,10 @@ function CreateCase() {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={closeModal} color="primary">
+                        <Button sx={{ textTransform: 'none' }} onClick={closeModal} color="primary">
                             Cancelar
                         </Button>
-                        <Button onClick={handleDeleteCase} color="error" autoFocus>
+                        <Button sx={{ textTransform: 'none' }} onClick={handleDeleteCase} color="error" autoFocus>
                             Eliminar
                         </Button>
                     </DialogActions>

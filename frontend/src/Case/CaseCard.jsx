@@ -39,7 +39,8 @@ const tabStyle = {
     },
     '&:hover': {
         backgroundColor: '#f0f0f0',
-    }
+    },
+    textTransform: 'none',
 };
 
 const tabsContainerStyle = {

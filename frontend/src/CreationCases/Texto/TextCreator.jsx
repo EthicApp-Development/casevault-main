@@ -215,7 +215,7 @@ export default function TextCreator() {
                                     onClick={handleCreateTag}
                                     disabled={!search}
                                     startIcon={<AddIcon />}
-                                    sx={{ marginTop: 2 }}
+                                    sx={{ marginTop: 2, textTransform: 'none'}}
                                 >
                                     Añadir etiqueta
                                 </Button>
