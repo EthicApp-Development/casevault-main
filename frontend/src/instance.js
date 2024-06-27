@@ -12,7 +12,6 @@ instance.interceptors.request.use((config) => {
     const newConfig = { ...config }
     const token = localStorage.getItem("token");
     if (token) {
-        console.log("TOKEN", token)
         newConfig.headers["Authorization"] =  token;
     }
     const accountString = localStorage.getItem("account");
@@ -24,7 +23,6 @@ instance.interceptors.request.use((config) => {
         newConfig.headers["User-Id"] = userId;
         newConfig.headers["baseurl"] = window.location.origin;
     }
-    console.log("NRE CONFIGGG",newConfig.headers)
     return newConfig
 })
 

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Grid, Container, Button, TextField, Avatar, Typography } from "@mui/material";
+import { Box, Grid, Container, Button, TextField, Avatar, Typography, Chip } from "@mui/material";
 import CaseCard from "./Case/CaseCard";
 import { styled } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import ListItemButton from '@mui/material/ListItemButton';
 import axios from "axios";
-import { createCase } from './API/cases';
+import { createCase, getAllTags } from './API/cases';
 import {inline_buttons, title_style} from  './Utils/defaultStyles'
 import AppContext from './Contexts/AppContext';
 
@@ -72,10 +72,12 @@ export default function Home() {
     const {user, setAvatar,avatar} = useContext(AppContext)
     const [authenticated, setauthenticated] = useState(null);
     const [caseTitle, setCaseTitle] = useState("");
+    const [tags, setTags] = useState([])
+
     useEffect(() => {
         const fetchCases = async () => {
-            setAvatar(stringAvatar(user?.first_name +" "+ user?.last_name))
             if (user){
+                setAvatar(stringAvatar(user?.first_name +" "+ user?.last_name))
                 try {
                     const response = await axios.get(CASES_API, {
                         params: {
@@ -83,7 +85,7 @@ export default function Home() {
                         }
                     });
                     setCases(response.data.info);
-                    console.log(response)
+                    
                 } catch (error) {
                     console.log(error);
                 }
@@ -96,6 +98,20 @@ export default function Home() {
             }
         };
         fetchCases();
+    }, []); 
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            
+                try {
+                    const response = await getAllTags()
+                    setTags(response.data);
+                    
+                } catch (error) {
+                    console.log(error);
+                }
+        };
+        fetchTags();
     }, []); 
 
     async function handleCreateCase() {
@@ -122,6 +138,12 @@ export default function Home() {
         navigate(`/show_case/${caseId}/text`);
     };
 
+    const handleClickTag = (tag) => {
+        const tagNameWithHash = `${encodeURIComponent("#"+tag.name)}`;
+        navigate(`/search/${tagNameWithHash}`);
+    };
+    
+
     return (
         (user?.first_name? 
             <Box sx={css.container}>
@@ -143,6 +165,16 @@ export default function Home() {
                         </CreateCaseButton>
                     </Box>
                 </Box>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginTop: 2, width: '100%', marginLeft: 5 }}>
+            {tags.slice(0, 10).map((tag) => (
+                <Chip
+                    key={tag.id}
+                    label={tag.name}
+                    onClick={() => handleClickTag(tag)}
+                    sx={{ marginBottom: 1 }}
+                />
+            ))}
+        </Box>
                 <Grid container spacing={8}>
                     {cases?.map(caseData => (
                         <Grid item xs={12} sm={6} md={4} lg={4} key={caseData.id}>

@@ -43,7 +43,7 @@ Rails.application.routes.draw do
           end
         end
       end
-      resources :tags, only: [:all_tags, :create, :destroy] do
+      resources :tags, only: [:all_tags, :create, :destroy, :index] do
         collection do
           get :all_tags
         end

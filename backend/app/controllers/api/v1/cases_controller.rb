@@ -65,23 +65,42 @@ class Api::V1::CasesController < ApplicationController
     end
   end
 
-  def get_searched_cases 
-    search_param = params[:search] 
-    user_id = params[:user_id] # Buscar casos según los criterios de búsqueda y visibilidad 
-    @cases = Case.where("(visibility = ? OR user_id = ?) AND (title LIKE ? OR description LIKE ?)", 
-    Case.visibilities[:public_status], user_id, "%#{search_param}%", "%#{search_param}%") # Mapear los casos encontrados para incluir la URL de la imagen principal si está adjunta 
-    cases_with_images = @cases.map do |c| 
-      case_json = c.as_json 
-      if c.main_image.attached? 
-        case_json.merge!(main_image_url: url_for(c.main_image)) 
-      else 
-        case_json.merge!(main_image_url: nil) 
-      end # Verificar si el caso está guardado por el usuario actual 
-      saved = SavedCase.exists?(user_id: user_id, case_id: c.id) 
-      case_json.merge(saved: saved) 
-    end 
-    render json: { info: cases_with_images, include: [:images, :documents, :audios, :videos] } 
+  def get_searched_cases
+    search_param = params[:search]
+    user_id = params[:user_id]
+    puts "EMPIEZA CON"
+    puts "#{search_param}"
+    if search_param.start_with?("#")
+      
+      # Búsqueda por tag
+      tag_name = search_param[1..-1] # Eliminar el '#' del inicio del tag
+      @cases = Case.joins(:tags)
+                   .where(tags: { name: tag_name })
+                   .where("(visibility = ? OR user_id = ?)",
+                          Case.visibilities[:public_status], user_id)
+    else
+      # Búsqueda por título/descripción
+      @cases = Case.where("(visibility = ? OR user_id = ?) AND (title LIKE ? OR description LIKE ?)",
+                          Case.visibilities[:public_status], user_id, "%#{search_param}%", "%#{search_param}%")
+    end
+  
+    # Mapear los casos encontrados para incluir la URL de la imagen principal si está adjunta
+    cases_with_images = @cases.map do |c|
+      case_json = c.as_json
+      if c.main_image.attached?
+        case_json.merge!(main_image_url: url_for(c.main_image))
+      else
+        case_json.merge!(main_image_url: nil)
+      end
+  
+      # Verificar si el caso está guardado por el usuario actual
+      saved = SavedCase.exists?(user_id: user_id, case_id: c.id)
+      case_json.merge(saved: saved)
+    end
+  
+    render json: { info: cases_with_images, include: [:images, :documents, :audios, :videos] }
   end
+  
 
   # POST /cases
   def create
