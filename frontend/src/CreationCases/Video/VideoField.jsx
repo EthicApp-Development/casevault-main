@@ -97,7 +97,7 @@ const VideoField = ({ open, toggleOpen }) => {
             <Button
                 onClick={handleSave}
                 variant="contained"
-                style={{ display: 'flex', marginLeft: 'auto', marginBottom: 10}}
+                style={{ textTransform: 'none', display: 'flex', marginLeft: 'auto', marginBottom: 10}}
             >
                 Guardar
             </Button>

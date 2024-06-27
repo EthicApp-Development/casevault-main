@@ -116,10 +116,6 @@ function CreateCase() {
         }
     };
 
-    const handleSave = () => {
-        navigate('/home');
-    };
-
     const contextValue = {
         title,
         setTitle,
@@ -158,7 +154,6 @@ function CreateCase() {
                             <Tab label="Visibilidad" value={4} />
                             <Tab label="Información" value={5} />
                         </Tabs>
-                        <Button sx={{ textTransform: 'none', zIndex: 100, }} variant="contained" onClick={handleSave}>Guardar</Button>
                         <Button sx={{ textTransform: 'none', zIndex: 100, marginRight: 2  }} variant="contained" color="error" onClick={() => openModal(caseObject.id)}>Eliminar caso</Button>
                     </Box>
                     <Outlet />

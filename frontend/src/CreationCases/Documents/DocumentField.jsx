@@ -97,7 +97,7 @@ const DocumentField = ({ open, toggleMenu }) => {
                 type="file"
                 onChange={handleFileChange}
             />
-            <Button onClick={handleUpload} sx={{ marginLeft: 10 }} variant="contained">
+            <Button onClick={handleUpload} sx={{ marginLeft: 10, textTransform: 'none' }} variant="contained">
                 Guardar
             </Button>
         </Collapse>

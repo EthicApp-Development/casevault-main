@@ -134,8 +134,8 @@ const AudioField = ({ open, toggleMenu }) => {
                 size="small"
                 sx={{ marginBottom: '10px' }}
             >
-                <ToggleButton value="url">Desde URL</ToggleButton>
-                <ToggleButton value="file">Desde Archivo</ToggleButton>
+                <ToggleButton sx={{ textTransform: 'none' }} value="url">Desde URL</ToggleButton>
+                <ToggleButton sx={{ textTransform: 'none' }} value="file">Desde Archivo</ToggleButton>
             </ToggleButtonGroup>
             {selectedOption === 'url' ? (
                 <TextField
@@ -165,7 +165,7 @@ const AudioField = ({ open, toggleMenu }) => {
                             onChange={handleChange}
                         />
                         <label htmlFor="audio-input">
-                            <Button variant="contained" component="span">
+                            <Button sx={{ textTransform: 'none' }} variant="contained" component="span">
                                 Subir archivo .mp3/.wav
                             </Button>
                         </label>
@@ -194,7 +194,7 @@ const AudioField = ({ open, toggleMenu }) => {
             <Button
                 onClick={handleSave}
                 variant="contained"
-                style={{ display: 'flex', marginLeft: 'auto', marginBottom: 10 }}
+                style={{ display: 'flex', marginLeft: 'auto', marginBottom: 10, textTransform: 'none' }}
             >
                 Guardar
             </Button>
