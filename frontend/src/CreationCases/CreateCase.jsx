@@ -33,6 +33,10 @@ function CreateCase() {
             if (!!caseObject) {
                 try {
                     const response = await getCase(caseId);
+                    setText(response.data.text || '');
+                    setTitle(response.data.title);
+                    setDescription(response.data.description || '');
+                    setMainImage(response.data.main_image_url);
                     setCaseObject(response.data);
                     setVideos(response.data.videos);
                     setTags(response.data.tags);
