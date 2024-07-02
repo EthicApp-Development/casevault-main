@@ -163,9 +163,8 @@ const newTheme = createTheme({
             fontSize: "1rem",
             fontWeight: 500,
         },
-        caption: {
+        success: {
             color: "#6A6A6A",
-            fontStyle: "italic",
             fontSize: "0.85rem",
             fontWeight: 400,
         },
