@@ -22,7 +22,7 @@ export default function CaseCardSearch({ title, description, image_url, case_id,
     };
 
     const handleCopyLink = () => {
-        const codeToCopy = `${window.location.origin}/show_case/${case_id}/text`;
+        const codeToCopy = `${window.location.origin}/show_case/${case_id}`;
         navigator.clipboard.writeText(codeToCopy)
             .then(() => alert('Enlace copiado al portapapeles'))
             .catch((error) => console.error('Error al copiar enlace:', error));
@@ -48,7 +48,7 @@ export default function CaseCardSearch({ title, description, image_url, case_id,
     };
 
     const handleClick = () => {
-        navigate(`/show_case/${case_id}/text`);
+        navigate(`/show_case/${case_id}`);
     };
 
     return (

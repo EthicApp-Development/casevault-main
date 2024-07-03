@@ -25,7 +25,7 @@ function ShowCase() {
     const {user} = useContext(AppContext)
     const navigate = useNavigate();
     const location = useLocation();
-    console.log(caseId)
+   
     useEffect(() => {
         async function fetchData() {
             if (!!caseObject && user) {
@@ -35,13 +35,14 @@ function ShowCase() {
                     setAudios(response.data.audios);
                     setVideos(response.data.videos);
                     setDocuments(response.data.documents);
+                    navigate(`/show_case/${caseId}/text`)
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
             }
         }
         fetchData()
-    }, [caseId]);
+    }, [caseId,user]);
 
     useEffect(() => {
         const segments = location.pathname.split('/');

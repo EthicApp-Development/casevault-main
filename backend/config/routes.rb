@@ -48,6 +48,7 @@ Rails.application.routes.draw do
       resources :tags, only: [:all_tags, :create, :destroy, :index] do
         collection do
           get :all_tags
+          get :searched_tags, to: 'tags#get_searched_tags'
         end
       end
     end

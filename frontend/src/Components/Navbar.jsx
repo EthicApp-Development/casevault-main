@@ -25,6 +25,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Menu, Avatar } from '@mui/material';
 import Logout from '../Session/Logout';
 import { dialog_style_white, inline_buttons } from '../Utils/defaultStyles';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 import AppContext from '../Contexts/AppContext';
 const drawerWidth = 240;
@@ -99,7 +100,7 @@ function Navbar(props) {
             {[
             { text: 'Home', icon: <HomeIcon />, route: '/home'},
             { text: 'Mis casos', icon: <SchoolIcon />, route: '/my_cases' },
-            { text: 'Casos guardados', icon: <FolderIcon />, route: '/saved_cases' },
+            { text: 'Casos guardados', icon: <BookmarkIcon />, route: '/saved_cases' },
             { text: 'Ajustes', icon: <SettingsIcon /> },
             ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
@@ -177,7 +178,7 @@ function Navbar(props) {
                                 <SearchIcon />
                             </SearchIconWrapper>
                             <StyledInputBase
-                                placeholder="Search…"
+                                placeholder="Buscar…"
                                 inputProps={{ 'aria-label': 'search' }}
                                 value={searchValue}
                                 onChange={handleSearchChange}

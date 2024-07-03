@@ -123,3 +123,11 @@ export function createTag(tagName) {
 export function getAllTags() {
 	return instance.get(`/api/v1/tags/all_tags`);
 }
+
+export function getSearchedTags(searchTerm) {
+	return instance.get(`/api/v1/tags/searched_tags`,{
+		params: {
+			search: searchTerm
+		}
+	} )
+}

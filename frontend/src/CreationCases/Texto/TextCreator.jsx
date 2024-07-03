@@ -1,4 +1,4 @@
-import { Box, Button, Typography, TextField, Grid, Chip } from '@mui/material';
+import { Box, Button, Typography, TextField, Grid, Chip, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import RTE from '../../Utils/RTE';
 import React, { useContext, useEffect, useState } from 'react';
@@ -29,9 +29,12 @@ export default function TextCreator() {
     const navigate = useNavigate();
     const [allTags, setAllTags] = useState([]);
     const [search, setSearch] = useState('');
-
+    const [loading, setLoading] = useState('')
+    
     useEffect(() => {
         async function fetchCase() {
+            
+            setLoading(true)
             if(user) {
             try {
                 const response = await getCase(caseId, user.id);
@@ -41,6 +44,7 @@ export default function TextCreator() {
                     setDescription(response.data.description || '')
                     setMainImage(response.data.main_image_url);
                     setCaseObject(response.data);
+                    setLoading(false)
                 } else {
                     console.error('Error al obtener el caso:', response.statusText);
                 }
@@ -50,7 +54,7 @@ export default function TextCreator() {
         }
         }
         fetchCase();
-    }, [caseId]);
+    }, [caseId,user]);
 
     useEffect(() => {
         async function fetchTags() {
@@ -144,6 +148,9 @@ export default function TextCreator() {
         } catch (error) {
             console.error('Error al procesar la solicitud:', error);
         }
+    }
+    if (loading) {
+        return <CircularProgress/>
     }
 
     return (
