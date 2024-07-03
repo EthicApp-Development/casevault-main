@@ -120,7 +120,7 @@ export default function Home() {
         (user?  
             <Box sx={css.container}>
                 <Box sx={{ ...css.createContainer, height: 150 }}>
-                    <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Crear un caso nuevo</Typography>
+                    <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">¡Te damos la bienvenida a CaseVault!</Typography>
                     <Box sx={{...css.centerAlign, inline_buttons}}>
                         <Avatar {...avatar} />
                         <TextField 
