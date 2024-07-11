@@ -49,8 +49,9 @@ const SearchResults = () => {
               <> 
 
             <Box sx={dialog_style_white}>
-                <Typography variant="h2" sx={title_style}>Etiquetas</Typography>
+                {tags.length > 0 && <Typography variant="h2" sx={title_style}>Etiquetas</Typography>}
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginTop: 2, width: '100%', marginLeft: 5 }}>
+                  
                 {tags.slice(0, 10).map((tag) => (
                   <Chip
                       key={tag.id}
