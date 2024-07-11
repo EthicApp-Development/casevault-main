@@ -73,6 +73,7 @@ const SearchResults = () => {
                       case_id={caseData.id}
                       owner={caseData.user_id}
                       saved = {caseData.saved}
+                      owner_info = {caseData.user_info}
                     />
                   </Grid>
                 ))}

@@ -12,11 +12,9 @@ import TextEllipsis from '../Utils/Ellipsis';
 import { useContext} from 'react';
 import AppContext from '../Contexts/AppContext';
 import { useNavigate } from "react-router-dom";
-import ShareIcon from '@mui/icons-material/Share';
 import EditIcon from '@mui/icons-material/Edit';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import { saveCase, unsaveCase } from '../API/cases';
 

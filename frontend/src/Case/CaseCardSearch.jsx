@@ -8,8 +8,9 @@ import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import AppContext from '../Contexts/AppContext';
 import { saveCase, unsaveCase } from '../API/cases';
+import EditIcon from '@mui/icons-material/Edit';
 
-export default function CaseCardSearch({ title, description, image_url, case_id, owner, saved }) {
+export default function CaseCardSearch({ title, description, image_url, case_id, owner, saved, owner_info }) {
     const [localSaved, setLocalSaved] = useState(saved);
     const { user } = useContext(AppContext);
     const navigate = useNavigate();
@@ -26,6 +27,10 @@ export default function CaseCardSearch({ title, description, image_url, case_id,
         navigator.clipboard.writeText(codeToCopy)
             .then(() => alert('Enlace copiado al portapapeles'))
             .catch((error) => console.error('Error al copiar enlace:', error));
+    };
+
+    const handleEdit = () => {
+        navigate(`/create_case/${case_id}/text`);
     };
 
     const handleSaveToggle = async (event) => {
@@ -55,7 +60,7 @@ export default function CaseCardSearch({ title, description, image_url, case_id,
         <Card onClick={handleClick} 
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        sx={{ display: 'flex', flexDirection: 'column', padding: 2, marginBottom: 2, position: 'relative', minHeight: 180, cursor: 'pointer', boxShadow: hovered ? '8px 8px 8px 8px rgba(0.1, 0.1, 0.1, 0.1)' : 'none',
+        sx={{ display: 'flex', flexDirection: 'column', padding: 2, marginBottom: 2, position: 'relative', minHeight: 180, cursor: 'pointer', boxShadow: hovered ? '8px 8px 8px 8px rgba(0.1, 0.1, 0.1, 0.1)' : '2px 2px 2px 2px rgba(0.1, 0.1, 0.1, 0.1)',
             transition: 'box-shadow 0.3s ease' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
                 <CardMedia
@@ -72,6 +77,9 @@ export default function CaseCardSearch({ title, description, image_url, case_id,
                             </Typography>
                             <TextEllipsis text={description || "Este caso no tiene descripción"} variant="body1" showTooltip maxLines={3} />
                         </Box>
+                        <Box>
+                            <Typography sx={{padding: 2}} variant="subtitle">Creador: {owner_info.first_name} {owner_info.last_name}</Typography>
+                        </Box>
                     </CardContent>
                 </Box>
                 <Box sx={{ position: 'absolute', top: '50%', right: 16, transform: 'translateY(-50%)' }}>
@@ -81,6 +89,9 @@ export default function CaseCardSearch({ title, description, image_url, case_id,
                 </Box>
             </Box>
             <Box sx={{ height: '10%', width: '100%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 2 }} >
+                {user.id == owner && <IconButton onClick={(e) => { e.stopPropagation(); handleEdit(); }}>
+                    <EditIcon />
+                </IconButton>    }           
                 <IconButton onClick={(event) => { event.stopPropagation(); handleCopy(); }}>
                     <IosShareIcon />
                 </IconButton>
