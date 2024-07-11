@@ -4,15 +4,18 @@ class Api::V1::CasesController < ApplicationController
 
   # GET /cases
   def index
- 
+    user_id = params[:user_id]
     @cases = Case.where("visibility = ? OR user_id = ?", Case.visibilities[:public_status], params[:user_id])
 
     cases_with_images = @cases.map do |c|
+      case_json = c.as_json
       if c.main_image.attached?
-        c.as_json.merge(main_image_url: url_for(c.main_image))
+        case_json.merge!(main_image_url: url_for(c.main_image))
       else
-        c.as_json.merge(main_image_url: nil)
+        case_json.merge!(main_image_url: nil)
       end
+      saved = SavedCase.exists?(user_id: user_id, case_id: c.id)
+      case_json.merge(saved: saved)
     end
 
     render json: {info: cases_with_images, include: [:images, :documents, :audios, :videos]}
@@ -77,7 +80,8 @@ class Api::V1::CasesController < ApplicationController
       else
         case_json.merge!(main_image_url: nil)
       end
-      case_json
+      saved = SavedCase.exists?(user_id: user_id, case_id: c.id)
+      case_json.merge(saved: saved)
     end
     
     render json: { saved_cases: cases_with_images }
@@ -87,11 +91,14 @@ class Api::V1::CasesController < ApplicationController
     user_id = params[:user_id]
     @cases = Case.where(user_id: user_id)
     cases_with_images = @cases.map do |c|
+      case_json = c.as_json
       if c.main_image.attached?
-        c.as_json.merge(main_image_url: url_for(c.main_image))
+        case_json.merge!(main_image_url: url_for(c.main_image))
       else
-        c.as_json.merge(main_image_url: nil)
+        case_json.merge!(main_image_url: nil)
       end
+      saved = SavedCase.exists?(user_id: user_id, case_id: c.id)
+      case_json.merge(saved: saved)
     end
     render json: { cases: cases_with_images }
   end
@@ -164,12 +171,12 @@ class Api::V1::CasesController < ApplicationController
     def render_case
       case_json = @case.as_json(include: {
         images: { only: [:title, :description], methods: :image_url },
-        documents: { only: [:title, :description], methods: :document_url },
-        audios: { only: [:title, :url], methods: :file_url },
+        documents: { only: [:id, :title, :description], methods: :document_url },
+        audios: { only: [:id, :title, :url], methods: :file_url },
         videos: { only: [:id, :url, :title, :description] },
         tags: { only: [:name, :id] }
       })
-  
+    
       if @case.main_image.attached?
         case_json.merge!(main_image_url: url_for(@case.main_image))
       else

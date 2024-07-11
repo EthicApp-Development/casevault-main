@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
+import { CardActionArea, IconButton } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Button from '@mui/material/Button';
@@ -12,6 +12,13 @@ import TextEllipsis from '../Utils/Ellipsis';
 import { useContext} from 'react';
 import AppContext from '../Contexts/AppContext';
 import { useNavigate } from "react-router-dom";
+import ShareIcon from '@mui/icons-material/Share';
+import EditIcon from '@mui/icons-material/Edit';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import { saveCase, unsaveCase } from '../API/cases';
 
 const modalStyle = {
     position: 'absolute',
@@ -41,7 +48,8 @@ const tabStyle = {
     },
     '&:hover': {
         backgroundColor: '#f0f0f0',
-    }
+    },
+    textTransform: 'none',
 };
 
 const tabsContainerStyle = {
@@ -51,11 +59,12 @@ const tabsContainerStyle = {
     borderBottom: '1px solid #ddd'
 };
 
-export default function CaseCard({ title, description, image_url, case_id, owner }) {
+export default function CaseCard({ title, description, image_url, case_id, owner, saved}) {
     const [open, setOpen] = useState(false);
     const {user, setAvatar,avatar} = useContext(AppContext)
     const navigate = useNavigate();
-    
+    const [localSaved, setLocalSaved] = useState(saved);
+    const [selectedTab, setSelectedTab] = useState(0);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -67,6 +76,25 @@ export default function CaseCard({ title, description, image_url, case_id, owner
 
 
     const ownerSession = owner == user.id 
+
+    const handleSave = async (event) => {
+      event.stopPropagation();
+      if (user) {
+          try {
+              if (!localSaved) {
+                  await saveCase(case_id, user.id);
+                  setLocalSaved(true);
+              } else {
+                  await unsaveCase(case_id, user.id);
+                  setLocalSaved(false);
+              }
+          } catch (error) {
+              console.error('Error al guardar o desguardar el caso:', error.message);
+          }
+      } else {
+          alert('Debes iniciar sesión para guardar el caso.');
+      }
+  };
 
 
     const handleEdit = () => {
@@ -90,13 +118,29 @@ export default function CaseCard({ title, description, image_url, case_id, owner
           </CardContent>
         </CardActionArea>
         <Box sx={tabsContainerStyle}>
-          <Tabs indicatorColor="primary" textColor="primary">
-            {ownerSession && 
-            <Tab label="Editar" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleEdit(); }} />
-            }
-            <Tab label="Compartir" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleOpen(); }} />
-          </Tabs>
-        </Box>
+                {ownerSession && 
+                    <IconButton
+                        onClick={(e) => { e.stopPropagation(); handleEdit(); }}
+                        sx={tabStyle}
+                   
+                    >
+                        <EditIcon />
+                    </IconButton>
+                }
+                <IconButton
+                    onClick={(e) => { e.stopPropagation(); handleOpen(); }}
+                    sx={tabStyle}
+
+                >
+                    <IosShareIcon />
+                </IconButton>
+                <IconButton
+                    onClick={(e) => { e.stopPropagation(); handleSave(e); }}
+                    sx={tabStyle}
+                >
+                    {localSaved ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+                </IconButton>
+            </Box>
         <Modal open={open} onClose={(e) => { e.stopPropagation(); handleClose(); }}>
           <Box sx={modalStyle}>
             <Typography variant="h6" component="h2">

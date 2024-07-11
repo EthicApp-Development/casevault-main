@@ -39,6 +39,7 @@ export default function SavedCases() {
             if (user){
                 try {
                     const response = await getUserSavedCases(user.id)
+                    
                     setCases(response.data.saved_cases)
                     
                 } catch (error) {
@@ -54,6 +55,7 @@ export default function SavedCases() {
         navigate(`/show_case/${caseId}/text`);
     };
 
+    console.log(cases)
     return (
         (user?.first_name? 
             <Box sx={css.container}>
@@ -68,6 +70,7 @@ export default function SavedCases() {
                                     image_url={caseData.main_image_url}
                                     case_id={caseData.id}
                                     owner = {caseData.user_id}
+                                    saved = {caseData.saved}
                                      sx={{
                                         height: '100%', 
                                         display: 'flex', 

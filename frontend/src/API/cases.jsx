@@ -124,6 +124,10 @@ export function getAllTags() {
 	return instance.get(`/api/v1/tags/all_tags`);
 }
 
+export function deleteCase(caseId) {
+	return instance.delete(`/api/v1/cases/${caseId}`);
+}
+
 export function getSearchedTags(searchTerm) {
 	return instance.get(`/api/v1/tags/searched_tags`,{
 		params: {

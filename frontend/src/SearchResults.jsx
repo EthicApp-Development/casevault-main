@@ -6,14 +6,14 @@ import { searchCases } from './API/cases';
 import AppContext from './Contexts/AppContext';
 import { useContext, useState } from 'react';
 import { getSearchedTags } from './API/cases';
-import { dialog_style, dialog_style_white, title_style } from './Utils/defaultStyles';
-
+import {dialog_style_white, title_style } from './Utils/defaultStyles';
+import { useNavigate } from 'react-router-dom';
 const SearchResults = () => {
     const { searchTerm } = useParams();
     const {user, setAvatar,avatar} = useContext(AppContext)
     const [cases, setCases] = useState([])
     const [tags, setTags] = useState([])
-
+    const navigate = useNavigate();
     useEffect(() => {
       if (user) {
         async function fetchData() {
