@@ -69,6 +69,7 @@ export default function UserCases() {
                                     case_id={caseData.id}
                                     owner = {caseData.user_info}
                                     saved = {caseData.saved}
+                                    owner_info = {caseData.user_id}
                                      sx={{
                                         height: '100%', 
                                         display: 'flex', 

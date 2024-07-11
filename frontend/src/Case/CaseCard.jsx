@@ -59,7 +59,7 @@ const tabsContainerStyle = {
     borderBottom: '1px solid #ddd'
 };
 
-export default function CaseCard({ title, description, image_url, case_id, owner, saved}) {
+export default function CaseCard({ title, description, image_url, case_id, owner, saved, owner_info}) {
     const [open, setOpen] = useState(false);
     const {user, setAvatar,avatar} = useContext(AppContext)
     const navigate = useNavigate();
@@ -75,7 +75,7 @@ export default function CaseCard({ title, description, image_url, case_id, owner
     };
 
 
-    const ownerSession = owner == user.id 
+    const ownerSession = owner_info == user.id 
 
     const handleSave = async (event) => {
       event.stopPropagation();
