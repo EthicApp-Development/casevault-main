@@ -67,7 +67,7 @@ export default function UserCases() {
                                     description={caseData.description}
                                     image_url={caseData.main_image_url}
                                     case_id={caseData.id}
-                                    owner = {caseData.user_id}
+                                    owner = {caseData.user_info}
                                     saved = {caseData.saved}
                                      sx={{
                                         height: '100%', 

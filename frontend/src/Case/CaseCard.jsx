@@ -117,6 +117,9 @@ export default function CaseCard({ title, description, image_url, case_id, owner
             />
           </CardContent>
         </CardActionArea>
+        <Box>
+         <Typography sx={{padding: 2}} variant="body1"> Creador: {owner.first_name} {owner.last_name}</Typography> 
+        </Box>
         <Box sx={tabsContainerStyle}>
                 {ownerSession && 
                     <IconButton

@@ -15,7 +15,8 @@ class Api::V1::CasesController < ApplicationController
         case_json.merge!(main_image_url: nil)
       end
       saved = SavedCase.exists?(user_id: user_id, case_id: c.id)
-      case_json.merge(saved: saved)
+      user_info = c.user.present? ? { first_name: c.user.first_name, last_name: c.user.last_name } : {}
+      case_json.merge!(user_info: user_info, saved: saved)
     end
 
     render json: {info: cases_with_images, include: [:images, :documents, :audios, :videos]}
@@ -81,7 +82,8 @@ class Api::V1::CasesController < ApplicationController
         case_json.merge!(main_image_url: nil)
       end
       saved = SavedCase.exists?(user_id: user_id, case_id: c.id)
-      case_json.merge(saved: saved)
+      user_info = c.user.present? ? { first_name: c.user.first_name, last_name: c.user.last_name } : {}
+      case_json.merge!(user_info: user_info, saved: saved)
     end
     
     render json: { saved_cases: cases_with_images }
@@ -98,7 +100,8 @@ class Api::V1::CasesController < ApplicationController
         case_json.merge!(main_image_url: nil)
       end
       saved = SavedCase.exists?(user_id: user_id, case_id: c.id)
-      case_json.merge(saved: saved)
+      user_info = c.user.present? ? { first_name: c.user.first_name, last_name: c.user.last_name } : {}
+      case_json.merge!(user_info: user_info, saved: saved)
     end
     render json: { cases: cases_with_images }
   end
