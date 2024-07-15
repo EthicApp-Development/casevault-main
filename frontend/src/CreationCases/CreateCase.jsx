@@ -2,6 +2,7 @@ import React, { useState, createContext, useContext, useEffect } from "react";
 import { Box, Tab, Tabs, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
 import { getCase, deleteCase } from "../API/cases";
+import AppContext from "../Contexts/AppContext";
 
 const CaseContext = createContext();
 
@@ -22,26 +23,30 @@ function CreateCase() {
     const [caseObject, setCaseObject] = useState({});
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
-    const navigate = useNavigate();
-    const location = useLocation();
-    const [tags, setTags] = useState([]);
+    const {user} = useContext(AppContext)
+    const navigate = useNavigate()
+    const location = useLocation()
+    const [tags, setTags] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [caseIdToDelete, setCaseIdToDelete] = useState(null);
-
+  
+    console.log(caseObject)
     useEffect(() => {
         async function fetchData() {
-            if (!!caseObject) {
+            if (!!caseObject && user) {
                 try {
-                    const response = await getCase(caseId);
+                    const response = await getCase(caseId, user.id)
                     setText(response.data.text || '');
                     setTitle(response.data.title);
                     setDescription(response.data.description || '');
                     setMainImage(response.data.main_image_url);
-                    setCaseObject(response.data);
-                    setVideos(response.data.videos);
-                    setTags(response.data.tags);
+                    setCaseObject(response.data)
+                    setVideos(response.data.videos)
+                    setTags(response.data.tags)
                     setDocuments(response.data.documents);
                     setAudios(response.data.audios);
+                    setVisibility(response.data.visibility)
+
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }

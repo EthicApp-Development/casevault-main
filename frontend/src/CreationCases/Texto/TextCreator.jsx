@@ -1,19 +1,64 @@
-import { Box, Button, Typography, TextField, Grid, Chip } from '@mui/material';
+import { Box, Button, Typography, TextField, Grid, Chip, CircularProgress } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import RTE from '../../Utils/RTE';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useCaseContext } from '../CreateCase';
 import { useParams } from 'react-router-dom';
 import { updateCase, getAllTags, createTag, addTagToCase, deleteTagFromCase } from '../../API/cases';
 import { inline_buttons } from "../../Utils/defaultStyles";
 import AddIcon from '@mui/icons-material/Add';
+import AppContext from '../../Contexts/AppContext';
+import { useNavigate } from 'react-router-dom';
+import { getCase } from '../../API/cases';
+const SaveCaseButton = styled(Button)({
+    position: 'absolute',
+    bottom: '16px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    color: 'white',
+    backgroundColor: '#282828',
+    '&:hover': {
+        color: '#282828',
+        backgroundColor: 'white',
+    },
+});
 
 export default function TextCreator() {
-    const { text, setText, title, setTitle, mainImage, setMainImage, tags, setTags, description, setDescription } = useCaseContext();
+    const { text, setText, title, setTitle, mainImage, setMainImage, setCaseObject, tags, setTags, description, setDescription } = useCaseContext();
     const { caseId } = useParams();
+    const {user} = useContext(AppContext)
+    const navigate = useNavigate();
     const [allTags, setAllTags] = useState([]);
     const [search, setSearch] = useState('');
     const [saveStatus, setSaveStatus] = useState('');
     const saveStatusRef = useRef(null);
+    const [loading, setLoading] = useState('')
+
+
+    useEffect(() => {
+        async function fetchCase() {
+            
+            setLoading(true)
+            if(user) {
+            try {
+                const response = await getCase(caseId, user.id);
+                if (response.status === 200) {
+                    setText(response.data.text || '');
+                    setTitle(response.data.title);
+                    setDescription(response.data.description || '')
+                    setMainImage(response.data.main_image_url);
+                    setCaseObject(response.data);
+                    setLoading(false)
+                } else {
+                    console.error('Error al obtener el caso:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error al procesar la solicitud:', error);
+            }
+        }
+        }
+        fetchCase();
+    }, [caseId,user]);
 
     useEffect(() => {
         async function fetchTags() {
@@ -136,11 +181,14 @@ export default function TextCreator() {
         } catch (error) {
             console.error('Error al procesar la solicitud:', error);
         }
-    };
-
+    }
     const handleFieldChange = (setter) => (event) => {
         setter(event.target.value);
     };
+
+    if (loading) {
+        return <CircularProgress/>
+    }
 
     return (
         <Box marginTop={5} marginRight={2}>
@@ -169,6 +217,7 @@ export default function TextCreator() {
                         </Grid>
                         <Grid item xs={12}>
                             <Box sx={inline_buttons}>
+                            <Typography variant="subtitle1">Etiquetas</Typography>
                                 <Box>
                                     {tags.map((tag, index) => (
                                         <Chip

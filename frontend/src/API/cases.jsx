@@ -17,8 +17,63 @@ export function getCases() {
 	return instance.get("api/v1/cases");
 }
 
-export function getCase(caseId) {
-	return instance.get(`api/v1/cases/${caseId}`);
+export function getUserCases(userId) {
+	return instance.get(`api/v1/cases/user_cases`, {
+		params: {
+		user_id: userId
+		}
+	});
+}
+
+export function getUserSavedCases(userId) {
+	return instance.get(`/api/v1/cases/saved_cases`, {
+		params: {
+		user_id: userId
+		}
+	});
+}
+
+export function getCase(caseId, userId) {
+	return instance.get(`api/v1/cases/${caseId}`, {
+		params: {
+			user_id: userId
+		}
+	});
+}
+
+export function saveCase(caseId,userId){
+	return instance.post('api/v1/cases/save_case/',{
+			case_id: caseId,
+			user_id: userId
+		}
+	)
+}
+
+export function unsaveCase(caseId,userId){
+	return instance.delete('api/v1/cases/unsave_case/',{
+		params: {
+			case_id: caseId,
+			user_id: userId
+		}
+		
+	})
+}
+
+export function savedCase(caseId,userId){
+	return instance.post('api/v1/cases/saved_case/',{
+			case_id: caseId,
+			user_id: userId
+		
+	})
+}
+
+export function searchCases(searchTerm,userId) {
+	return instance.get(`api/v1/cases/search`,{
+		params: {
+			search: searchTerm,
+			user_id: userId
+		}
+	} );
 }
 
 export function getCaseAudios(caseId) {
@@ -71,4 +126,12 @@ export function getAllTags() {
 
 export function deleteCase(caseId) {
 	return instance.delete(`/api/v1/cases/${caseId}`);
+}
+
+export function getSearchedTags(searchTerm) {
+	return instance.get(`/api/v1/tags/searched_tags`,{
+		params: {
+			search: searchTerm
+		}
+	} )
 }

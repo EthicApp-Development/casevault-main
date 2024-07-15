@@ -2,7 +2,6 @@ import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './Components/Navbar.jsx';
 import Home from './Home.jsx';
-import UserCases from './MyCases/UserCases.jsx';
 import SearchResults from './SearchResults.jsx';
 import AppContext from './Contexts/AppContext.jsx';
 import { Box } from "@mui/material";
@@ -23,7 +22,9 @@ import ShowCaseText from './ShowCase/ShowCaseText.jsx';
 import ShowCaseVideos from './ShowCase/ShowCaseVideos.jsx';
 import ShowCaseAudios from './ShowCase/ShowCaseAudios.jsx';
 import ShowCaseDocuments from './ShowCase/ShowCaseDocuments.jsx';
-
+import Visibility from './CreationCases/Visibility.jsx';
+import UserCases from './MyCases/UserCases.jsx';
+import SavedCases from './MyCases/SavedCases.jsx';
 function App() {
   const location = useLocation();
   const [user, setUser] = useState(null)
@@ -36,18 +37,14 @@ function App() {
             if (accountString) {
                 console.log("accountString", accountString);
                 const account = JSON.parse(accountString);
-                const userId = account.id;
-                try {
-                    const response = await getUser(userId);
-                    setUser(response.data.info);
-                } catch (error) {
-                    console.error("Error fetching user:", error);
-                }
+                setUser(account)
             }
         };
 
         fetchUser();
     }, []);
+
+  console.log("user", user)
 
   useEffect(() => {
     const accountInfo = localStorage.getItem('account');
@@ -68,8 +65,9 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/search/:searchTerm" element={<SearchResults />} />
-            <Route path="/mycases/" element={<UserCases />} />
+            <Route path="/search/:searchTerm/" element={<SearchResults />} />
+            <Route path="/my_cases/" element={<UserCases />} />
+            <Route path="/saved_cases/" element={<SavedCases />} />
             <Route path="/show_case/:caseId/" element={<ShowCase />}>
               <Route path="text" element={<ShowCaseText />} />
               <Route path="videos" element={<ShowCaseVideos />} />
@@ -83,6 +81,7 @@ function App() {
               {/* <Route path="images" element={<ImageCreator />} /> */}
               <Route path="audios" element={<AudioCreator />} />
               <Route path="information" element={<InfoCreator />} />
+              <Route path="visibility" element= {<Visibility/>} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

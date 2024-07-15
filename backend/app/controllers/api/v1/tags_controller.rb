@@ -17,6 +17,12 @@ class Api::V1::TagsController < ApplicationController
         render json: @tags, status: :ok
     end
 
+    def get_searched_tags
+        search_param = params[:search]
+        @tags = Tag.where("name LIKE ?", "%#{search_param}%")
+        render json: { info: @tags }
+      end
+
     def add_tag
         @tag = Tag.find(params[:tag_id])
         @case.tags << @tag unless @case.tags.include?(@tag)

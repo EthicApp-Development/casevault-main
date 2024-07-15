@@ -8,6 +8,6 @@ export function authLogin(data) {
     return instance.post("login", data);
 }
 
-export function authLogout(data) {
-    return instance.delete("logout", data);
+export function authLogout() {
+    return instance.delete("logout");
 }

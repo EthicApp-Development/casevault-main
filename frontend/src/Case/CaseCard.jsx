@@ -2,14 +2,21 @@ import React, { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
+import { CardActionArea, IconButton } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextEllipsis from '../Utils/Ellipsis';
+import { useContext} from 'react';
+import AppContext from '../Contexts/AppContext';
 import { useNavigate } from "react-router-dom";
+import EditIcon from '@mui/icons-material/Edit';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import { saveCase, unsaveCase } from '../API/cases';
 
 const modalStyle = {
     position: 'absolute',
@@ -50,10 +57,12 @@ const tabsContainerStyle = {
     borderBottom: '1px solid #ddd'
 };
 
-export default function CaseCard({ title, description, image_url, case_id }) {
+export default function CaseCard({ title, description, image_url, case_id, owner, saved, owner_info}) {
     const [open, setOpen] = useState(false);
+    const {user, setAvatar,avatar} = useContext(AppContext)
     const navigate = useNavigate();
-    
+    const [localSaved, setLocalSaved] = useState(saved);
+    const [selectedTab, setSelectedTab] = useState(0);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -63,48 +72,89 @@ export default function CaseCard({ title, description, image_url, case_id }) {
         alert('Código embebido copiado al portapapeles');
     };
 
+
+    const ownerSession = owner_info == user.id 
+
+    const handleSave = async (event) => {
+      event.stopPropagation();
+      if (user) {
+          try {
+              if (!localSaved) {
+                  await saveCase(case_id, user.id);
+                  setLocalSaved(true);
+              } else {
+                  await unsaveCase(case_id, user.id);
+                  setLocalSaved(false);
+              }
+          } catch (error) {
+              console.error('Error al guardar o desguardar el caso:', error.message);
+          }
+      } else {
+          alert('Debes iniciar sesión para guardar el caso.');
+      }
+  };
+
+
     const handleEdit = () => {
         navigate(`/create_case/${case_id}/text`);
     };
 
     return (
-        <Card sx={{ maxWidth: 700 }}>
-            <CardActionArea>
-                <CardContent>
-                    <img src={image_url} alt={title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
-                    <Typography gutterBottom variant="h5" component="div">
-                        {title}
-                    </Typography>
-                    <TextEllipsis 
-                        text={description ? description : ""} 
-                        variant="body1" 
-                        showTooltip={true} 
-                        maxLines={5} 
-                    />
-                </CardContent>
-            </CardActionArea>
-            <Box sx={tabsContainerStyle}>
-                <Tabs
-                    indicatorColor="primary"
-                    textColor="primary"
+        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', minWidth: '100%', minHeight: '32vw'}}>
+        <CardActionArea sx={{ flexGrow: 1 }}>
+          <CardContent sx={{minHeight: '23vw'}}>
+            <img src={image_url} alt={title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+            <Typography gutterBottom variant="h5" component="div" sx={{marginTop:1}}>
+              {title}
+            </Typography>
+            <TextEllipsis 
+              text={description ? description : "Este caso no tiene descripción"} 
+              variant="body1" 
+              showTooltip={true} 
+              maxLines={5} 
+            />
+          </CardContent>
+        </CardActionArea>
+        <Box>
+         <Typography sx={{padding: 2}} variant="body1"> Creador: {owner.first_name} {owner.last_name}</Typography> 
+        </Box>
+        <Box sx={tabsContainerStyle}>
+                {ownerSession && 
+                    <IconButton
+                        onClick={(e) => { e.stopPropagation(); handleEdit(); }}
+                        sx={tabStyle}
+                   
+                    >
+                        <EditIcon />
+                    </IconButton>
+                }
+                <IconButton
+                    onClick={(e) => { e.stopPropagation(); handleOpen(); }}
+                    sx={tabStyle}
+
                 >
-                    <Tab label="Editar" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleEdit(); }} />
-                    <Tab label="Compartir" sx={tabStyle} onClick={(e) => { e.stopPropagation(); handleOpen(); }} />
-                </Tabs>
+                    <IosShareIcon />
+                </IconButton>
+                <IconButton
+                    onClick={(e) => { e.stopPropagation(); handleSave(e); }}
+                    sx={tabStyle}
+                >
+                    {localSaved ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+                </IconButton>
             </Box>
-            <Modal open={open} onClose={(e) => { e.stopPropagation(); handleClose(); }}>
-                <Box sx={modalStyle}>
-                    <Typography variant="h6" component="h2">
-                        Código embebido
-                    </Typography>
-                    <Box sx={codeBoxStyle}>
-                        {`<iframe id="casevault-iframe" src="http://localhost:3000/cases/${case_id}" width="800px" height="900px"></iframe>`}
-                    </Box>
-                    <Button variant="contained" color="primary" onClick={(e) => {e.stopPropagation(); handleCopy(); }} sx={{ mt: 2 }}>
-                        Copiar
-                    </Button>
-                </Box>
-            </Modal>
-        </Card>
+        <Modal open={open} onClose={(e) => { e.stopPropagation(); handleClose(); }}>
+          <Box sx={modalStyle}>
+            <Typography variant="h6" component="h2">
+              Código embebido
+            </Typography>
+            <Box sx={codeBoxStyle}>
+              {`<iframe id="casevault-iframe" src="http://localhost:3000/cases/${case_id}" width="800px" height="900px"></iframe>`}
+            </Box>
+            <Button variant="contained" color="primary" onClick={(e) => { e.stopPropagation(); handleCopy(); }} sx={{ mt: 2 }}>
+              Copiar
+            </Button>
+          </Box>
+        </Modal>
+      </Card>
     );
 }
