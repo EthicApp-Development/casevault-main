@@ -1,18 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Box, Grid, Container, Button, TextField, Avatar, Typography, Chip } from "@mui/material";
-import CaseCard from "./Case/CaseCard";
-import { styled } from '@mui/material/styles';
-import { useNavigate } from "react-router-dom";
-import ListItemButton from '@mui/material/ListItemButton';
 import axios from "axios";
-import { createCase, getAllTags } from './API/cases';
-import {inline_buttons, title_style} from  './Utils/defaultStyles'
+import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from 'react';
+import { styled } from '@mui/material/styles'
+import ListItemButton from '@mui/material/ListItemButton';
+import { Box, Grid, Button, TextField, Chip, FormControl } from "@mui/material";
+import CaseCard from "./Case/CaseCard";
 import AppContext from './Contexts/AppContext';
+import { createCase, getAllTags } from './API/cases';
+import { inline_buttons } from  './Utils/defaultStyles';
 
 const CASES_API = import.meta.env.VITE_API_CASES_URL;
 
 const CreateCaseButton = styled(Button)({
     position: 'relative',
+    textTransform: 'none',
 });
 
 const css = {
@@ -20,10 +21,11 @@ const css = {
         width: "100%"
     },
     createContainer: {
-
+        padding: '20px',
+        marginBottom: '20px'
     },
     inputRounded: {
-        width: '70%',
+        width: '40%',
         borderRadius: '50px',
         '& .MuiOutlinedInput-root': {
             borderRadius: '50px',
@@ -33,43 +35,19 @@ const css = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '10px', // Space between avatar and input
+        gap: '10px'
+    },
+    formLabel: {
+        textAlign: 'center',
+        marginBottom: '10px',
+        width: '100%',
     },
 };
-
-
-function stringToColor(string) {
-    let hash = 0;
-    let i;
-
-    for (i = 0; i < string.length; i += 1) {
-        hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let color = '#';
-
-    for (i = 0; i < 3; i += 1) {
-        const value = (hash >> (i * 8)) & 0xff;
-        color += `00${value.toString(16)}`.slice(-2);
-    }
-
-    return color;
-}
-
-
-function stringAvatar(name) {
-    return {
-        sx: {
-            bgcolor: stringToColor(name),
-        },
-        children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
-    };
-}
 
 export default function Home() {
     const [cases, setCases] = useState([]);
     const navigate = useNavigate();
-    const {user, setAvatar,avatar} = useContext(AppContext)
+    const {user} = useContext(AppContext)
     const [authenticated, setauthenticated] = useState(null);
     const [caseTitle, setCaseTitle] = useState("");
     const [tags, setTags] = useState([])
@@ -77,7 +55,6 @@ export default function Home() {
     useEffect(() => {
         const fetchCases = async () => {
             if (user){
-                setAvatar(stringAvatar(user?.first_name +" "+ user?.last_name))
                 try {
                     const response = await axios.get(CASES_API, {
                         params: {
@@ -142,39 +119,42 @@ export default function Home() {
         const tagNameWithHash = `${encodeURIComponent("#"+tag.name)}`;
         navigate(`/search/${tagNameWithHash}`);
     };
-    
 
     return (
         (user?.first_name? 
             <Box sx={css.container}>
-                <Box sx={{ ...css.createContainer, height: 150 }}>
-                    <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">¡Te damos la bienvenida a CaseVault!</Typography>
-                    <Box sx={{...css.centerAlign, inline_buttons}}>
-                        <Avatar {...avatar} />
-                        <TextField 
-                            required
-                            id="outlined-basic" 
-                            label="Título del caso..." 
-                            variant="outlined" 
-                            value={caseTitle}
-                            onChange={(e) => setCaseTitle(e.target.value)}
-                            sx={css.inputRounded} 
-                        />
-                        <CreateCaseButton variant="contained" onClick={handleCreateCase} disabled={caseTitle===""}>
-                            Crear Caso
-                        </CreateCaseButton>
-                    </Box>
+                <Box sx={css.createContainer}>
+                    <FormControl fullWidth>
+                        <Box sx={{ ...css.centerAlign, ...inline_buttons }}>
+                            <TextField 
+                                required
+                                id="case-title"
+                                label="Título del caso..."
+                                variant="outlined"
+                                value={caseTitle}
+                                onChange={(e) => setCaseTitle(e.target.value)}
+                                sx={css.inputRounded}
+                            />
+                            <CreateCaseButton 
+                                variant="contained" 
+                                onClick={handleCreateCase} 
+                                disabled={caseTitle === ""}
+                            >
+                                Crear caso
+                            </CreateCaseButton>
+                        </Box>
+                    </FormControl>
                 </Box>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginTop: 2, width: '100%', marginLeft: 5 }}>
-            {tags.slice(0, 10).map((tag) => (
-                <Chip
-                    key={tag.id}
-                    label={tag.name}
-                    onClick={() => handleClickTag(tag)}
-                    sx={{ marginBottom: 1 }}
-                />
-            ))}
-        </Box>
+                    {tags.slice(0, 10).map((tag) => (
+                        <Chip
+                            key={tag.id}
+                            label={tag.name}
+                            onClick={() => handleClickTag(tag)}
+                            sx={{ marginBottom: 1 }}
+                        />
+                    ))}
+                </Box>
                 <Grid container spacing={8}>
                     {cases?.map(caseData => (
                         <Grid item xs={12} sm={6} md={4} lg={4} key={caseData.id}>
@@ -187,14 +167,14 @@ export default function Home() {
                                     owner = {caseData.user_info}
                                     owner_info = {caseData.user_id}
                                     saved = {caseData.saved}
-                                     sx={{
+                                    sx={{
                                         height: '100%', 
                                         display: 'flex', 
                                         flexDirection: 'column',
                                         overflow: 'hidden', 
                                         textOverflow: 'ellipsis', 
                                         whiteSpace: 'nowrap',
-                                      }}
+                                    }}
                                 />
                             </ListItemButton>
                         </Grid>
@@ -206,4 +186,3 @@ export default function Home() {
         </Box>)
     );
 }
-
