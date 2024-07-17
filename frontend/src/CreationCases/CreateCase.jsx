@@ -156,12 +156,11 @@ function CreateCase() {
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: 10 }}>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs aria-label="basic tabs example" value={selectedTab} onChange={handleTabChange}>
-                            <Tab label="Texto" value={0} />
-                            <Tab label="Videos" value={1} />
-                            <Tab label="Documentos" value={2} />
-                            <Tab label="Audios" value={3} />
-                            <Tab label="Visibilidad" value={4} />
-                            <Tab label="Información" value={5} />
+                            <Tab label="Texto" value={0} sx={{ textTransform: 'none' }} />
+                            <Tab label="Videos" value={1} sx={{ textTransform: 'none' }} />
+                            <Tab label="Documentos" value={2} sx={{ textTransform: 'none' }} />
+                            <Tab label="Audios" value={3} sx={{ textTransform: 'none' }} />
+                            <Tab label="Visibilidad" value={4} sx={{ textTransform: 'none' }} />
                         </Tabs>
                         <Button sx={{ textTransform: 'none', zIndex: 100, marginRight: 2  }} variant="contained" color="error" onClick={() => openModal(caseObject.id)}>Eliminar caso</Button>
                     </Box>

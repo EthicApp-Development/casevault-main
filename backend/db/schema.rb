@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_30_170253) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_27_023946) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -48,6 +48,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_30_170253) do
     t.index ["case_id"], name: "index_audios_on_case_id"
   end
 
+  create_table "case_tags", force: :cascade do |t|
+    t.integer "case_id", null: false
+    t.integer "tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["case_id"], name: "index_case_tags_on_case_id"
+    t.index ["tag_id"], name: "index_case_tags_on_tag_id"
+  end
+
   create_table "cases", force: :cascade do |t|
     t.text "title"
     t.text "description"
@@ -55,6 +64,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_30_170253) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.text "text"
+    t.integer "visibility", default: 0
     t.index ["user_id"], name: "index_cases_on_user_id"
   end
 
@@ -74,6 +85,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_30_170253) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["case_id"], name: "index_images_on_case_id"
+  end
+
+  create_table "saved_cases", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "case_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["case_id"], name: "index_saved_cases_on_case_id"
+    t.index ["user_id"], name: "index_saved_cases_on_user_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -105,8 +132,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_30_170253) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audios", "cases"
+  add_foreign_key "case_tags", "cases"
+  add_foreign_key "case_tags", "tags"
   add_foreign_key "cases", "users"
   add_foreign_key "documents", "cases"
   add_foreign_key "images", "cases"
+  add_foreign_key "saved_cases", "cases"
+  add_foreign_key "saved_cases", "users"
   add_foreign_key "videos", "cases"
 end

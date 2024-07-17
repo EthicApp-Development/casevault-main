@@ -57,7 +57,7 @@ export default function UserCases() {
     return (
         (user?.first_name? 
             <Box sx={css.container}>
-                <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Mis Casos</Typography>
+                <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Mis casos</Typography>
                 <Grid container spacing={8}>
                     {cases?.map(caseData => (
                         <Grid item xs={12} sm={6} md={4} lg={4} key={caseData.id}>
