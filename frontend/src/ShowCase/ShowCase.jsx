@@ -1,7 +1,7 @@
 import React, { useState, createContext, useContext, useEffect } from "react";
 import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
 import { getCase } from "../API/cases";
-import { Box, Tab, Tabs} from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 import AppContext from "../Contexts/AppContext";
 
 const CaseContext = createContext();
@@ -11,7 +11,7 @@ export const useCaseContext = () => {
 };
 
 function ShowCase() {
-    const [selectedTab, setSelectedTab] = useState(0); // Inicializar en 0
+    const [selectedTab, setSelectedTab] = useState(0); 
     const [title, setTitle] = useState('');
     const [summary, setSummary] = useState('');
     const [text, setText] = useState('');
@@ -22,39 +22,38 @@ function ShowCase() {
     const [caseObject, setCaseObject] = useState({});
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
-    const {user} = useContext(AppContext)
+    const { user } = useContext(AppContext);
     const navigate = useNavigate();
     const location = useLocation();
-   
+
     useEffect(() => {
         async function fetchData() {
-            if (!!caseObject && user) {
+            if (caseId && user) {
                 try {
                     const response = await getCase(caseId, user.id);
                     setCaseObject(response.data);
                     setAudios(response.data.audios);
                     setVideos(response.data.videos);
                     setDocuments(response.data.documents);
-                    navigate(`/show_case/${caseId}/text`)
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
             }
         }
-        fetchData()
-    }, [caseId,user]);
+        fetchData();
+    }, [caseId, user]);
 
     useEffect(() => {
         const segments = location.pathname.split('/');
         const tabSegment = segments[segments.length - 1];
         const tabValue = getTabValue(tabSegment);
-        setSelectedTab(tabValue); 
+        setSelectedTab(tabValue);
     }, [location.pathname]);
 
     const handleTabChange = (event, newValue) => {
-        setSelectedTab(newValue)
-        navigate(`/show_case/${caseObject?.id}/${getTabSegment(newValue)}`)
-    }
+        setSelectedTab(newValue);
+        navigate(`/show_case/${caseId}/${getTabSegment(newValue)}`);
+    };
 
     const getTabSegment = (tabIndex) => {
         switch (tabIndex) {
@@ -69,7 +68,7 @@ function ShowCase() {
             default:
                 return '';
         }
-    }
+    };
 
     const getTabValue = (tabSegment) => {
         switch (tabSegment) {
@@ -84,7 +83,7 @@ function ShowCase() {
             default:
                 return 0;
         }
-    }
+    };
 
     const contextValue = {
         title,
@@ -105,7 +104,6 @@ function ShowCase() {
         setMainImage,
         caseObject,
         setCaseObject,
-
     };
 
     return (
@@ -114,17 +112,17 @@ function ShowCase() {
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: 10 }}>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs aria-label="basic tabs example" value={selectedTab} onChange={handleTabChange}>
-                            <Tab label="Texto" value={0} sx={{ textTransform: 'none' }}/>
-                            <Tab label="Videos" value={1} sx={{ textTransform: 'none' }}/>
-                            <Tab label="Documentos" value={2} sx={{ textTransform: 'none' }}/>
-                            <Tab label="Audios" value={3} sx={{ textTransform: 'none' }}/>
+                            <Tab label="Texto" value={0} sx={{ textTransform: 'none' }} />
+                            <Tab label="Videos" value={1} sx={{ textTransform: 'none' }} />
+                            <Tab label="Documentos" value={2} sx={{ textTransform: 'none' }} />
+                            <Tab label="Audios" value={3} sx={{ textTransform: 'none' }} />
                         </Tabs>
                     </Box>
                     <Outlet />
                 </Box>
             </Box>
         </CaseContext.Provider>
-    )
+    );
 }
 
 export default ShowCase;

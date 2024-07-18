@@ -10,6 +10,8 @@ import AppContext from '../Contexts/AppContext';
 import { saveCase, unsaveCase } from '../API/cases';
 import EditIcon from '@mui/icons-material/Edit';
 
+const exportURL = import.meta.env.VITE_API_EXPORT_CASE_URL;
+
 export default function CaseCardSearch({ title, description, image_url, case_id, owner, saved, owner_info }) {
     const [localSaved, setLocalSaved] = useState(saved);
     const { user } = useContext(AppContext);
@@ -17,7 +19,7 @@ export default function CaseCardSearch({ title, description, image_url, case_id,
     const [hovered, setHovered] = useState(false);
 
     const handleCopy = () => {
-        const codeToCopy = `<iframe id="casevault-iframe" src="http://localhost:3000/cases/${case_id}" width="800px" height="900px"></iframe>`;
+        const codeToCopy = `<iframe id="casevault-iframe" src="${exportURL}/${case_id}" width="800px" height="900px"></iframe>`;
         navigator.clipboard.writeText(codeToCopy);
         alert('Código embebido copiado al portapapeles');
     };
