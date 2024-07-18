@@ -11,7 +11,7 @@ export const useCaseContext = () => {
 };
 
 function CreateCase() {
-    const [selectedTab, setSelectedTab] = useState(0); // Inicializar en 0
+    const [selectedTab, setSelectedTab] = useState(0);
     const [title, setTitle] = useState('');
     const [summary, setSummary] = useState('');
     const [text, setText] = useState('');
@@ -23,47 +23,46 @@ function CreateCase() {
     const [caseObject, setCaseObject] = useState({});
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
-    const {user} = useContext(AppContext)
-    const navigate = useNavigate()
-    const location = useLocation()
-    const [tags, setTags] = useState([])
+    const { user } = useContext(AppContext);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [tags, setTags] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [caseIdToDelete, setCaseIdToDelete] = useState(null);
-  
+
     useEffect(() => {
         async function fetchData() {
-            if (!!caseObject && user) {
+            if (caseId && user) {
                 try {
-                    const response = await getCase(caseId, user.id)
+                    const response = await getCase(caseId, user.id);
                     setText(response.data.text || '');
                     setTitle(response.data.title);
                     setDescription(response.data.description || '');
                     setMainImage(response.data.main_image_url);
-                    setCaseObject(response.data)
-                    setVideos(response.data.videos)
-                    setTags(response.data.tags)
+                    setCaseObject(response.data);
+                    setVideos(response.data.videos);
+                    setTags(response.data.tags);
                     setDocuments(response.data.documents);
                     setAudios(response.data.audios);
-                    setVisibility(response.data.visibility)
-
+                    setVisibility(response.data.visibility);
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
             }
         }
         fetchData();
-    }, [caseId]);
+    }, [caseId, user]);
 
     useEffect(() => {
         const segments = location.pathname.split('/');
         const tabSegment = segments[segments.length - 1];
         const tabValue = getTabValue(tabSegment);
-        setSelectedTab(tabValue); 
+        setSelectedTab(tabValue);
     }, [location.pathname]);
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue);
-        navigate(`/create_case/${caseObject?.id}/${getTabSegment(newValue)}`);
+        navigate(`/create_case/${caseId}/${getTabSegment(newValue)}`);
     };
 
     const getTabSegment = (tabIndex) => {
@@ -161,7 +160,7 @@ function CreateCase() {
                             <Tab label="Audios" value={3} sx={{ textTransform: 'none' }} />
                             <Tab label="Visibilidad" value={4} sx={{ textTransform: 'none' }} />
                         </Tabs>
-                        <Button sx={{ textTransform: 'none', zIndex: 100, marginRight: 2  }} variant="contained" color="error" onClick={() => openModal(caseObject.id)}>Eliminar caso</Button>
+                        <Button sx={{ textTransform: 'none', zIndex: 100, marginRight: 2 }} variant="contained" color="error" onClick={() => openModal(caseObject.id)}>Eliminar caso</Button>
                     </Box>
                     <Outlet />
                 </Box>
