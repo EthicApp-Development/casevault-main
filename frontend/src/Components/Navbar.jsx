@@ -26,7 +26,7 @@ import { Menu, Avatar } from '@mui/material';
 import Logout from '../Session/Logout';
 import { dialog_style_white, inline_buttons } from '../Utils/defaultStyles';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import AppContext from '../Contexts/AppContext';
 const drawerWidth = 240;
 const Search = styled('div')(({ theme }) => ({
@@ -101,7 +101,8 @@ function Navbar(props) {
             { text: 'Home', icon: <HomeIcon />, route: '/home'},
             { text: 'Mis casos', icon: <SchoolIcon />, route: '/my_cases' },
             { text: 'Casos guardados', icon: <BookmarkIcon />, route: '/saved_cases' },
-            { text: 'Ajustes', icon: <SettingsIcon /> },
+            {text: 'Canales', icon: <RecentActorsIcon/>,route: '/channels'},
+            { text: 'Ajustes', icon: <SettingsIcon /> }
             ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
             {item.route ? (
