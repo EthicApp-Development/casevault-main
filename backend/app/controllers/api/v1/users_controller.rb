@@ -1,5 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   def index
+    users = User.all
+    render json: {info: users, status: :success}
   end
 
   # GET /users/1

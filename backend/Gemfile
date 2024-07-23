@@ -52,3 +52,5 @@ gem "devise-jwt"
 gem 'pry', '~> 0.14.2'
 
 gem 'actionview', '~> 7.1'
+
+gem 'pundit'
