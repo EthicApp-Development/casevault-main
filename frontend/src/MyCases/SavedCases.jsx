@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Grid, Container, Button, TextField, Avatar, Typography, Chip } from "@mui/material";
+import { Box, Grid, Typography, Snackbar } from "@mui/material";
 import CaseCard from '../Case/CaseCard';
-import { styled } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import ListItemButton from '@mui/material/ListItemButton';
 import AppContext from '../Contexts/AppContext';
 import { getUserSavedCases } from '../API/cases';
+import { getMyChannels } from '../API/channels';
 import { title_style } from '../Utils/defaultStyles';
+
 const css = {
     container: {
         width: "100%"
@@ -31,35 +32,60 @@ const css = {
 
 export default function SavedCases() {
     const [cases, setCases] = useState([]);
+    const [myChannels, setMyChannels] = useState([]);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
     const navigate = useNavigate();
-    const {user} = useContext(AppContext)
+    const { user } = useContext(AppContext);
 
     useEffect(() => {
         const fetchCases = async () => {
-            if (user){
+            if (user) {
                 try {
-                    const response = await getUserSavedCases(user.id)
-                    
-                    setCases(response.data.saved_cases)
-                    
+                    const response = await getUserSavedCases(user.id);
+                    setCases(response.data.saved_cases);
                 } catch (error) {
                     console.log(error);
                 }
             }
         };
         fetchCases();
-    }, []); 
-    
+    }, [user]);
+
+    useEffect(() => {
+        if (user) {
+            const fetchMyChannels = async () => {
+                try {
+                    const response = await getMyChannels({ user_id: user.id });
+                    setMyChannels(response.data);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            };
+            fetchMyChannels();
+        } else {
+            console.log('No hay usuario logueado');
+        }
+    }, [user]);
+
     const handleClick = (caseId) => (event) => {
         event.stopPropagation();
         navigate(`/show_case/${caseId}/text`);
     };
 
-    console.log(cases)
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
+    const handleCaseAdded = () => {
+        setSnackbarMessage('Caso agregado con éxito');
+        setSnackbarOpen(true);
+    };
+
     return (
-        (user?.first_name? 
+        user?.first_name ? 
             <Box sx={css.container}>
-                <Typography sx={{...title_style,marginBottom: 5}} variant="h1" color="primary">Mis casos guardados</Typography>
+                <Typography sx={{ ...title_style, marginBottom: 5 }} variant="h1" color="primary">Mis casos guardados</Typography>
                 <Grid container spacing={8}>
                     {cases?.map(caseData => (
                         <Grid item xs={12} sm={6} md={4} lg={4} key={caseData.id}>
@@ -69,26 +95,33 @@ export default function SavedCases() {
                                     description={caseData.description}
                                     image_url={caseData.main_image_url}
                                     case_id={caseData.id}
-                                    owner = {caseData.user_info}
-                                    owner_info = {caseData.user_id}
-                                    saved = {caseData.saved}
-                                     sx={{
-                                        height: '100%', 
-                                        display: 'flex', 
+                                    owner={caseData.user_info}
+                                    owner_info={caseData.user_id}
+                                    saved={caseData.saved}
+                                    myChannels={myChannels}
+                                    onCaseAdded={handleCaseAdded}
+                                    sx={{
+                                        height: '100%',
+                                        display: 'flex',
                                         flexDirection: 'column',
-                                        overflow: 'hidden', 
-                                        textOverflow: 'ellipsis', 
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
                                         whiteSpace: 'nowrap',
-                                      }}
+                                    }}
                                 />
                             </ListItemButton>
                         </Grid>
                     ))}
                 </Grid>
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={handleSnackbarClose}
+                    message={snackbarMessage}
+                />
             </Box>
-        :
-        <Box>
-        </Box>)
+            :
+            <Box>
+            </Box>
     );
 }
-

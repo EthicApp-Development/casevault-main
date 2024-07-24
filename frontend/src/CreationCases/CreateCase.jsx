@@ -30,7 +30,6 @@ function CreateCase() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [caseIdToDelete, setCaseIdToDelete] = useState(null);
   
-    console.log(caseObject)
     useEffect(() => {
         async function fetchData() {
             if (!!caseObject && user) {

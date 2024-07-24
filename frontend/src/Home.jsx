@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles'
 import ListItemButton from '@mui/material/ListItemButton';
-import { Box, Grid, Button, TextField, Chip, FormControl } from "@mui/material";
+import { Box, Grid, Button, TextField, Chip, FormControl, Snackbar } from "@mui/material";
 import CaseCard from "./Case/CaseCard";
 import AppContext from './Contexts/AppContext';
 import { createCase, getAllTags } from './API/cases';
 import { inline_buttons } from  './Utils/defaultStyles';
+import { getMyChannels } from "./API/channels";
 
 const CASES_API = import.meta.env.VITE_API_CASES_URL;
 
@@ -51,6 +52,9 @@ export default function Home() {
     const [authenticated, setauthenticated] = useState(null);
     const [caseTitle, setCaseTitle] = useState("");
     const [tags, setTags] = useState([])
+    const [myChannels, setMyChannels] = useState([])
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     useEffect(() => {
         const fetchCases = async () => {
@@ -70,26 +74,40 @@ export default function Home() {
             const loggedInUser = localStorage.getItem("authenticated");
             if (loggedInUser) {
                 setauthenticated(loggedInUser);
-            }else{
+            } else {
                 navigate("/login")
             }
         };
         fetchCases();
-    }, []); 
+    }, [user, navigate]); 
 
     useEffect(() => {
         const fetchTags = async () => {
-            
-                try {
-                    const response = await getAllTags()
-                    setTags(response.data);
-                    
-                } catch (error) {
-                    console.log(error);
-                }
+            try {
+                const response = await getAllTags()
+                setTags(response.data);
+            } catch (error) {
+                console.log(error);
+            }
         };
         fetchTags();
     }, []); 
+
+    useEffect(() => {
+        if (user) {
+          async function fetchData() {
+            try {
+              const response = await getMyChannels({ user_id: user.id });
+              setMyChannels(response.data);
+            } catch (error) {
+              console.error('Error fetching data:', error);
+            }
+          }
+          fetchData();
+        } else {
+          console.log('No hay usuario logueado');
+        }
+      }, [user]);
 
     async function handleCreateCase() {
         const response = await fetch("src/assets/default_case_img.png");
@@ -101,10 +119,8 @@ export default function Home() {
         formData.append('case[title]',caseTitle)
         try {
             const response = await createCase(formData);
-            
             const createdCase = response?.data?.info;
             navigate(`/create_case/${createdCase.id}/text`)
-
         } catch (error) {
             console.error("Error al crear el caso:", error);
         }
@@ -120,8 +136,17 @@ export default function Home() {
         navigate(`/search/${tagNameWithHash}`);
     };
 
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
+    const handleCaseAdded = () => {
+        setSnackbarMessage('Caso agregado con éxito');
+        setSnackbarOpen(true);
+    };
+
     return (
-        (user?.first_name? 
+        user?.first_name ? 
             <Box sx={css.container}>
                 <Box sx={css.createContainer}>
                     <FormControl fullWidth>
@@ -167,6 +192,8 @@ export default function Home() {
                                     owner = {caseData.user_info}
                                     owner_info = {caseData.user_id}
                                     saved = {caseData.saved}
+                                    myChannels={myChannels}
+                                    onCaseAdded={handleCaseAdded}
                                     sx={{
                                         height: '100%', 
                                         display: 'flex', 
@@ -180,9 +207,14 @@ export default function Home() {
                         </Grid>
                     ))}
                 </Grid>
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={handleSnackbarClose}
+                    message={snackbarMessage}
+                />
             </Box>
         :
-        <Box>
-        </Box>)
+        <Box></Box>
     );
 }

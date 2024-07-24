@@ -25,6 +25,8 @@ import ShowCaseDocuments from './ShowCase/ShowCaseDocuments.jsx';
 import Visibility from './CreationCases/Visibility.jsx';
 import UserCases from './MyCases/UserCases.jsx';
 import SavedCases from './MyCases/SavedCases.jsx';
+import IndexChannels from './Channels/IndexChannels.jsx';
+import ShowChannel from './Channels/ShowChannel.jsx';
 function App() {
   const location = useLocation();
   const [user, setUser] = useState(null)
@@ -68,6 +70,8 @@ function App() {
             <Route path="/search/:searchTerm/" element={<SearchResults />} />
             <Route path="/my_cases/" element={<UserCases />} />
             <Route path="/saved_cases/" element={<SavedCases />} />
+            <Route path="/channels" element={<IndexChannels />} />
+            <Route path="/show_channel/:channelId" element={<ShowChannel />} />
             <Route path="/show_case/:caseId/" element={<ShowCase />}>
               <Route path="text" element={<ShowCaseText />} />
               <Route path="videos" element={<ShowCaseVideos />} />

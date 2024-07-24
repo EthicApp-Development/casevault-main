@@ -1,8 +1,9 @@
 class ApplicationController < ActionController::API
+    include Pundit::Authorization
     before_action :configure_permitted_parameters, if: :devise_controller?
 
     before_action :authenticate_user_from_token!
-
+    rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
     private
   
     def authenticate_user_from_token!
@@ -28,9 +29,17 @@ class ApplicationController < ActionController::API
         puts "No se encontró token en el encabezado de autorización."
       end
     end
+
+    def pundit_user
+      PunditContext.new(current_user_from_params, params)
+    end
   
-    def current_user
-      @current_user
+    def user_not_authorized(exception)
+      render json: { error: exception.policy.class.to_s.underscore + '.' + exception.query.to_s }, status: :forbidden
+    end
+  
+    def current_user_from_params
+      @current_user_from_params ||= User.find(params[:user_id]) if params[:user_id]
     end
 
     protected
