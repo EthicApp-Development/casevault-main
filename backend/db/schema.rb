@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_27_023946) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_18_143303) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -67,6 +67,34 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_27_023946) do
     t.text "text"
     t.integer "visibility", default: 0
     t.index ["user_id"], name: "index_cases_on_user_id"
+  end
+
+  create_table "channel_cases", force: :cascade do |t|
+    t.integer "channel_id", null: false
+    t.integer "case_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["case_id"], name: "index_channel_cases_on_case_id"
+    t.index ["channel_id"], name: "index_channel_cases_on_channel_id"
+  end
+
+  create_table "channel_memberships", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "channel_id", null: false
+    t.string "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["channel_id"], name: "index_channel_memberships_on_channel_id"
+    t.index ["user_id"], name: "index_channel_memberships_on_user_id"
+  end
+
+  create_table "channels", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "visibility"
+    t.integer "creator_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "documents", force: :cascade do |t|
@@ -135,6 +163,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_27_023946) do
   add_foreign_key "case_tags", "cases"
   add_foreign_key "case_tags", "tags"
   add_foreign_key "cases", "users"
+  add_foreign_key "channel_cases", "cases"
+  add_foreign_key "channel_cases", "channels"
+  add_foreign_key "channel_memberships", "channels"
+  add_foreign_key "channel_memberships", "users"
   add_foreign_key "documents", "cases"
   add_foreign_key "images", "cases"
   add_foreign_key "saved_cases", "cases"
