@@ -104,7 +104,7 @@ export default function CaseCard({ title, description, image_url, case_id, owner
   const handleDelete = async (event) => {
     event.stopPropagation();
     if (inChannel && channelId) {
-      await deleteCaseFromChannel(channelId, case_id);
+      await deleteCaseFromChannel(channelId, case_id, {user_id: user?.id});
       onCaseDeleted(case_id);
     }
   };
