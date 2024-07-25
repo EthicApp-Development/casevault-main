@@ -28,3 +28,7 @@ export function addCaseToChannel(params){
 export function deleteCaseFromChannel(channelId, caseId, params) {
 	return instance.delete(`/api/v1/channels/${channelId}/remove_case/${caseId}`, {params});
   }
+
+export function removeMember(channelId, userId) {
+	return instance.delete('/api/v1/channels/remove_member',{params: {id: channelId, user_id: userId}})
+}

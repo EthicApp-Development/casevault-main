@@ -1,14 +1,13 @@
-import { Typography, Box, List, ListItem, ListItemText, Grid, ListItemButton, Card, CardContent, Avatar, IconButton, Tooltip, Snackbar } from '@mui/material';
+import { Typography, Box, List, ListItem, ListItemText, Grid, ListItemButton, Card, CardContent, Avatar, IconButton, Tooltip, Snackbar, Button } from '@mui/material';
 import CaseCard from '../Case/CaseCard';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import AppContext from '../Contexts/AppContext';
-import { useContext } from 'react';
 import { inline_buttons, inline_space_end, title_style } from '../Utils/defaultStyles';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import EditIcon from '@mui/icons-material/Edit';
 import { getAllUsers, getUser } from '../API/user';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getChannel, getMyChannels } from '../API/channels';
+import { getChannel, getMyChannels, removeMember } from '../API/channels';
 import SelectUsersDialog from '../Components/SelectUser';
 import useToggle from '../Hooks/ToggleHook';
 
@@ -101,6 +100,20 @@ const ShowChannel = () => {
     setSnackbarOpen(false);
   };
 
+  const handleLeaveChannel = async () => {
+    try {
+      await removeMember(channelId, user.id);
+      setCurrentMembers((prevMembers) => prevMembers.filter(member => member.id !== user.id));
+      setSnackbarMessage('Has abandonado el canal');
+      setSnackbarOpen(true);
+      navigate('/channels'); // Navega a la página de canales del usuario después de salir del canal
+    } catch (error) {
+      console.error('Error leaving the channel:', error);
+      setSnackbarMessage('Error al abandonar el canal');
+      setSnackbarOpen(true);
+    }
+  };
+
   return (
     <Box>
       <Box sx={inline_space_end}>
@@ -146,6 +159,13 @@ const ShowChannel = () => {
           </Grid>
         ))}
       </Grid>
+      {currentMembers.some(member => member.id === user.id) && (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+          <Button variant="contained" color="primary" onClick={handleLeaveChannel}>
+            Salir del canal
+          </Button>
+        </Box>
+      )}
       <Typography variant="h5" sx={{ ...title_style, marginTop: 3 }}>Casos pertenecientes al canal</Typography>
       {channel?.cases &&
         <Grid container spacing={8}>

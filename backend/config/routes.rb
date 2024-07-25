@@ -60,11 +60,11 @@ Rails.application.routes.draw do
           get 'public', to: 'channels#public_channels'
           get 'my_channels', to: 'channels#my_channels'
           post 'add_case', to: 'channels#add_case'
+          delete 'remove_member', to: 'channels#remove_member'
         end
         member do
           delete 'remove_case/:case_id', to: 'channels#remove_case'
           post 'add_members', to: 'channels#update_members'
-          delete 'remove_member/:user_id', to: 'channels#remove_member'
           get 'cases', to: 'channels#cases'
         end
       end
