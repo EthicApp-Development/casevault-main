@@ -10,7 +10,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getChannel, getMyChannels, removeMember } from '../API/channels';
 import SelectUsersDialog from '../Components/SelectUser';
 import useToggle from '../Hooks/ToggleHook';
-
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 const ShowChannel = () => {
   const { user } = useContext(AppContext);
   const [channel, setChannel] = useState([]);
@@ -161,7 +161,7 @@ const ShowChannel = () => {
       </Grid>
       {currentMembers.some(member => member.id === user.id) && (
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
-          <Button variant="contained" color="primary" onClick={handleLeaveChannel}>
+          <Button startIcon={<ExitToAppIcon/>} variant="contained" color="primary" onClick={handleLeaveChannel} sx={{ textTransform: 'none' }}>
             Salir del canal
           </Button>
         </Box>
