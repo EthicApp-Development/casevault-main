@@ -211,7 +211,7 @@ function NewMultiSelectInput(props) {
 						</Box>
 						{renderGroupedOptions()}
 						<Box style={{ textAlign: 'right' }}>
-							<Button variant="contained" color="primary" onClick={handleCloseMenu}>Guardar y terminar</Button>
+							<Button variant="contained" color="primary" sx={{ textTransform: 'none' }} onClick={handleCloseMenu}>Guardar y terminar</Button>
 						</Box>
 					</Box>
 				</Dialog>

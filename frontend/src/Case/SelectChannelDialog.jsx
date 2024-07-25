@@ -27,7 +27,7 @@ const SelectChannelDialog = ({ open, onClose, channels, onSelectChannel }) => {
     <Modal open={open} onClose={onClose}>
       <Box sx={modalStyle} onClick={(e) => e.stopPropagation()}>
         <Typography variant="h6" component="h2">
-          Seleccionar Canal
+          Seleccionar canal
         </Typography>
         <TextField
           fullWidth

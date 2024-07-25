@@ -38,7 +38,7 @@ function SelectUsersDialog({ open, onClose, users = [], channel_id, user, member
         <Dialog open={open} onClose={onClose} fullWidth>
             <Box sx={dialog_style_white}>
                 <Box sx={inline_space_title}>
-                    <Typography variant='h4'>Seleccionar Usuarios</Typography>
+                    <Typography variant='h4'>Seleccionar usuarios</Typography>
                     <IconButton onClick={onClose}>
                         <Clear />
                     </IconButton>
@@ -48,17 +48,17 @@ function SelectUsersDialog({ open, onClose, users = [], channel_id, user, member
                         value={selectedOptions}
                         onChange={handleChange}
                         options={options}
-                        label="Usuarios"
+                        label="usuarios"
                         name="categories"
                         required={true}
                     />
                 </Box>
                 <Box sx={end_flex_buttons}>
-                    <Button onClick={onClose} variant="outlined">
+                    <Button onClick={onClose} sx={{ textTransform: 'none' }} variant="outlined">
                         Cancelar
                     </Button>
-                    <Button onClick={onFinish} variant="contained">
-                        Actualizar Usuarios
+                    <Button onClick={onFinish} sx={{ textTransform: 'none' }} variant="contained">
+                        Actualizar usuarios
                     </Button>
                 </Box>
             </Box>
