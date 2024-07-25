@@ -13,6 +13,8 @@ import SelectChannelDialog from './SelectChannelDialog';
 import { saveCase, unsaveCase } from '../API/cases';
 import { addCaseToChannel, deleteCaseFromChannel } from '../API/channels';
 
+const exportURL = import.meta.env.VITE_API_EXPORT_CASE_URL;
+
 const modalStyle = {
   position: 'absolute',
   top: '50%',
@@ -70,11 +72,11 @@ export default function CaseCard({ title, description, image_url, case_id, owner
     onCaseAdded();
   };
 
-  const handleCopy = () => {
-    const codeToCopy = `<iframe id="casevault-iframe" src="http://localhost:3000/cases/${case_id}" width="800px" height="900px"></iframe>`;
-    navigator.clipboard.writeText(codeToCopy);
-    alert('Código embebido copiado al portapapeles');
-  };
+    const handleCopy = () => {
+        const codeToCopy = `<iframe id="casevault-iframe" src="${exportURL}/${case_id}" width="800px" height="900px"></iframe>`;
+        navigator.clipboard.writeText(codeToCopy);
+        alert('Código embebido copiado al portapapeles');
+    };
 
   const ownerSession = owner_info == user.id;
 
@@ -111,82 +113,82 @@ export default function CaseCard({ title, description, image_url, case_id, owner
 
   const isMember = members?.some(member => member?.email === user.email) || ownerId === user?.id;
 
-  return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', minWidth: '100%', minHeight: '32vw' }}>
-      <CardActionArea sx={{ flexGrow: 1 }}>
-        <CardContent sx={{ minHeight: '23vw' }}>
-          <img src={image_url} alt={title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
-          <Typography gutterBottom variant="h5" component="div" sx={{ marginTop: 1 }}>
-            {title}
-          </Typography>
-          <TextEllipsis
-            text={description ? description : "Este caso no tiene descripción"}
-            variant="body1"
-            showTooltip={true}
-            maxLines={5}
-          />
-        </CardContent>
-      </CardActionArea>
-      <Box>
-        <Typography sx={{ padding: 2 }} variant="body1"> Creador: {owner.first_name} {owner.last_name}</Typography>
-      </Box>
-      <Box sx={tabsContainerStyle}>
-        {ownerSession &&
-          <>
+    return (
+        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', minWidth: '100%', minHeight: '32vw' }}>
+        <CardActionArea sx={{ flexGrow: 1 }}>
+          <CardContent sx={{ minHeight: '23vw' }}>
+            <img src={image_url} alt={title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+            <Typography gutterBottom variant="h5" component="div" sx={{ marginTop: 1 }}>
+              {title}
+            </Typography>
+            <TextEllipsis
+              text={description ? description : "Este caso no tiene descripción"}
+              variant="body1"
+              showTooltip={true}
+              maxLines={5}
+            />
+          </CardContent>
+        </CardActionArea>
+        <Box>
+          <Typography sx={{ padding: 2 }} variant="body1"> Creador: {owner.first_name} {owner.last_name}</Typography>
+        </Box>
+        <Box sx={tabsContainerStyle}>
+          {ownerSession &&
+            <>
+              <IconButton
+                onClick={(e) => { e.stopPropagation(); handleEdit(); }}
+                sx={tabStyle}
+              >
+                <EditIcon />
+              </IconButton>
+            </>
+          }
+          {inChannel && isMember &&
             <IconButton
-              onClick={(e) => { e.stopPropagation(); handleEdit(); }}
+              onClick={(e) => { e.stopPropagation(); handleDelete(e); }}
               sx={tabStyle}
             >
-              <EditIcon />
+              <DeleteIcon />
             </IconButton>
-          </>
-        }
-        {inChannel && isMember &&
+          }
           <IconButton
-            onClick={(e) => { e.stopPropagation(); handleDelete(e); }}
+            onClick={(e) => { e.stopPropagation(); handleSelectChannelDialogOpen(); }}
             sx={tabStyle}
           >
-            <DeleteIcon />
+            <AddIcon />
           </IconButton>
-        }
-        <IconButton
-          onClick={(e) => { e.stopPropagation(); handleSelectChannelDialogOpen(); }}
-          sx={tabStyle}
-        >
-          <AddIcon />
-        </IconButton>
-        <IconButton
-          onClick={(e) => { e.stopPropagation(); handleOpen(); }}
-          sx={tabStyle}
-        >
-          <IosShareIcon />
-        </IconButton>
-        <IconButton
-          onClick={(e) => { e.stopPropagation(); handleSave(e); }}
-          sx={tabStyle}
-        >
-          {localSaved ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-        </IconButton>
-      </Box>
-      <Modal open={open} onClose={(e) => { e.stopPropagation(); handleClose(); }}>
-        <Box sx={modalStyle}>
-          <Typography variant="h6" component="h2">
-            Código embebido
-          </Typography>
-          <Box sx={codeBoxStyle}>
-            {`<iframe id="casevault-iframe" src="http://localhost:3000/cases/${case_id}" width="800px" height="900px"></iframe>`}
-          </Box>
-          <Button variant="contained" color="primary" onClick={(e) => { e.stopPropagation(); handleCopy(); }} sx={{ mt: 2 }}>
-            Copiar
-          </Button>
+          <IconButton
+            onClick={(e) => { e.stopPropagation(); handleOpen(); }}
+            sx={tabStyle}
+          >
+            <IosShareIcon />
+          </IconButton>
+          <IconButton
+            onClick={(e) => { e.stopPropagation(); handleSave(e); }}
+            sx={tabStyle}
+          >
+            {localSaved ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+          </IconButton>
         </Box>
-      </Modal>
-      <SelectChannelDialog
-        open={selectChannelDialogOpen}
-        onClose={handleSelectChannelDialogClose}
-        channels={myChannels}
-        onSelectChannel={handleSelectChannel}
-      />
-    </Card>
-  );
+        <Modal open={open} onClose={(e) => { e.stopPropagation(); handleClose(); }}>
+          <Box sx={modalStyle}>
+            <Typography variant="h6" component="h2">
+              Código embebido
+            </Typography>
+            <Box sx={codeBoxStyle}>
+              {`<iframe id="casevault-iframe" src="${exportURL}/${case_id}" width="800px" height="900px"></iframe>`}
+            </Box>
+            <Button variant="contained" color="primary" onClick={(e) => { e.stopPropagation(); handleCopy(); }} sx={{ mt: 2 }}>
+              Copiar
+            </Button>
+          </Box>
+        </Modal>
+        <SelectChannelDialog
+          open={selectChannelDialogOpen}
+          onClose={handleSelectChannelDialogClose}
+          channels={myChannels}
+          onSelectChannel={handleSelectChannel}
+        />
+      </Card>
+    );
 }

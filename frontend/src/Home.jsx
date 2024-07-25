@@ -128,7 +128,7 @@ export default function Home() {
     
     const handleClick = (caseId) => (event) => {
         event.stopPropagation();
-        navigate(`/show_case/${caseId}`);
+        navigate(`/show_case/${caseId}/text`);
     };
 
     const handleClickTag = (tag) => {
