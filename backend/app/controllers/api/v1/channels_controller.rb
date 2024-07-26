@@ -2,7 +2,7 @@ class Api::V1::ChannelsController < ApplicationController
     before_action :set_channel, only: [:show, :update, :destroy, :add_case, :remove_case, :update_members, :remove_member]
     before_action :set_user, except: :public_channels
 
-    after_action :verify_authorized, except: [:index, :public_channels, :my_channels]
+    after_action :verify_authorized, except: [:index, :public_channels, :my_channels, :remove_member]
 
     def index
       @channels = Channel.all
@@ -132,11 +132,8 @@ class Api::V1::ChannelsController < ApplicationController
         render json: { errors: @channel.errors.full_messages }, status: :unprocessable_entity
       end
     end
-    
-    
 
     def remove_member
-      authorize @channel, :remove_member?, policy_class: ChannelPolicy
       @user_to_remove = User.find(params[:user_id])
       if @user_to_remove
         @channel.users.delete(@user_to_remove)
