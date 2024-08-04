@@ -1,17 +1,13 @@
-FROM node:18 AS build
+FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
 RUN npm install
-
-RUN npm install -g vite
-
-RUN npm install --save @ckeditor/ckeditor5-react @ckeditor/ckeditor5-build-classic
 
 COPY . .
 
 EXPOSE 3001
 
-CMD [ "npm", "run", "dev" ]
+CMD ["npm", "run", "dev"]
