@@ -21,6 +21,7 @@ export default function Logout() {
             localStorage.removeItem("account")
             localStorage.setItem("authenticated",false)
             setUser(null)
+            localStorage.removeItem("token")
             navigate('login')
         } catch (error) {
             console.error('Error during authentication:', error);
