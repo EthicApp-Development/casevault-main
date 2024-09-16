@@ -17,6 +17,7 @@ import { authLogin } from '../API/login';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import AppContext from '../Contexts/AppContext';
+import { SetInLocalStorage } from '../../storage-commons'
 
 const defaultTheme = createTheme();
 
@@ -41,9 +42,9 @@ export default function Login() {
             console.log(response)
             setUser(account);
             const token = response.headers['authorization'];
-            localStorage.setItem('token', token);
-            localStorage.setItem('account', JSON.stringify(account));
-            localStorage.setItem('authenticated', true);
+            SetInLocalStorage('token', token);
+            SetInLocalStorage('account', JSON.stringify(account));
+            SetInLocalStorage('authenticated', true);
             navigate('/home');
         } catch (error) {
             console.error('Error during authentication:', error);

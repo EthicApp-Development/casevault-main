@@ -27,6 +27,7 @@ import UserCases from './MyCases/UserCases.jsx';
 import SavedCases from './MyCases/SavedCases.jsx';
 import IndexChannels from './Channels/IndexChannels.jsx';
 import ShowChannel from './Channels/ShowChannel.jsx';
+import { GetFromLocalStorage } from '../storage-commons.js'
 function App() {
   const location = useLocation();
   const [user, setUser] = useState(null)
@@ -35,7 +36,7 @@ function App() {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const accountString = localStorage.getItem("account");
+            const accountString = GetFromLocalStorage("account");
             if (accountString) {
                 console.log("accountString", accountString);
                 const account = JSON.parse(accountString);
@@ -49,7 +50,7 @@ function App() {
   console.log("user", user)
 
   useEffect(() => {
-    const accountInfo = localStorage.getItem('account');
+    const accountInfo = GetFromLocalStorage('account');
     if (!accountInfo && pathname !== "/login" && pathname !== "/login/" && pathname !== "/register" && pathname !== "/register/"){
       // Redirigir a la página de inicio de sesión si no hay información de cuenta en el almacenamiento local
       window.location.href = "/login";
