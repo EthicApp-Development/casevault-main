@@ -5,12 +5,12 @@ let baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const url = baseUrl
 
-const instance = axios.create({
+const axiosInstance = axios.create({
     baseURL: url,
     timeout: 120000,
 })
 
-instance.interceptors.request.use((config) => {
+axiosInstance.interceptors.request.use((config) => {
     const newConfig = { ...config }
     const token = GetFromLocalStorage("token");
     if (token) {
@@ -28,7 +28,7 @@ instance.interceptors.request.use((config) => {
     return newConfig
 })
 
-instance.interceptors.response.use((response) => {
+axiosInstance.interceptors.response.use((response) => {
     return response;
 }, (error) => {
     // Manejo de errores globales (por ejemplo, redireccionar al login si la autenticación falla)
@@ -42,4 +42,4 @@ instance.interceptors.response.use((response) => {
     return Promise.reject(error);
 });
 
-export default instance
+export default axiosInstance

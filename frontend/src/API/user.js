@@ -1,9 +1,9 @@
-import instance from "../instance";
+import axiosInstance from "../axios.init";
 
 export function getUser(id) {
-    return instance.get(`api/v1/users/${id}`);
+    return axiosInstance.get(`api/v1/users/${id}`);
 }
 
 export function getAllUsers(){
-    return instance.get('api/v1/users')
+    return axiosInstance.get('api/v1/users')
 }

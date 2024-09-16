@@ -1,13 +1,13 @@
-import instance from "../instance";
+import axiosInstance from "../axios.init";
 
 
 export function authRegister(data) {
-	return instance.post("signup", data);
+	return axiosInstance.post("signup", data);
 }
 export function authLogin(data) {
-    return instance.post("login", data);
+    return axiosInstance.post("login", data);
 }
 
 export function authLogout() {
-    return instance.delete("logout");
+    return axiosInstance.delete("logout");
 }
