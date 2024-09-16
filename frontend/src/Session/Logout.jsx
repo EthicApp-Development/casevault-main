@@ -9,7 +9,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { inline_buttons } from '../Utils/defaultStyles';
 import {Box } from '@mui/material';
 import { authLogout } from '../API/login';
-import { RemoveFromLocalStorage, SetInLocalStorage } from '../../storage-commons'
+import { RemoveFromLocalStorage, SetInLocalStorage } from '../storage-commons'
 
 const defaultTheme = createTheme();
 

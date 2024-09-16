@@ -9,7 +9,7 @@ import AppContext from './Contexts/AppContext';
 import { createCase, getAllTags } from './API/cases';
 import { inline_buttons } from  './Utils/defaultStyles';
 import { getMyChannels } from "./API/channels";
-import { GetFromLocalStorage } from '../storage-commons'
+import { GetFromLocalStorage } from './storage-commons'
 
 const CASES_API = import.meta.env.VITE_API_CASES_URL;
 

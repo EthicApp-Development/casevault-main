@@ -16,7 +16,7 @@ import {authRegister} from '../API/login';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import AppContext from '../Contexts/AppContext';
-import { SetInLocalStorage } from '../../storage-commons'
+import { SetInLocalStorage } from '../storage-commons'
 
 const defaultTheme = createTheme();
 

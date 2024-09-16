@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getUser } from "../API/user";
-import { GetFromLocalStorage } from '../../storage-commons'
+import { GetFromLocalStorage } from '../storage-commons'
 
 export default function getCurrentUser() {
     const [user, setUser] = useState(null);

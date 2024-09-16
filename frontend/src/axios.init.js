@@ -1,5 +1,5 @@
 import axios from "axios"
-import { RemoveFromLocalStorage, SetInLocalStorage, GetFromLocalStorage } from '../storage-commons'
+import { RemoveFromLocalStorage, SetInLocalStorage, GetFromLocalStorage } from './storage-commons'
 
 let baseUrl = import.meta.env.VITE_API_BASE_URL;
 

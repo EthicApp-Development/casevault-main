@@ -27,7 +27,7 @@ import UserCases from './MyCases/UserCases.jsx';
 import SavedCases from './MyCases/SavedCases.jsx';
 import IndexChannels from './Channels/IndexChannels.jsx';
 import ShowChannel from './Channels/ShowChannel.jsx';
-import { GetFromLocalStorage } from '../storage-commons.js'
+import { GetFromLocalStorage } from './storage-commons.js'
 function App() {
   const location = useLocation();
   const [user, setUser] = useState(null)
