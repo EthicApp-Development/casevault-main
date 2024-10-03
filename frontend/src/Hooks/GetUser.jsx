@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { getUser } from "../API/user";
+import { getFromLocalStorage } from '../storage-commons'
 
 export default function getCurrentUser() {
     const [user, setUser] = useState(null);
     useEffect(() => {
         const fetchUser = async () => {
-            const accountString = localStorage.getItem("account");
+            const accountString = getFromLocalStorage("account");
             if (accountString) {
                 const account = JSON.parse(accountString);
                 const userId = account.id;
