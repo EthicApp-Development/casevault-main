@@ -9,7 +9,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { inline_buttons } from '../Utils/defaultStyles';
 import {Box } from '@mui/material';
 import { authLogout } from '../API/login';
-import { RemoveFromLocalStorage, SetInLocalStorage } from '../storage-commons'
+import { removeFromLocalStorage, setInLocalStorage } from '../storage-commons'
 
 const defaultTheme = createTheme();
 
@@ -20,10 +20,10 @@ export default function Logout() {
     const handleLogout = async (event) => {
         event.preventDefault();
         try {
-            RemoveFromLocalStorage("account")
-            SetInLocalStorage("authenticated",false)
+            removeFromLocalStorage("account")
+            setInLocalStorage("authenticated",false)
             setUser(null)
-            RemoveFromLocalStorage('token')
+            removeFromLocalStorage('token')
             navigate('login')
         } catch (error) {
             console.error('Error during authentication:', error);

@@ -9,7 +9,7 @@ import AppContext from './Contexts/AppContext';
 import { createCase, getAllTags } from './API/cases';
 import { inline_buttons } from  './Utils/defaultStyles';
 import { getMyChannels } from "./API/channels";
-import { GetFromLocalStorage } from './storage-commons'
+import { getFromLocalStorage } from './storage-commons'
 
 const CASES_API = import.meta.env.VITE_API_CASES_URL;
 
@@ -72,7 +72,7 @@ export default function Home() {
                     console.log(error);
                 }
             }
-            const loggedInUser = GetFromLocalStorage("authenticated");
+            const loggedInUser = getFromLocalStorage("authenticated");
             if (loggedInUser) {
                 setauthenticated(loggedInUser);
             } else {

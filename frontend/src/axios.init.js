@@ -1,5 +1,5 @@
 import axios from "axios"
-import { RemoveFromLocalStorage, SetInLocalStorage, GetFromLocalStorage } from './storage-commons'
+import { removeFromLocalStorage, setInLocalStorage, getFromLocalStorage } from './storage-commons'
 
 let baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -12,11 +12,11 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use((config) => {
     const newConfig = { ...config }
-    const token = GetFromLocalStorage("token");
+    const token = getFromLocalStorage("token");
     if (token) {
         newConfig.headers["Authorization"] =  token;
     }
-    const accountString = GetFromLocalStorage("account");
+    const accountString = getFromLocalStorage("account");
     if (accountString) {
         const account = JSON.parse(accountString);
         const accessToken = account.jti;
@@ -33,10 +33,10 @@ axiosInstance.interceptors.response.use((response) => {
 }, (error) => {
     // Manejo de errores globales (por ejemplo, redireccionar al login si la autenticación falla)
     if (error.response && error.response.status === 401) {
-        RemoveFromLocalStorage('token')
-        RemoveFromLocalStorage("token");
-        RemoveFromLocalStorage("account");
-        SetInLocalStorage("authenticated", false);
+        removeFromLocalStorage('token')
+        removeFromLocalStorage("token");
+        removeFromLocalStorage("account");
+        setInLocalStorage("authenticated", false);
         window.location.href = '/login'; // Redirigir a la página de login
     }
     return Promise.reject(error);
