@@ -15,7 +15,7 @@ FROM base as build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libvips pkg-config
+    apt-get install --no-install-recommends -y build-essential libvips pkg-config libpq-dev
 
 # Install application gems
 COPY backend/Gemfile backend/Gemfile.lock ./
@@ -34,7 +34,7 @@ FROM base
 
 # Install packages needed for development
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libsqlite3-dev libvips && \
+    apt-get install --no-install-recommends -y curl libsqlite3-dev libvips libpq-dev && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 # Copy built artifacts: gems, application

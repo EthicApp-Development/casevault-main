@@ -6,6 +6,15 @@
 # Read more: https://github.com/cyu/rack-cors
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  if Rails.env.production?
+    allow do
+      origins '*' # Production frontend domain
+      resource '*',
+        headers: :any,
+        methods: [:get, :post, :put, :patch, :delete, :options, :head],
+        expose: ['access-token', 'expiry', 'token-type', 'Authorization']
+    end
+  else
     allow do
       origins '*'
       resource(
@@ -15,4 +24,5 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
         methods: [:get, :post, :put, :patch, :delete, :options, :head]
       )
     end
+  end
   end
