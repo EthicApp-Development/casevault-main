@@ -111,7 +111,7 @@ export default function Home() {
       }, [user]);
 
     async function handleCreateCase() {
-        const response = await fetch("src/assets/default_case_img.png");
+        const response = await fetch("images/default_case_img.png");
         const blob = await response.blob();
         const defaultImg = new File([blob], "default_case_img.png");
         const formData = new FormData();

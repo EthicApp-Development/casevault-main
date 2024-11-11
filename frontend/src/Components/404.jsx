@@ -8,7 +8,7 @@ const NotFound = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <h1>¡Página no encontrada!</h1>
                 <img
-                    src="src/assets/images/404.jpg"
+                    src="images/404.jpg"
                     alt="Imagen Error 404"
                     style={{ width: '200px', height: '200px', objectFit: 'cover' }}
                 />
