@@ -58,3 +58,5 @@ gem 'pundit'
 gem 'jsonapi-serializer'
 
 gem 'pg', '~> 1.2'
+
+gem 'rack-attack'
