@@ -87,8 +87,19 @@ export default function TextCreator() {
             const response = await addTagToCase(caseId, tag.id);
             if (response.status === 200) {
                 setTags((prevTags) => [...prevTags, tag]);
-            } else {
-                console.error('Error al agregar la etiqueta:', response.statusText);
+            } else if (response.status === 422) {
+                // Check if the error is related to tag limit exceeded
+                console.log('estoy en error 422');
+                const errors = await response.json();
+                const tagLimitError = errors.errors.find(error => error.error_code === 'tag_limit_exceeded');
+                console.log(errors);
+                console.log(tagLimitError);
+                if (tagLimitError) {
+                    toast(tagLimitError.message);
+                } else {
+                    // Other errors
+                    console.error('Error al agregar la etiqueta:', response.statusText);
+                }
             }
         } catch (error) {
             console.error('Error al procesar la solicitud:', error);
@@ -106,6 +117,7 @@ export default function TextCreator() {
                 console.error('Error al crear la etiqueta:', response.statusText);
             }
         } catch (error) {
+            console.log('desde crear etiqueta');
             console.error('Error al procesar la solicitud:', error);
         }
     };
