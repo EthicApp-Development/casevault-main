@@ -33,31 +33,12 @@ class Api::V1::TagsController < ApplicationController
         render json: @case.tags, status: :ok
     end
 
-    def create
-        # Use Redis to store request counts for each unique user or IP
-        key = "user:#{current_user.id}:throttle" # or "ip:#{request.remote_ip}:throttle"
-        
-        # Increment the counter for this user/IP
-        request_count = $redis.get(key).to_i
-
-        # Check if the request count exceeds the limit
-        if request_count >= RATE_LIMIT
-            render json: { error: 'Rate limit exceeded. Try again later.' }, status: :too_many_requests
+    def create     
+        @tag = Tag.new(tag_params)
+        if @tag.save
+            render json: @tag, status: :ok
         else
-            # Increment the count and set expiration if not already set
-            $redis.multi do
-                $redis.incr(key)
-                $redis.expire(key, RATE_LIMIT_PERIOD) if request_count == 0
-            end
-        
-            # Proceed with your action logic
-            # Your POST action logic goes here
-            @tag = Tag.new(tag_params)
-            if @tag.save
-                render json: @tag, status: :ok
-            else
-                render json: @tag.errors, status: :unprocessable_entity
-            end
+            render json: @tag.errors, status: :unprocessable_entity
         end
     end
 
