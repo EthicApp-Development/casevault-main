@@ -14,10 +14,12 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { authLogin } from '../API/login';
+import { authGoogleLogin } from '../API/login';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import AppContext from '../Contexts/AppContext';
-import { setInLocalStorage } from '../storage-commons'
+import { setInLocalStorage } from '../storage-commons';
+import { GoogleLogin } from '@react-oauth/google';
 
 const defaultTheme = createTheme();
 
@@ -48,6 +50,16 @@ export default function Login() {
             navigate('/home');
         } catch (error) {
             console.error('Error during authentication:', error);
+        }
+    };
+
+    const handleGoogleLogin = async (res) => {
+        try {
+            console.log(res)
+            const apiRes = await authGoogleLogin(res.credential);
+            console.log(apiRes);
+        } catch (error) {
+            console.error('Google login failed:', error);
         }
     };
 
@@ -102,6 +114,11 @@ export default function Login() {
                         >
                             Iniciar sesión
                         </Button>
+
+                        <GoogleLogin
+                            onSuccess={handleGoogleLogin}
+                            onError={() => console.log('Login Failed')}
+                        ></GoogleLogin>
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">

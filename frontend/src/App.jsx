@@ -27,7 +27,8 @@ import UserCases from './MyCases/UserCases.jsx';
 import SavedCases from './MyCases/SavedCases.jsx';
 import IndexChannels from './Channels/IndexChannels.jsx';
 import ShowChannel from './Channels/ShowChannel.jsx';
-import { getFromLocalStorage } from './storage-commons.js'
+import { getFromLocalStorage } from './storage-commons.js';
+import LoginWithProvider from './wrappers/LoginWithProvider';
 function App() {
   const location = useLocation();
   const [user, setUser] = useState(null)
@@ -66,7 +67,7 @@ function App() {
         <Box marginTop={0} marginLeft={45}>
           <Routes>
             <Route path="/home" element={<Home />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<LoginWithProvider />} />
             <Route path="/register" element={<Register />} />
             <Route path="/search/:searchTerm/" element={<SearchResults />} />
             <Route path="/my_cases/" element={<UserCases />} />

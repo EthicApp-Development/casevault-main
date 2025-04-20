@@ -321,4 +321,12 @@ config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.c
     ]
     jwt.expiration_time = 1.day.to_i
   end
+  
+  #OAuth
+  config.omniauth :google_oauth2,
+  ENV.fetch('GOOGLE_CLIENT_ID'),
+  ENV.fetch('GOOGLE_CLIENT_SECRET'),
+  scope: 'userinfo.email, userinfo.profile',
+  access_type: 'offline',
+  prompt: 'consent'
 end

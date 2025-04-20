@@ -42,3 +42,4 @@ packages/react-devtools-timeline/dist
 .env.test.local
 .env.production.local
 .env.local
+production.env

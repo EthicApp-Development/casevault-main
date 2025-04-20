@@ -11,3 +11,7 @@ export function authLogin(data) {
 export function authLogout() {
     return axiosInstance.delete("logout");
 }
+
+export function authGoogleLogin(token) {
+	return axiosInstance.post('auth/google_oauth2/callback', token);
+}
