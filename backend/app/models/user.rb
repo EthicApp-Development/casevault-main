@@ -12,13 +12,14 @@ class User < ApplicationRecord
 
   # For Oauth
   def self.from_google_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-      user.email = auth.info.email
-      user.password = Devise.friendly_token[0, 20]
-      user.first_name = auth.info.name
-      Rails.logger.debug "Auth Info: #{auth.info.inspect}"
+    where(email: payload['email']).first_or_initialize.tap do |user|
+      user.first_name = payload['given_name']
+      user.last_name = payload['family_name']
+      user.email = payload['email']
+      user.uid = payload['sub']
+      user.provider = 'google_oauth2'
+      user.password ||= Devise.friendly_token[0, 20]
+      user.save!
     end
   end
-        
-  
 end

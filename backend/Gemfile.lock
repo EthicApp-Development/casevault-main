@@ -116,6 +116,8 @@ GEM
     ffi (1.16.3)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    google-id-token (1.4.2)
+      jwt (>= 1)
     hashie (5.0.0)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
@@ -312,6 +314,7 @@ DEPENDENCIES
   debug
   devise
   devise-jwt
+  google-id-token
   image_processing (~> 1.2)
   jsonapi-serializer
   omniauth

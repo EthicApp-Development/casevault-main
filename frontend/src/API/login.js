@@ -13,5 +13,5 @@ export function authLogout() {
 }
 
 export function authGoogleLogin(token) {
-	return axiosInstance.post('auth/google_oauth2/callback', token);
+	return axiosInstance.post('auth/google_oauth2', { credential: token });
 }

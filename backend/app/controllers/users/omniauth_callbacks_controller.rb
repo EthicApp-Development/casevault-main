@@ -1,19 +1,26 @@
+require 'google-id-token'
+
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-    def google_oauth2
-      user = User.from_google_omniauth(request.env['omniauth.auth'])
-      puts(user)
-  
+  #protect_from_forgery except: [:google_oauth2]
+  def google_oauth2
+    token = params[:credential]
+    # Initialize Google's ID token verifier
+    validator = GoogleIDToken::Validator.new
+    payload = validator.check(token, ENV['GOOGLE_CLIENT_ID'])
+    if payload
+      user = User.from_google_omniauth(payload)
+      
       if user.persisted?
-        sign_in(user)
-        token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
-        render json: { token:, user: user }, status: :ok
+        jwt_token, _payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
+        render json: { token: jwt_token, user: UserSerializer.new(user).serializable_hash[:data][:attributes] }, status: :ok
       else
-        render json: { error: 'Authentication failed' }, status: :unauthorized
+        render json: { error: 'User creation failed' }, status: :unauthorized
       end
+    else
+      render json: { error: 'Invalid Google token' }, status: :unauthorized
     end
-  
-    def failure
-      render json: { error: 'OAuth authentication failed' }, status: :unauthorized
-    end
+  rescue GoogleIDToken::ValidationError => e
+    render json: { error: "Google token validation failed: #{e.message}" }, status: :unauthorized
   end
-  
+end
+

@@ -62,3 +62,5 @@ gem 'pg', '~> 1.2'
 gem 'omniauth'
 
 gem 'omniauth-google-oauth2'
+
+gem 'google-id-token'

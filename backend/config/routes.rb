@@ -19,7 +19,9 @@ Rails.application.routes.draw do
     registrations: 'users/registrations',
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
-
+  # Custom route for Google OAuth callback (handling the token sent from frontend)
+  post 'auth/google_oauth2', to: 'users/omniauth_callbacks#google_oauth2', as: :google_oauth2_callback
+  
   get 'cases/:id', to: 'static/static_cases#show', as: 'case'
 
   # Rutas del API

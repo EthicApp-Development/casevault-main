@@ -57,7 +57,21 @@ export default function Login() {
         try {
             console.log(res)
             const apiRes = await authGoogleLogin(res.credential);
-            console.log(apiRes);
+            console.log("[DEBUG] RESPONSE FROM SERVER AFTER PROCESSING THE GOOGLE TOKEN\n",apiRes);
+            const account = {
+                id: apiRes.user.data.id,
+                email: apiRes.user.data.email,
+                jti: apiRes.user.data.jti,
+                first_name: apiRes.user.data.first_name,
+                last_name: apiRes.user.data.last_name
+            };
+            console.log(apiRes.token);
+            setUser(account);
+            const token = response.headers['authorization'];
+            setInLocalStorage('token', token);
+            setInLocalStorage('account', JSON.stringify(account));
+            setInLocalStorage('authenticated', true);
+            navigate('/home');
         } catch (error) {
             console.error('Google login failed:', error);
         }
