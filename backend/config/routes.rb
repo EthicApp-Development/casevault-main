@@ -39,6 +39,7 @@ Rails.application.routes.draw do
             post :add_tag
           end
         end
+        resources :comments, only: [:index, :create, :destroy]
         resources :audios, only: [:index, :create, :update, :destroy]
         resources :videos, only: [:index, :create, :update, :destroy]
         resources :documents, only: [:index, :create, :destroy] do

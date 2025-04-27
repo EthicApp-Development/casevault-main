@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_18_143303) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_27_184233) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -97,6 +97,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_143303) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "comments", force: :cascade do |t|
+    t.text "body"
+    t.integer "user_id", null: false
+    t.integer "case_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["case_id"], name: "index_comments_on_case_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
   create_table "documents", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -142,6 +152,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_143303) do
     t.string "jti", null: false
     t.string "first_name"
     t.string "last_name"
+    t.string "provider"
+    t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -167,6 +179,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_143303) do
   add_foreign_key "channel_cases", "channels"
   add_foreign_key "channel_memberships", "channels"
   add_foreign_key "channel_memberships", "users"
+  add_foreign_key "comments", "cases"
+  add_foreign_key "comments", "users"
   add_foreign_key "documents", "cases"
   add_foreign_key "images", "cases"
   add_foreign_key "saved_cases", "cases"
