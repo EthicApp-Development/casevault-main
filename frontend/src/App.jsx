@@ -28,6 +28,7 @@ import SavedCases from './MyCases/SavedCases.jsx';
 import IndexChannels from './Channels/IndexChannels.jsx';
 import ShowChannel from './Channels/ShowChannel.jsx';
 import { getFromLocalStorage } from './storage-commons.js'
+import ShowCaseComments from './ShowCase/ShowCaseComments.jsx';
 function App() {
   const location = useLocation();
   const [user, setUser] = useState(null)
@@ -78,6 +79,7 @@ function App() {
               <Route path="videos" element={<ShowCaseVideos />} />
               <Route path="audios" element={<ShowCaseAudios />} />
               <Route path='documents' element={<ShowCaseDocuments />} />
+              <Route path='comments' element={<ShowCaseComments />} />
             </Route>
             <Route path="/create_case/:caseId/" element={<CreateCase />}>
               <Route path="text" element={<TextCreator />} />
