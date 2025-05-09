@@ -1,10 +1,9 @@
 import { useParams } from 'react-router-dom';
 import React, { useContext, useEffect, useState } from 'react';
-import { getCase } from '../API/cases';
+import { getCase, addCommentToCase } from '../API/cases';
 import { Box, Typography, TextField, Button } from '@mui/material';
+import { ThumbUp } from '@mui/icons-material';
 import AppContext from '../Contexts/AppContext';
-import { useCaseContext } from './ShowCase';
-import { title_style } from "../Utils/defaultStyles";
 
 function ShowCaseComments() {
     const [comments, setComments] = useState([]);
@@ -45,15 +44,35 @@ function ShowCaseComments() {
 
     // Handle submitting the comment
     const handleCommentSubmit = async () => {
-        // Reset the input state
-        setIsEditing(false);
-        setNewComment('');
+      if (!newComment.trim()) return;
+
+      try {
+        const response = await addCommentToCase(caseId, newComment);
+
+        if (response.status === 201) {
+          const createdComment = response.data;
+          console.log("Created comment:", createdComment);
+
+          // Add the new comment to the state
+          setComments(prev => [...prev, createdComment]);
+
+          // Reset input
+          setIsEditing(false);
+          setNewComment('');
+        } else {
+          console.error('Error al crear el comentario:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error al enviar el comentario:', error);
+      }
     }
     useEffect(() => {
         const containerHeight = comments.length > 8 ? 600 : 500; // Adjust based on the number of comments
         setCommentBoxHeight(containerHeight);
       }, [comments]);
-    
+    const handleUpvote = async () => {
+
+    }
 
     return (
     <div
@@ -81,7 +100,7 @@ function ShowCaseComments() {
         }}
         onClick={handleAddCommentClick}
       >
-        Add a comment
+        Agregar un comentario
       </Typography>
 
       {/* Underline */}
@@ -107,7 +126,7 @@ function ShowCaseComments() {
         rows={2}
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
-        placeholder="Write your comment here..."
+        placeholder="Escribe tu comentario..."
         fullWidth
       />
 
@@ -132,39 +151,63 @@ function ShowCaseComments() {
 
   {/* Displaying the comments list */}
   <Box
-    sx={{
-      height: commentBoxHeight,
-      overflowY: 'auto',
-      marginTop: '10px',
-      paddingRight: '10px',
-      display: 'flex',
-      flexDirection: 'column',
-      width: '100%',
-    }}
-  >
-    {comments.length > 0 ? (
-      comments.map((comment) => (
-        <Box
-          key={comment.id}
-          sx={{
-            backgroundColor: 'white',
-            padding: 2,
-            marginBottom: 2,
-            borderRadius: 2,
-            boxShadow: 3,
-            width: '100%',
-          }}
-        >
-          <p>
-            <strong>{comment.user.first_name}</strong>: {comment.body}
-          </p>
+  sx={{
+    height: commentBoxHeight,
+    overflowY: 'auto',
+    marginTop: '10px',
+    paddingRight: '10px',
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+  }}
+>
+  {comments.length > 0 ? (
+    comments.map((comment) => (
+      <Box
+        key={comment.id}
+        sx={{
+          backgroundColor: 'white',
+          padding: 2,
+          marginBottom: 2,
+          borderRadius: 2,
+          boxShadow: 3,
+          width: '100%',
+        }}
+      >
+        {/* Header: User + Date */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="subtitle2">
+            {comment.user.first_name}
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            DATE {/*{new Date(comment.created_at).toLocaleString()} */}
+          </Typography>
         </Box>
-      ))
-    ) : (
-      <Typography variant="h6" sx={{ paddingTop: 3 }}>
-      </Typography>
-    )}
-  </Box>
+
+        {/* Comment content */}
+        <Typography variant="body1" sx={{ marginTop: 1 }}>
+          {comment.body}
+        </Typography>
+
+        {/* Upvote button */}
+        <Box sx={{ marginTop: 1 }}>
+          <Button 
+            size="small" 
+            variant="text" 
+            onClick={() => handleUpvote(comment.id)}
+            startIcon={<ThumbUp />}>
+            {comment.votes > 0 ? comment.votes : ''}
+          </Button>
+        </Box>
+      </Box>
+    ))
+  ) : (
+    <Typography variant="h6" sx={{ paddingTop: 3 }}>
+      No hay comentarios todavía.
+    </Typography>
+  )}
+</Box>
+
 </Box>
 
     </div>

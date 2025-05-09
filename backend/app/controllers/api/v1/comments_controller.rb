@@ -12,7 +12,7 @@ class Api::V1::CommentsController < ApplicationController
         @comment = @case.comments.build(comment_params.merge(user_id: @current_user.id))
 
         if @comment.save
-            render json: @comment, status: :created
+            render json: @comment.as_json(include: { user: { only: [:id, :first_name, :last_name] } }), status: :created
         else
             render json: { errors: @comment.errors.full_messages }, status: :unprocessable_entity
         end
@@ -25,7 +25,7 @@ class Api::V1::CommentsController < ApplicationController
             @comment.destroy
             head :no_content
         else
-            render json: { error: "You can only delete your own comments." }, status: :forbidden
+            render json: { error: "Solo puedes eliminar tus propios comentarios." }, status: :forbidden
         end
     end
 
