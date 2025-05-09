@@ -30,13 +30,10 @@ function ShowCaseComments() {
             }
             fetchCase();
         }, [caseId]);
-
-    // Handle opening the input field for a new comment
+        
     const handleAddCommentClick = () => {
         setIsEditing(true);
     };
-
-    // Handle canceling the comment input
     const handleCancel = () => {
         setIsEditing(false);
         setNewComment('');
@@ -50,12 +47,8 @@ function ShowCaseComments() {
 
         if (response.status === 201) {
           const createdComment = response.data;
-          console.log("Created comment:", createdComment);
 
-          // Add the new comment to the state
           setComments(prev => [...prev, createdComment]);
-
-          // Reset input
           setIsEditing(false);
           setNewComment('');
         } else {
@@ -75,7 +68,6 @@ function ShowCaseComments() {
         const response = await patchVotesInComments(caseId, commentID);
         if (response.status === 200) {
           const commentUpdated = response.data;
-          // Update the specific comment in the state
           setComments(prevComments => 
             prevComments.map(comment => comment.id === commentUpdated.id ? { ...comment, votes: commentUpdated.votes } : comment)
           );
@@ -113,8 +105,6 @@ function ShowCaseComments() {
       >
         Agregar un comentario
       </Typography>
-
-      {/* Underline */}
       <Box
         sx={{
           position: 'absolute',
@@ -140,8 +130,6 @@ function ShowCaseComments() {
         placeholder="Escribe tu comentario..."
         fullWidth
       />
-
-      {/* Buttons for cancel and comment */}
       <Box
         sx={{
           display: 'flex',
@@ -160,7 +148,7 @@ function ShowCaseComments() {
     </Box>
   )}
 
-  {/* Displaying the comments list */}
+  {/* Comments list*/}
   <Box
   sx={{
     height: commentBoxHeight,
@@ -185,7 +173,6 @@ function ShowCaseComments() {
           width: '100%',
         }}
       >
-        {/* Header: User + Date */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="subtitle2">
             {comment.user.first_name}
@@ -195,12 +182,10 @@ function ShowCaseComments() {
           </Typography>
         </Box>
 
-        {/* Comment content */}
         <Typography variant="body1" sx={{ marginTop: 1 }}>
           {comment.body}
         </Typography>
 
-        {/* Upvote button */}
         <Box sx={{ marginTop: 1 }}>
           <Button 
             size="small" 
