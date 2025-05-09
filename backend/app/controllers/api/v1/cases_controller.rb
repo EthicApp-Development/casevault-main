@@ -179,7 +179,7 @@ class Api::V1::CasesController < ApplicationController
         audios: { only: [:id, :title, :url], methods: :file_url },
         videos: { only: [:id, :url, :title, :description] },
         tags: { only: [:name, :id] },
-        comments: { only: [:id, :body], include: {user: {only: [:id, :first_name, :last_name]}}}
+        comments: { only: [:id, :body, :created_at, :votes], include: {user: {only: [:id, :first_name, :last_name]}}}
       })
     
       if @case.main_image.attached?

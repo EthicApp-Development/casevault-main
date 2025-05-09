@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import React, { useContext, useEffect, useState } from 'react';
-import { getCase, addCommentToCase } from '../API/cases';
+import { getCase, addCommentToCase, patchVotesInComments } from '../API/cases';
 import { Box, Typography, TextField, Button } from '@mui/material';
 import { ThumbUp } from '@mui/icons-material';
 import AppContext from '../Contexts/AppContext';
@@ -42,7 +42,6 @@ function ShowCaseComments() {
         setNewComment('');
     };
 
-    // Handle submitting the comment
     const handleCommentSubmit = async () => {
       if (!newComment.trim()) return;
 
@@ -70,8 +69,20 @@ function ShowCaseComments() {
         const containerHeight = comments.length > 8 ? 600 : 500; // Adjust based on the number of comments
         setCommentBoxHeight(containerHeight);
       }, [comments]);
-    const handleUpvote = async () => {
 
+    const handleUpvote = async (commentID) => {
+      try{
+        const response = await patchVotesInComments(caseId, commentID);
+        if (response.status === 200) {
+          const commentUpdated = response.data;
+          // Update the specific comment in the state
+          setComments(prevComments => 
+            prevComments.map(comment => comment.id === commentUpdated.id ? { ...comment, votes: commentUpdated.votes } : comment)
+          );
+        }
+      } catch (error) {
+        console.error('Error al votar', error);
+      }
     }
 
     return (

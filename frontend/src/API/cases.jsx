@@ -139,3 +139,7 @@ export function getSearchedTags(searchTerm) {
 export function addCommentToCase(caseId, commentText) {
 	return axiosInstance.post(`/api/v1/cases/${caseId}/comments`, {comment: { body: commentText}});
 }
+
+export function patchVotesInComments(caseId, commentId){
+	return axiosInstance.patch(`/api/v1/cases/${caseId}/comments/${commentId}/upvote`);
+}

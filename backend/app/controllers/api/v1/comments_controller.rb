@@ -18,6 +18,17 @@ class Api::V1::CommentsController < ApplicationController
         end
     end
 
+    # PATCH api/v1/cases/:case_id/comments/:id/upvote
+    def upvote
+        @comment = @case.comments.find(params[:id])
+        if @comment.increment!(:votes)
+            render json: { id: @comment.id, votes: @comment.votes }, status: :ok
+        else 
+            render json: { error: "No se pudo registrar el voto." }, status: :unprocessable_entity
+        end
+    end
+  
+
     def destroy
         @comment = @case.comments.find(params[:id])
 
