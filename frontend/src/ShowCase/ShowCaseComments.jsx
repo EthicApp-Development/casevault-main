@@ -12,6 +12,7 @@ function ShowCaseComments() {
     const [newComment, setNewComment] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [commentBoxHeight, setCommentBoxHeight] = useState(600);
+    const [canComment, setCanComment] = useState(false);
 
     useEffect(() => {
             async function fetchCase() {
@@ -20,6 +21,7 @@ function ShowCaseComments() {
                     const response = await getCase(caseId, user.id);
                     if (response.status === 200) {
                         setComments(response.data.comments || []);
+                        setCanComment(response.data.current_user_comment_available);
                     } else {
                         console.error('Error al obtener el caso:', response.statusText);
                     }
@@ -51,6 +53,7 @@ function ShowCaseComments() {
           setComments(prev => [...prev, createdComment]);
           setIsEditing(false);
           setNewComment('');
+          setCanComment(false);
         } else {
           console.error('Error al crear el comentario:', response.statusText);
         }
@@ -109,133 +112,136 @@ function ShowCaseComments() {
         flexDirection: 'column',
       }}>
 
-<Box sx={{ display: 'flex', flexDirection: 'column', width: '80%', marginTop: '10px' }}>
-  {/* Comment text zone with underline */}
-  {!isEditing && (
-    <Box sx={{ position: 'relative', width: '100%' }}>
-      <Typography
-        variant="body1"
-        sx={{
-          cursor: 'pointer',
-          color: 'gray',
-          marginBottom: '10px',
-          display: 'inline-block',
-          paddingBottom: '5px',
-          width: '100%',
-        }}
-        onClick={handleAddCommentClick}
-      >
-        Agregar un comentario
+    <Box sx={{ display: 'flex', flexDirection: 'column', width: '80%', marginTop: '10px' }}>
+      {canComment && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '80%', marginTop: '10px' }}>
+          {/* Comment text zone with underline */}
+          {!isEditing && (
+            <Box sx={{ position: 'relative', width: '100%' }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  cursor: 'pointer',
+                  color: 'gray',
+                  marginBottom: '10px',
+                  display: 'inline-block',
+                  paddingBottom: '5px',
+                  width: '100%',
+                }}
+                onClick={handleAddCommentClick}
+              >
+                Agregar un comentario
+              </Typography>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '2px',
+                  backgroundColor: 'gray',
+                }}
+              />
+            </Box>
+          )}
+
+          {/* Input field for new comment */}
+          {isEditing && (
+            <Box sx={{ width: '100%', marginBottom: '20px' }}>
+              <TextField
+                variant="outlined"
+                multiline
+                rows={2}
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Escribe tu comentario..."
+                fullWidth
+              />
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: '10px',
+                  marginTop: '10px',
+                }}
+              >
+                <Button variant="outlined" color="error" onClick={handleCancel}>
+                  Cancel
+                </Button>
+                <Button variant="contained" onClick={handleCommentSubmit}>
+                  Comment
+                </Button>
+              </Box>
+            </Box>
+          )}
+        </Box>
+      )}
+      
+
+      {/* Comments list*/}
+      <Box
+      sx={{
+        height: commentBoxHeight,
+        overflowY: 'auto',
+        marginTop: '10px',
+        paddingRight: '10px',
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+      }}
+    >
+    {comments.length > 0 ? (
+      comments.map((comment) => (
+        <Box
+          key={comment.id}
+          sx={{
+            backgroundColor: 'white',
+            padding: 2,
+            marginBottom: 2,
+            borderRadius: 2,
+            boxShadow: 3,
+            width: '100%',
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant="subtitle2">
+              {comment.user.first_name}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              DATE {/*{new Date(comment.created_at).toLocaleString()} */}
+            </Typography>
+          </Box>
+
+          <Typography variant="body1" sx={{ marginTop: 1 }}>
+            {comment.body}
+          </Typography>
+
+          <Box sx={{ marginTop: 1 }}>
+            <Button 
+              size="small" 
+              variant="text"
+              onClick={() => handleUpvote(comment.id)}
+              startIcon={comment.user_vote === 1 ? <ThumbUp /> : <ThumbUpOffAlt  />}>
+              {comment.upvotes_count > 0 ? comment.upvotes_count : ''}
+            </Button>
+            <Button 
+              size="small" 
+              variant="text"
+              onClick={() => handleDownVote(comment.id)}
+              startIcon={comment.user_vote === -1 ? <ThumbDown /> : <ThumbDownOffAlt  />}>
+              {comment.downvotes_count > 0 ? comment.downvotes_count : ''}
+            </Button>
+          </Box>
+        </Box>
+      ))
+    ) : (
+      <Typography variant="h6" sx={{ paddingTop: 3 }}>
+        No hay comentarios todavía.
       </Typography>
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: '100%',
-          height: '2px',
-          backgroundColor: 'gray',
-        }}
-      />
-    </Box>
-  )}
-
-  {/* Input field for new comment */}
-  {isEditing && (
-    <Box sx={{ width: '100%', marginBottom: '20px' }}>
-      <TextField
-        variant="outlined"
-        multiline
-        rows={2}
-        value={newComment}
-        onChange={(e) => setNewComment(e.target.value)}
-        placeholder="Escribe tu comentario..."
-        fullWidth
-      />
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          gap: '10px',
-          marginTop: '10px',
-        }}
-      >
-        <Button variant="outlined" color="error" onClick={handleCancel}>
-          Cancel
-        </Button>
-        <Button variant="contained" onClick={handleCommentSubmit}>
-          Comment
-        </Button>
+    )}
       </Box>
-    </Box>
-  )}
-
-  {/* Comments list*/}
-  <Box
-  sx={{
-    height: commentBoxHeight,
-    overflowY: 'auto',
-    marginTop: '10px',
-    paddingRight: '10px',
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-  }}
->
-  {comments.length > 0 ? (
-    comments.map((comment) => (
-      <Box
-        key={comment.id}
-        sx={{
-          backgroundColor: 'white',
-          padding: 2,
-          marginBottom: 2,
-          borderRadius: 2,
-          boxShadow: 3,
-          width: '100%',
-        }}
-      >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Typography variant="subtitle2">
-            {comment.user.first_name}
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
-            DATE {/*{new Date(comment.created_at).toLocaleString()} */}
-          </Typography>
-        </Box>
-
-        <Typography variant="body1" sx={{ marginTop: 1 }}>
-          {comment.body}
-        </Typography>
-
-        <Box sx={{ marginTop: 1 }}>
-          <Button 
-            size="small" 
-            variant="text"
-            onClick={() => handleUpvote(comment.id)}
-            startIcon={comment.user_vote === 1 ? <ThumbUp /> : <ThumbUpOffAlt  />}>
-            {comment.upvotes_count > 0 ? comment.upvotes_count : ''}
-          </Button>
-          <Button 
-            size="small" 
-            variant="text"
-            onClick={() => handleDownVote(comment.id)}
-            startIcon={comment.user_vote === -1 ? <ThumbDown /> : <ThumbDownOffAlt  />}>
-            {comment.downvotes_count > 0 ? comment.downvotes_count : ''}
-          </Button>
-        </Box>
-      </Box>
-    ))
-  ) : (
-    <Typography variant="h6" sx={{ paddingTop: 3 }}>
-      No hay comentarios todavía.
-    </Typography>
-  )}
-</Box>
-
-</Box>
-
-    </div>
+  </Box>
+  </div>
   );
 }
 

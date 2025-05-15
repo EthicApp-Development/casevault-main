@@ -188,6 +188,9 @@ class Api::V1::CasesController < ApplicationController
         comment_json["upvotes_count"] = comment.upvotes_count
         comment_json["downvotes_count"] = comment.downvotes_count
       end
+
+      user_has_commented = @case.comments.exists?(user_id: @current_user.id)
+      case_json["current_user_comment_available"] = !user_has_commented
     
       if @case.main_image.attached?
         case_json.merge!(main_image_url: url_for(@case.main_image))
