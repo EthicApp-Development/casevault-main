@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import React, { useContext, useEffect, useState } from 'react';
 import { getCase, addCommentToCase, postVotesInComments } from '../API/cases';
 import { Box, Typography, TextField, Button } from '@mui/material';
-import { ThumbUp } from '@mui/icons-material';
+import { ThumbUp, ThumbUpOffAlt, ThumbDown, ThumbDownOffAlt } from '@mui/icons-material';
 import AppContext from '../Contexts/AppContext';
 
 function ShowCaseComments() {
@@ -65,11 +65,33 @@ function ShowCaseComments() {
 
     const handleUpvote = async (commentID) => {
       try{
-        const response = await postVotesInComments(caseId, commentID);
+        const voteValue = 1;
+        const response = await postVotesInComments(caseId, commentID, voteValue);
         if (response.status === 200) {
-          const commentUpdated = response.data;
+          const voteUpdated = response.data;
           setComments(prevComments => 
-            prevComments.map(comment => comment.id === commentUpdated.id ? { ...comment, votes: commentUpdated.votes } : comment)
+            prevComments.map(comment => comment.id === voteUpdated.vote.comment_id ? { ...comment, 
+              upvotes_count: voteUpdated.upvotes_count, 
+              downvotes_count: voteUpdated.downvotes_count, 
+              user_vote: voteUpdated.user_vote} : comment)
+          );
+        }
+      } catch (error) {
+        console.error('Error al votar', error);
+      }
+    }
+
+    const handleDownVote = async (commentID) => {
+      try{
+        const voteValue = -1;
+        const response = await postVotesInComments(caseId, commentID, voteValue);
+        if (response.status === 200) {
+          const voteUpdated = response.data;
+          setComments(prevComments => 
+            prevComments.map(comment => comment.id === voteUpdated.vote.comment_id ? { ...comment, 
+              upvotes_count: voteUpdated.upvotes_count, 
+              downvotes_count: voteUpdated.downvotes_count, 
+              user_vote: voteUpdated.user_vote} : comment)
           );
         }
       } catch (error) {
@@ -189,10 +211,17 @@ function ShowCaseComments() {
         <Box sx={{ marginTop: 1 }}>
           <Button 
             size="small" 
-            variant="text" 
+            variant="text"
             onClick={() => handleUpvote(comment.id)}
-            startIcon={<ThumbUp />}>
-            {comment.votes > 0 ? comment.votes : ''}
+            startIcon={comment.user_vote === 1 ? <ThumbUp /> : <ThumbUpOffAlt  />}>
+            {comment.upvotes_count > 0 ? comment.upvotes_count : ''}
+          </Button>
+          <Button 
+            size="small" 
+            variant="text"
+            onClick={() => handleDownVote(comment.id)}
+            startIcon={comment.user_vote === -1 ? <ThumbDown /> : <ThumbDownOffAlt  />}>
+            {comment.downvotes_count > 0 ? comment.downvotes_count : ''}
           </Button>
         </Box>
       </Box>

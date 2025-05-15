@@ -6,12 +6,12 @@ class Api::V1::VotesController < ApplicationController
     vote_value = vote_params[:value].to_i
     if existing_vote
       existing_vote.update(value: vote_value)
-      render json: { success: true, message: "Voto actualizado", vote: existing_vote }, status: :ok
+      render json: { success: true, message: "Voto actualizado", vote: existing_vote, upvotes_count: @comment.upvotes_count, downvotes_count: @comment.downvotes_count, user_vote: @comment.user_vote_by(@current_user) }, status: :ok
     else
       @vote = @comment.votes.build(user: @current_user, value: vote_params[:value])
 
       if @vote.save
-        render json: { success: true, vote: @vote }, status: :created
+        render json: { success: true, vote: @vote, upvotes_count: @comment.upvotes_count, downvotes_count: @comment.downvotes_count, user_vote: @comment.user_vote_by(@current_user)}, status: :created
       else
         render json: { errors: @vote.errors.full_messages }, status: :unprocessable_entity
       end
