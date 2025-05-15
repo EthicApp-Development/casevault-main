@@ -40,9 +40,7 @@ Rails.application.routes.draw do
           end
         end
         resources :comments, only: [:index, :create, :destroy] do
-          member do
-            patch :upvote
-          end
+          resource :vote, only: [:create, :destroy]
         end
         resources :audios, only: [:index, :create, :update, :destroy]
         resources :videos, only: [:index, :create, :update, :destroy]

@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import React, { useContext, useEffect, useState } from 'react';
-import { getCase, addCommentToCase, patchVotesInComments } from '../API/cases';
+import { getCase, addCommentToCase, postVotesInComments } from '../API/cases';
 import { Box, Typography, TextField, Button } from '@mui/material';
 import { ThumbUp } from '@mui/icons-material';
 import AppContext from '../Contexts/AppContext';
@@ -65,7 +65,7 @@ function ShowCaseComments() {
 
     const handleUpvote = async (commentID) => {
       try{
-        const response = await patchVotesInComments(caseId, commentID);
+        const response = await postVotesInComments(caseId, commentID);
         if (response.status === 200) {
           const commentUpdated = response.data;
           setComments(prevComments => 

@@ -3,8 +3,8 @@ class Api::V1::CommentsController < ApplicationController
 
     # GET api/v1/cases/:case_id/comments
     def index
-        @comments = @case.comments.includes(:user)
-        render json: @comments.as_json(include: { user: { only: [:id, :first_name, :last_name] } }), status: :ok
+        @comments = @case.comments.includes(:user, :votes)
+        render json: @comments.map { |comment| render_comment(comment) }, status: :ok
     end
       
     # POST api/v1/cases/:case_id/comments
@@ -18,16 +18,6 @@ class Api::V1::CommentsController < ApplicationController
         end
     end
 
-    # PATCH api/v1/cases/:case_id/comments/:id/upvote
-    def upvote
-        @comment = @case.comments.find(params[:id])
-        if @comment.increment!(:votes)
-            render json: { id: @comment.id, votes: @comment.votes }, status: :ok
-        else 
-            render json: { error: "No se pudo registrar el voto." }, status: :unprocessable_entity
-        end
-    end
-  
 
     def destroy
         @comment = @case.comments.find(params[:id])
@@ -48,6 +38,22 @@ class Api::V1::CommentsController < ApplicationController
 
     def comment_params
         params.require(:comment).permit(:body)
+    end
+
+    def render_comment(comment)
+        {
+        id: comment.id,
+        body: comment.body,
+        created_at: comment.created_at,
+        user: {
+            id: comment.user.id,
+            first_name: comment.user.first_name,
+            last_name: comment.user.last_name
+        },
+        upvotes_count: comment.upvotes_count,
+        downvotes_count: comment.downvotes_count,
+        user_vote: comment.user_vote_by(@current_user)
+        }
     end
 
     #def current_user

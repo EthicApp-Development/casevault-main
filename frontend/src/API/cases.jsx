@@ -140,6 +140,6 @@ export function addCommentToCase(caseId, commentText) {
 	return axiosInstance.post(`/api/v1/cases/${caseId}/comments`, {comment: { body: commentText}});
 }
 
-export function patchVotesInComments(caseId, commentId){
-	return axiosInstance.patch(`/api/v1/cases/${caseId}/comments/${commentId}/upvote`);
+export function postVotesInComments(caseId, commentId){
+	return axiosInstance.patch(`/api/v1/cases/${caseId}/comments/${commentId}/vote`);
 }

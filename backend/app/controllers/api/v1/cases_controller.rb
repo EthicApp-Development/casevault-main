@@ -179,8 +179,15 @@ class Api::V1::CasesController < ApplicationController
         audios: { only: [:id, :title, :url], methods: :file_url },
         videos: { only: [:id, :url, :title, :description] },
         tags: { only: [:name, :id] },
-        comments: { only: [:id, :body, :created_at, :votes], include: {user: {only: [:id, :first_name, :last_name]}}}
+        comments: { only: [:id, :body, :created_at], include: {user: {only: [:id, :first_name, :last_name]}}}
       })
+
+      case_json["comments"].each do |comment_json|
+        comment = @case.comments.find { |c| c.id == comment_json["id"] }
+        comment_json["user_vote"] = comment.user_vote_by(@current_user)
+        comment_json["upvotes_count"] = comment.upvotes_count
+        comment_json["downvotes_count"] = comment.downvotes_count
+      end
     
       if @case.main_image.attached?
         case_json.merge!(main_image_url: url_for(@case.main_image))
@@ -198,5 +205,5 @@ class Api::V1::CasesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def case_params
       params.require(:case).permit(:user_id,:case_id,:visibility, :text, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
-    end
+    end    
 end
