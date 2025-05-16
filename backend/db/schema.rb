@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_18_143303) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_14_233749) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -97,6 +97,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_143303) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "comments", force: :cascade do |t|
+    t.text "body"
+    t.integer "user_id", null: false
+    t.integer "case_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["case_id"], name: "index_comments_on_case_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
   create_table "documents", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -157,6 +167,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_143303) do
     t.index ["case_id"], name: "index_videos_on_case_id"
   end
 
+  create_table "votes", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "comment_id", null: false
+    t.integer "value", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["comment_id"], name: "index_votes_on_comment_id"
+    t.index ["user_id", "comment_id"], name: "index_votes_on_user_id_and_comment_id", unique: true
+    t.index ["user_id"], name: "index_votes_on_user_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audios", "cases"
@@ -167,9 +188,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_143303) do
   add_foreign_key "channel_cases", "channels"
   add_foreign_key "channel_memberships", "channels"
   add_foreign_key "channel_memberships", "users"
+  add_foreign_key "comments", "cases"
+  add_foreign_key "comments", "users"
   add_foreign_key "documents", "cases"
   add_foreign_key "images", "cases"
   add_foreign_key "saved_cases", "cases"
   add_foreign_key "saved_cases", "users"
   add_foreign_key "videos", "cases"
+  add_foreign_key "votes", "comments"
+  add_foreign_key "votes", "users"
 end

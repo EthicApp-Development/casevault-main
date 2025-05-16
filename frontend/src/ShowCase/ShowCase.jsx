@@ -20,6 +20,7 @@ function ShowCase() {
     const [visibility, setVisibility] = useState('');
     const [mainImage, setMainImage] = useState('');
     const [caseObject, setCaseObject] = useState({});
+    const [comments, setComments] = useState({});
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
     const { user } = useContext(AppContext);
@@ -35,6 +36,7 @@ function ShowCase() {
                     setAudios(response.data.audios);
                     setVideos(response.data.videos);
                     setDocuments(response.data.documents);
+                    setComments(response.data.comments);
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
@@ -65,6 +67,8 @@ function ShowCase() {
                 return 'documents';
             case 3:
                 return 'audios';
+            case 4:
+                return 'comments';
             default:
                 return '';
         }
@@ -80,6 +84,8 @@ function ShowCase() {
                 return 2;
             case 'audios':
                 return 3;
+            case 'comments':
+                return 4;
             default:
                 return 0;
         }
@@ -104,6 +110,8 @@ function ShowCase() {
         setMainImage,
         caseObject,
         setCaseObject,
+        comments,
+        setComments,
     };
 
     return (
@@ -116,6 +124,7 @@ function ShowCase() {
                             <Tab label="Videos" value={1} sx={{ textTransform: 'none' }} />
                             <Tab label="Documentos" value={2} sx={{ textTransform: 'none' }} />
                             <Tab label="Audios" value={3} sx={{ textTransform: 'none' }} />
+                            <Tab label="Comentarios" value={4} sx={{ textTransform: 'none' }} />
                         </Tabs>
                     </Box>
                     <Outlet />

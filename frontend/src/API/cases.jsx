@@ -135,3 +135,11 @@ export function getSearchedTags(searchTerm) {
 		}
 	} )
 }
+
+export function addCommentToCase(caseId, commentText) {
+	return axiosInstance.post(`/api/v1/cases/${caseId}/comments`, {comment: { body: commentText}});
+}
+
+export function postVotesInComments(caseId, commentId, voteValue){
+	return axiosInstance.post(`/api/v1/cases/${caseId}/comments/${commentId}/vote`, {vote: {value: voteValue}});
+}
