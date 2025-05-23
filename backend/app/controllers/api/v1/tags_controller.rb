@@ -29,35 +29,21 @@ class Api::V1::TagsController < ApplicationController
 
     def add_tag
         @tag = Tag.find(params[:tag_id])
-        @case.tags << @tag unless @case.tags.include?(@tag)
-        render json: @case.tags, status: :ok
+        if @case.tags.count >= 6
+            render json: { errors: [{error_code: 'tag_limit_exceeded', message: 'Un caso no puede tener más de 6 etiquetas'}] }, status: :unprocessable_entity
+        else
+            # Add the tag to the case if it's not already added
+            @case.tags << @tag unless @case.tags.include?(@tag)
+            render json: @case.tags, status: :ok
+        end
     end
 
     def create
-        # Use Redis to store request counts for each unique user or IP
-        key = "user:#{current_user.id}:throttle" # or "ip:#{request.remote_ip}:throttle"
-        
-        # Increment the counter for this user/IP
-        request_count = $redis.get(key).to_i
-
-        # Check if the request count exceeds the limit
-        if request_count >= RATE_LIMIT
-            render json: { error: 'Rate limit exceeded. Try again later.' }, status: :too_many_requests
+        @tag = Tag.new(tag_params)
+        if @tag.save
+            render json: @tag, status: :ok
         else
-            # Increment the count and set expiration if not already set
-            $redis.multi do
-                $redis.incr(key)
-                $redis.expire(key, RATE_LIMIT_PERIOD) if request_count == 0
-            end
-        
-            # Proceed with your action logic
-            # Your POST action logic goes here
-            @tag = Tag.new(tag_params)
-            if @tag.save
-                render json: @tag, status: :ok
-            else
-                render json: @tag.errors, status: :unprocessable_entity
-            end
+            render json: @tag.errors, status: :unprocessable_entity
         end
     end
 
