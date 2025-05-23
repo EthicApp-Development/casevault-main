@@ -256,12 +256,6 @@ export default function TextCreator() {
                                 </Box>
                             </Box>
                             <Box sx={{ ...inline_buttons }}>
-                                {tagError && (
-                                    <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-                                        {tagError}
-                                    </Typography>
-                                    )}
-
                                 <TextField
                                     value={search}
                                     onKeyDown={(e) => {
@@ -305,6 +299,11 @@ export default function TextCreator() {
                                     Añadir etiqueta
                                 </Button>
                             </Box>
+                            {tagError && (
+                                    <Typography color="error" variant="caption" sx={{ mt: 1 }}>
+                                        {tagError}
+                                    </Typography>
+                                    )}
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
