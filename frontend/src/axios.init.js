@@ -39,6 +39,9 @@ axiosInstance.interceptors.response.use((response) => {
         setInLocalStorage("authenticated", false);
         window.location.href = '/login'; // Redirigir a la página de login
     }
+    if (error.response && error.response.status === 429) {
+        alert('Muchos intentos realizados. Por favor espere e intente más tarde.');
+    }
     return Promise.reject(error);
 });
 
