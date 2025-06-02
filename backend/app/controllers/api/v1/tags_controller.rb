@@ -29,7 +29,7 @@ class Api::V1::TagsController < ApplicationController
 
     def add_tag
         @tag = Tag.find(params[:tag_id])
-        if @case.tags.count >= 6
+        if @case.tags.count >= Rails.application.config.x.limit_case_tags_to
             render json: { errors: [{error_code: 'tag_limit_exceeded', message: 'Un caso no puede tener más de 6 etiquetas'}] }, status: :unprocessable_entity
         else
             # Add the tag to the case if it's not already added
