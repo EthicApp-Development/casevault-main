@@ -49,6 +49,7 @@ Rails.application.routes.draw do
             get :download_document
           end
         end
+        post 'rate', to: 'case_ratings#create_or_update'
       end
       resources :tags, only: [:all_tags, :create, :destroy, :index] do
         collection do

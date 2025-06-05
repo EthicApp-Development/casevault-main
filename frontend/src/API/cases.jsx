@@ -143,3 +143,7 @@ export function addCommentToCase(caseId, commentText) {
 export function postVotesInComments(caseId, commentId, voteValue){
 	return axiosInstance.post(`/api/v1/cases/${caseId}/comments/${commentId}/vote`, {vote: {value: voteValue}});
 }
+
+export function postRatingToCase(caseID, ratingValue){
+	return axiosInstance.post(`/api/v1/cases/${caseID}/rate`, {rating: ratingValue});
+}
