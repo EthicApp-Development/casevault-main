@@ -32,7 +32,8 @@ export default function TextCreator() {
     const [search, setSearch] = useState('');
     const [saveStatus, setSaveStatus] = useState('');
     const saveStatusRef = useRef(null);
-    const [loading, setLoading] = useState('')
+    const [loading, setLoading] = useState('');
+    const [tagError, setTagError] = useState('');
 
 
     useEffect(() => {
@@ -87,26 +88,50 @@ export default function TextCreator() {
             const response = await addTagToCase(caseId, tag.id);
             if (response.status === 200) {
                 setTags((prevTags) => [...prevTags, tag]);
-            } else {
-                console.error('Error al agregar la etiqueta:', response.statusText);
+                setTagError('');
             }
         } catch (error) {
-            console.error('Error al procesar la solicitud:', error);
+            if (error.response && error.response.status === 422) {
+                const customErrors = error.response.data.errors;
+                const tagLimitError = customErrors.find(e => e.error_code === 'tag_limit_exceeded');
+                if (tagLimitError) {
+                    setTagError(tagLimitError.message);
+                }
+                else {
+                    console.error('Errores:', customErrors);
+                }
+            }
+            else {
+                console.error('Error al procesar la solicitud:', error);
+            }
         }
     };
 
     const handleCreateTag = async () => {
         try {
+            setTagError('');
             const response = await createTag(search);
             if (response.status === 200) {
                 const newTag = response.data;
-                await handleAddTag(newTag);
+                await handleAddTag(newTag);           
                 setSearch('');
             } else {
                 console.error('Error al crear la etiqueta:', response.statusText);
             }
         } catch (error) {
-            console.error('Error al procesar la solicitud:', error);
+            if (error.response && error.response.status === 422) {
+                const customErrors = error.response?.data?.errors || error.response?.data?.name || [];
+                const tagLimitError = customErrors.find(e => e.error_code === 'tag_limit_exceeded');
+                if (tagLimitError) {
+                    setTagError(tagLimitError.message);
+                }
+                else {
+                    console.error('Errores:', customErrors);
+                }
+            }
+            else {
+                console.error('Error al procesar la solicitud:', error);
+            }
         }
     };
 
@@ -145,6 +170,7 @@ export default function TextCreator() {
 
     const handleDeleteTag = async (tagId) => {
         try {
+            setTagError('');
             const response = await deleteTagFromCase(caseId, tagId);
             if (response.status === 200) {
                 setTags((prevTags) => prevTags.filter(tag => tag.id !== tagId));
@@ -232,6 +258,13 @@ export default function TextCreator() {
                             <Box sx={{ ...inline_buttons }}>
                                 <TextField
                                     value={search}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter" && search) {
+                                            e.preventDefault();
+                                            handleCreateTag();
+                                            setSearch("");
+                                        }
+                                    }}
                                     onChange={handleFieldChange(setSearch)}
                                     label={
                                         <Typography sx={{ fontWeight: 600 }} color={"primary"}>
@@ -266,6 +299,11 @@ export default function TextCreator() {
                                     Añadir etiqueta
                                 </Button>
                             </Box>
+                            {tagError && (
+                                    <Typography color="error" variant="caption" sx={{ mt: 1 }}>
+                                        {tagError}
+                                    </Typography>
+                                    )}
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
