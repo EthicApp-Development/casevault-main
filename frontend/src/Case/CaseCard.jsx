@@ -13,6 +13,8 @@ import TextEllipsis from '../Utils/Ellipsis';
 import SelectChannelDialog from './SelectChannelDialog';
 import { saveCase, unsaveCase, postRatingToCase } from '../API/cases';
 import { addCaseToChannel, deleteCaseFromChannel } from '../API/channels';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 const exportURL = import.meta.env.VITE_API_EXPORT_CASE_URL;
 
@@ -115,10 +117,10 @@ export default function CaseCard({ title, description, image_url, case_id, owner
 
   const handleRatingChange = async (newRatingValue) => {
     try {
-      const response = await postRatingToCase(case_id,newRatingValue);
+      const roundedValue = Math.round(newRatingValue);
+      const response = await postRatingToCase(case_id, roundedValue);
       if (response.status === 200){
         setRating(response.data.average_rating);
-        console.log("Rating response: ", response.data.average_rating)
       }
     } catch (error) {
       console.error('Error en puntaje', error);
@@ -147,18 +149,23 @@ export default function CaseCard({ title, description, image_url, case_id, owner
             />
           </CardContent>
         </CardActionArea>
-        <Box sx={{ display: 'flex', flexDirection: 'column' , justifyContent: 'flex-end'}}>
+        <Box sx={{ display: 'flex', flexDirection: 'row' , justifyContent: 'flex-start', alignItems: 'center',  gap: 1, }}>
           <Rating
             name="interactive-rating"
             value={rating}
-            precision={1}
+            precision={0.5}
             max={5}
             onChange={(e, newValue) => {
               e.stopPropagation();
               handleRatingChange(newValue);
             }}
             onClick={(e) => e.stopPropagation()}
+            icon={<StarIcon fontSize="inherit" />}
+            emptyIcon={<StarBorderIcon fontSize="inherit" />}
           />
+          <box sx={{ fontSize: '1rem', color: 'text.secondary' }}>
+            {!isNaN(Number(rating)) ? Number(rating).toFixed(1) : ' '}
+          </box>
         </Box>
         <Box>
           <Typography sx={{ padding: 2 }} variant="body1"> Creador: {owner.first_name} {owner.last_name}</Typography>
