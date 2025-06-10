@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_14_233749) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_10_002304) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -48,6 +48,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_14_233749) do
     t.index ["case_id"], name: "index_audios_on_case_id"
   end
 
+  create_table "case_ratings", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "case_id", null: false
+    t.integer "rating"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["case_id"], name: "index_case_ratings_on_case_id"
+    t.index ["user_id"], name: "index_case_ratings_on_user_id"
+  end
+
   create_table "case_tags", force: :cascade do |t|
     t.integer "case_id", null: false
     t.integer "tag_id", null: false
@@ -66,6 +76,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_14_233749) do
     t.integer "user_id"
     t.text "text"
     t.integer "visibility", default: 0
+    t.integer "comments_availability", default: 1, null: false
     t.index ["user_id"], name: "index_cases_on_user_id"
   end
 
@@ -181,6 +192,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_14_233749) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audios", "cases"
+  add_foreign_key "case_ratings", "cases"
+  add_foreign_key "case_ratings", "users"
   add_foreign_key "case_tags", "cases"
   add_foreign_key "case_tags", "tags"
   add_foreign_key "cases", "users"
