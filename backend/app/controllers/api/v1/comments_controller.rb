@@ -9,6 +9,11 @@ class Api::V1::CommentsController < ApplicationController
       
     # POST api/v1/cases/:case_id/comments
     def create
+        if @case.comments_disabled?
+            render json: { error: 'Los comentarios se encuentran deshabilitados para este caso.' }, status: :forbidden
+            return
+        end
+
         @comment = @case.comments.build(comment_params.merge(user_id: @current_user.id))
 
         if @comment.save
