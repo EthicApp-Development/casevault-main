@@ -4,34 +4,12 @@ import { getCase } from '../API/cases';
 import InterpreterRichText from '../Utils/InterpreterRichText';
 import { Box, Typography, Chip } from '@mui/material';
 import AppContext from '../Contexts/AppContext';
+import { useCaseContext } from "./ShowCase";
 
 function ShowCaseText() {
-    const [mainImage, setMainImage] = useState();
-    const [title, setTitle] = useState('');
+    const { mainImage, setMainImage , title, setTitle, text, setText, tags, setTags} = useCaseContext();
     const { caseId } = useParams();
-    const [text, setText] = useState('');
-    const [tags, setTags] = useState([]);
-    const {user} = useContext(AppContext)
-    useEffect(() => {
-        async function fetchCase() {
-            if(user) {
-            try {
-                const response = await getCase(caseId, user.id);
-                if (response.status === 200) {
-                    setTitle(response.data.title);
-                    setMainImage(response.data.main_image_url);
-                    setText(response.data.text || '');
-                    setTags(response.data.tags);
-                } else {
-                    console.error('Error al obtener el caso:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error al procesar la solicitud:', error);
-            }
-        }
-        }
-        fetchCase();
-    }, [caseId]);
+    const {user} = useContext(AppContext)    
 
     return (
         <Box p={2} sx={{ position: 'relative', marginRight: '320px' }}>

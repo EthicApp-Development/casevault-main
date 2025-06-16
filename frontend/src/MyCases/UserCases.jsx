@@ -70,6 +70,7 @@ export default function UserCases() {
                                     owner = {caseData.user_info}
                                     saved = {caseData.saved}
                                     owner_info = {caseData.user_id}
+                                    avgRating={caseData.average_rating}
                                      sx={{
                                         height: '100%', 
                                         display: 'flex', 

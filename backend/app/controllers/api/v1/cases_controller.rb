@@ -4,23 +4,27 @@ class Api::V1::CasesController < ApplicationController
 
   # GET /cases
   def index
-    user_id = params[:user_id]
-    @cases = Case.where("visibility = ? OR user_id = ?", Case.visibilities[:public_status], params[:user_id])
-
-    cases_with_images = @cases.map do |c|
-      case_json = c.as_json
-      if c.main_image.attached?
-        case_json.merge!(main_image_url: url_for(c.main_image))
-      else
-        case_json.merge!(main_image_url: nil)
-      end
-      saved = SavedCase.exists?(user_id: user_id, case_id: c.id)
-      user_info = c.user.present? ? { first_name: c.user.first_name, last_name: c.user.last_name } : {}
-      case_json.merge!(user_info: user_info, saved: saved)
+  user_id = params[:user_id]
+  @cases = Case.includes(:user, :case_ratings, :images, :documents, :audios, :videos).where("visibility = ? OR user_id = ?", Case.visibilities[:public_status], user_id)
+  average_ratings = fetch_average_ratings
+  cases_with_images = @cases.map do |c|
+    case_json = c.as_json(include: [:images, :documents, :audios, :videos])
+    case_json["main_image_url"] = c.main_image.attached? ? url_for(c.main_image) : nil
+    case_json["saved"] = SavedCase.exists?(user_id: user_id, case_id: c.id)
+    if c.user.present?
+      case_json["user_info"] = {
+        first_name: c.user.first_name,
+        last_name: c.user.last_name
+      }
     end
 
-    render json: {info: cases_with_images, include: [:images, :documents, :audios, :videos]}
+    case_json["average_rating"] = average_ratings[c.id]&.round(2)
+    case_json
   end
+  
+  render json: { info: cases_with_images }
+end
+
 
   def save_case
     user = User.find(params[:user_id])
@@ -60,9 +64,13 @@ class Api::V1::CasesController < ApplicationController
 
   # GET /cases/1
   def show
-    if @case.public_status? || @case.unlisted_status?
-      render_case
-    elsif @case.private_status? && @case.user_id == params[:user_id].to_i
+    cache_key = "case-viewed:user-#{@current_user.id}:case-#{@case.id}"
+    if @case.public_status? || @case.unlisted_status? || (@case.private_status? && @case.user_id == params[:user_id].to_i)
+      if $redis.exists(cache_key) == 0
+        puts "Limiting case views update for: #{cache_key}"
+        @case.increment!(:views)
+        $redis.set(cache_key, "Visto", ex: 1.day.to_i)
+      end
       render_case
     else
       render_unauthorized
@@ -73,17 +81,15 @@ class Api::V1::CasesController < ApplicationController
     user_id = params[:user_id]
     saved_case_ids = SavedCase.where(user_id: user_id).pluck(:case_id)
     @cases = Case.where(id: saved_case_ids)
-  
+    average_ratings = fetch_average_ratings
     cases_with_images = @cases.map do |c|
       case_json = c.as_json
-      if c.main_image.attached?
-        case_json.merge!(main_image_url: url_for(c.main_image))
-      else
-        case_json.merge!(main_image_url: nil)
-      end
+      case_json[:main_image_url] = c.main_image.attached? ? url_for(c.main_image) : nil
       saved = SavedCase.exists?(user_id: user_id, case_id: c.id)
       user_info = c.user.present? ? { first_name: c.user.first_name, last_name: c.user.last_name } : {}
       case_json.merge!(user_info: user_info, saved: saved)
+      case_json["average_rating"] = average_ratings[c.id]&.round(2)
+      case_json
     end
     
     render json: { saved_cases: cases_with_images }
@@ -92,16 +98,15 @@ class Api::V1::CasesController < ApplicationController
   def get_user_cases
     user_id = params[:user_id]
     @cases = Case.where(user_id: user_id)
+    average_ratings = fetch_average_ratings
     cases_with_images = @cases.map do |c|
       case_json = c.as_json
-      if c.main_image.attached?
-        case_json.merge!(main_image_url: url_for(c.main_image))
-      else
-        case_json.merge!(main_image_url: nil)
-      end
+      case_json[:main_image_url] = c.main_image.attached? ? url_for(c.main_image) : nil
       saved = SavedCase.exists?(user_id: user_id, case_id: c.id)
       user_info = c.user.present? ? { first_name: c.user.first_name, last_name: c.user.last_name } : {}
       case_json.merge!(user_info: user_info, saved: saved)
+      case_json["average_rating"] = average_ratings[c.id]&.round(2)
+      case_json
     end
     render json: { cases: cases_with_images }
   end
@@ -212,6 +217,10 @@ class Api::V1::CasesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def case_params
-      params.require(:case).permit(:user_id,:case_id,:visibility,:comments_availability, :text, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
-    end    
+      params.require(:case).permit(:user_id,:case_id,:visibility, :text, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
+    end
+
+    def fetch_average_ratings
+      CaseRating.group(:case_id).average(:rating)
+    end
 end

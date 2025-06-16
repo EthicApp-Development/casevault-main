@@ -1,17 +1,20 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Card, CardContent, Typography, CardActionArea, IconButton, Box, Modal, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import IosShareIcon from '@mui/icons-material/IosShare';
+import Rating from "@mui/material/Rating";
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AppContext from '../Contexts/AppContext';
 import { useNavigate } from "react-router-dom";
 import TextEllipsis from '../Utils/Ellipsis';
 import SelectChannelDialog from './SelectChannelDialog';
-import { saveCase, unsaveCase } from '../API/cases';
+import { saveCase, unsaveCase, postRatingToCase } from '../API/cases';
 import { addCaseToChannel, deleteCaseFromChannel } from '../API/channels';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 const exportURL = import.meta.env.VITE_API_EXPORT_CASE_URL;
 
@@ -54,12 +57,13 @@ const tabsContainerStyle = {
   borderBottom: '1px solid #ddd'
 };
 
-export default function CaseCard({ title, description, image_url, case_id, owner, saved, owner_info, myChannels = [], inChannel = false, members = null, channelId = null, onCaseDeleted, onCaseAdded, ownerId }) {
+export default function CaseCard({ title, description, image_url, case_id, owner, saved, owner_info, myChannels = [], inChannel = false, members = null, channelId = null, onCaseDeleted, onCaseAdded, ownerId , avgRating = null }) {
   const [open, setOpen] = useState(false);
   const [selectChannelDialogOpen, setSelectChannelDialogOpen] = useState(false);
   const { user } = useContext(AppContext);
   const navigate = useNavigate();
   const [localSaved, setLocalSaved] = useState(saved);
+  const [rating, setRating] = useState(avgRating);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -111,6 +115,22 @@ export default function CaseCard({ title, description, image_url, case_id, owner
     }
   };
 
+  const handleRatingChange = async (newRatingValue) => {
+    try {
+      const roundedValue = Math.round(newRatingValue);
+      const response = await postRatingToCase(case_id, roundedValue);
+      if (response.status === 200){
+        setRating(response.data.average_rating);
+      }
+    } catch (error) {
+      console.error('Error en puntaje', error);
+    }
+  };
+  
+  useEffect(() => {
+    setRating(avgRating);
+  }, [avgRating])
+
   const isMember = members?.some(member => member?.email === user.email) || ownerId === user?.id;
 
     return (
@@ -129,6 +149,24 @@ export default function CaseCard({ title, description, image_url, case_id, owner
             />
           </CardContent>
         </CardActionArea>
+        <Box sx={{ display: 'flex', flexDirection: 'row' , justifyContent: 'flex-start', alignItems: 'center',  gap: 1, }}>
+          <Rating
+            name="interactive-rating"
+            value={rating}
+            precision={0.5}
+            max={5}
+            onChange={(e, newValue) => {
+              e.stopPropagation();
+              handleRatingChange(newValue);
+            }}
+            onClick={(e) => e.stopPropagation()}
+            icon={<StarIcon fontSize="inherit" />}
+            emptyIcon={<StarBorderIcon fontSize="inherit" />}
+          />
+          <box sx={{ fontSize: '1rem', color: 'text.secondary' }}>
+            {!isNaN(Number(rating)) ? Number(rating).toFixed(1) : ' '}
+          </box>
+        </Box>
         <Box>
           <Typography sx={{ padding: 2 }} variant="body1"> Creador: {owner.first_name} {owner.last_name}</Typography>
         </Box>

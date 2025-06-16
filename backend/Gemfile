@@ -60,3 +60,5 @@ gem 'jsonapi-serializer'
 gem 'pg', '~> 1.2'
 
 gem 'rack-attack'
+
+gem 'faker'

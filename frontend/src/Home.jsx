@@ -231,6 +231,7 @@ export default function Home() {
                                     saved = {caseData.saved}
                                     myChannels={myChannels}
                                     onCaseAdded={handleCaseAdded}
+                                    avgRating={caseData.average_rating}
                                     sx={{
                                         height: '100%', 
                                         display: 'flex', 
