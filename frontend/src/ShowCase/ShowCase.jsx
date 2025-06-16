@@ -15,6 +15,7 @@ function ShowCase() {
     const [title, setTitle] = useState('');
     const [summary, setSummary] = useState('');
     const [text, setText] = useState('');
+    const [tags, setTags] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [audios, setAudios] = useState([]);
     const [visibility, setVisibility] = useState('');
@@ -37,6 +38,10 @@ function ShowCase() {
                     setVideos(response.data.videos);
                     setDocuments(response.data.documents);
                     setComments(response.data.comments);
+                    setTags(response.data.tags);
+                    setMainImage(response.data.main_image_url);
+                    setText(response.data.text || '');
+                    setTitle(response.data.title);
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
@@ -108,6 +113,8 @@ function ShowCase() {
         setText,
         mainImage,
         setMainImage,
+        tags,
+        setTags,
         caseObject,
         setCaseObject,
         comments,

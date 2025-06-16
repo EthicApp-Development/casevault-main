@@ -64,9 +64,13 @@ end
 
   # GET /cases/1
   def show
-    if @case.public_status? || @case.unlisted_status?
-      render_case
-    elsif @case.private_status? && @case.user_id == params[:user_id].to_i
+    cache_key = "case-viewed:user-#{@current_user.id}:case-#{@case.id}"
+    if @case.public_status? || @case.unlisted_status? || (@case.private_status? && @case.user_id == params[:user_id].to_i)
+      if $redis.exists(cache_key) == 0
+        puts "Limiting case views update for: #{cache_key}"
+        @case.increment!(:views)
+        $redis.set(cache_key, "Visto", ex: 1.day.to_i)
+      end
       render_case
     else
       render_unauthorized
