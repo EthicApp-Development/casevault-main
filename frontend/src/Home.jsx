@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { styled } from '@mui/material/styles'
 import ListItemButton from '@mui/material/ListItemButton';
-import { Box, Grid, Button, TextField, Chip, FormControl, Snackbar } from "@mui/material";
+import { Box, Grid, Button, TextField, Chip, FormControl, Snackbar, ClickAwayListener, Collapse } from "@mui/material";
 import CaseCard from "./Case/CaseCard";
 import AppContext from './Contexts/AppContext';
 import { createCase, getAllTags } from './API/cases';
@@ -12,11 +12,6 @@ import { getMyChannels } from "./API/channels";
 import { getFromLocalStorage } from './storage-commons'
 
 const CASES_API = import.meta.env.VITE_API_CASES_URL;
-
-const CreateCaseButton = styled(Button)({
-    position: 'relative',
-    textTransform: 'none',
-});
 
 const css = {
     container: {
@@ -56,6 +51,8 @@ export default function Home() {
     const [myChannels, setMyChannels] = useState([])
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const inputTextFocusRef = useRef(null);
 
     useEffect(() => {
         const fetchCases = async () => {
@@ -110,6 +107,12 @@ export default function Home() {
         }
       }, [user]);
 
+    useEffect(() => {
+        if (isFormOpen && inputTextFocusRef.current) {
+            inputTextFocusRef.current.focus();
+        }
+    }, [isFormOpen]);
+
     async function handleCreateCase() {
         const response = await fetch("images/default_case_img.png");
         const blob = await response.blob();
@@ -121,6 +124,7 @@ export default function Home() {
         try {
             const response = await createCase(formData);
             const createdCase = response?.data?.info;
+            handleCloseForm();
             navigate(`/create_case/${createdCase.id}/text`)
         } catch (error) {
             console.error("Error al crear el caso:", error);
@@ -146,30 +150,62 @@ export default function Home() {
         setSnackbarOpen(true);
     };
 
+    const handleOpenForm = () => {
+        setIsFormOpen(true);
+    };
+    
+    const handleCloseForm = () => {
+        setIsFormOpen(false);
+        setCaseTitle(""); // Optional: clear input
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (caseTitle !== "") {
+          handleCreateCase();
+        }
+    };
+
     return (
         user?.first_name ? 
             <Box sx={css.container}>
                 <Box sx={css.createContainer}>
-                    <FormControl fullWidth>
-                        <Box sx={{ ...css.centerAlign, ...inline_buttons }}>
-                            <TextField 
-                                required
-                                id="case-title"
-                                label="Título del caso..."
-                                variant="outlined"
-                                value={caseTitle}
-                                onChange={(e) => setCaseTitle(e.target.value)}
-                                sx={css.inputRounded}
-                            />
-                            <CreateCaseButton 
-                                variant="contained" 
-                                onClick={handleCreateCase} 
-                                disabled={caseTitle === ""}
-                            >
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+                        <ClickAwayListener onClickAway={handleCloseForm}>
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+                            {!isFormOpen && (
+                                <Button variant="contained" onClick={handleOpenForm}>
                                 Crear caso
-                            </CreateCaseButton>
-                        </Box>
-                    </FormControl>
+                                </Button>
+                            )}
+                            <Collapse in={isFormOpen}>
+                                <form onSubmit={handleSubmit}>
+                                <FormControl fullWidth>
+                                    <Box sx={{ ...css.centerAlign, ...css.inline_buttons }}>
+                                    <TextField
+                                        required
+                                        id="case-title"
+                                        label="Título del caso..."
+                                        variant="outlined"
+                                        value={caseTitle}
+                                        onChange={(e) => setCaseTitle(e.target.value)}
+                                        sx={css.inputRounded}
+                                        autoFocus
+                                        inputRef={inputTextFocusRef}
+                                    />
+                                    <Button
+                                        variant="contained"
+                                        type="submit"
+                                        disabled={caseTitle === ""}
+                                    >
+                                        Crear caso
+                                    </Button>
+                                    </Box>
+                                </FormControl>
+                                </form>
+                            </Collapse>
+                            </Box>
+                        </ClickAwayListener>
+                    </Box>
                 </Box>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginTop: 2, width: '100%', marginLeft: 5 }}>
                     {tags.slice(0, 10).map((tag) => (

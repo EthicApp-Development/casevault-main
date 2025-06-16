@@ -13,6 +13,7 @@ class Case < ApplicationRecord
 
     accepts_nested_attributes_for :images, :documents, :audios, :videos, allow_destroy: true
     enum visibility: {private_status: 0, public_status: 1, unlisted_status: 2}, _default: :private_status
+    enum comments_availability: { comments_disabled: 0, comments_enabled: 1 }, _default: :comments_enabled
     before_destroy :purge_attachments
 
     def average_rating

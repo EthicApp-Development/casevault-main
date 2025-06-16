@@ -22,6 +22,8 @@ function ShowCase() {
     const [mainImage, setMainImage] = useState('');
     const [caseObject, setCaseObject] = useState({});
     const [comments, setComments] = useState({});
+    const [allowComments, setAllowComments] = useState(true);
+    const [canComment, setCanComment] = useState(false);
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
     const { user } = useContext(AppContext);
@@ -119,6 +121,10 @@ function ShowCase() {
         setCaseObject,
         comments,
         setComments,
+        allowComments,
+        setAllowComments,
+        canComment,
+        setCanComment,
     };
 
     return (
