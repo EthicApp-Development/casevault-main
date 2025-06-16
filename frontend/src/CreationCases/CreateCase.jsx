@@ -29,6 +29,7 @@ function CreateCase() {
     const [tags, setTags] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [caseIdToDelete, setCaseIdToDelete] = useState(null);
+    const [commentsAvailability, setCommentsAvailability] = useState('');
 
     useEffect(() => {
         async function fetchData() {
@@ -45,6 +46,7 @@ function CreateCase() {
                     setDocuments(response.data.documents);
                     setAudios(response.data.audios);
                     setVisibility(response.data.visibility);
+                    setCommentsAvailability(response.data.comments_availability);
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
@@ -145,7 +147,9 @@ function CreateCase() {
         tags,
         setTags,
         description,
-        setDescription
+        setDescription,
+        commentsAvailability,
+        setCommentsAvailability
     };
 
     return (

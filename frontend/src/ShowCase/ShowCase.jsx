@@ -21,6 +21,8 @@ function ShowCase() {
     const [mainImage, setMainImage] = useState('');
     const [caseObject, setCaseObject] = useState({});
     const [comments, setComments] = useState({});
+    const [allowComments, setAllowComments] = useState(true);
+    const [canComment, setCanComment] = useState(false);
     const { caseId } = useParams();
     const [videos, setVideos] = useState([]);
     const { user } = useContext(AppContext);
@@ -37,6 +39,8 @@ function ShowCase() {
                     setVideos(response.data.videos);
                     setDocuments(response.data.documents);
                     setComments(response.data.comments);
+                    setAllowComments(response.data.comments_availability === "comments_enabled");
+                    setCanComment(response.data.current_user_comment_available);
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
@@ -112,6 +116,10 @@ function ShowCase() {
         setCaseObject,
         comments,
         setComments,
+        allowComments,
+        setAllowComments,
+        canComment,
+        setCanComment,
     };
 
     return (
