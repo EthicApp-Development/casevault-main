@@ -217,7 +217,7 @@ end
 
     # Only allow a list of trusted parameters through.
     def case_params
-      params.require(:case).permit(:user_id,:case_id,:visibility, :text, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
+      params.require(:case).permit(:user_id,:case_id,:visibility, :comments_availability, :text, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
     end
 
     def fetch_average_ratings
