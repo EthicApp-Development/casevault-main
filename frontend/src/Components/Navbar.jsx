@@ -102,7 +102,7 @@ function Navbar(props) {
             { text: 'Mis casos', icon: <SchoolIcon />, route: '/my_cases' },
             { text: 'Casos guardados', icon: <BookmarkIcon />, route: '/saved_cases' },
             {text: 'Canales', icon: <RecentActorsIcon/>,route: '/channels'},
-            { text: 'Ajustes', icon: <SettingsIcon /> }
+            { text: 'Ajustes', icon: <SettingsIcon />, route: '/user_settings' }
             ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
             {item.route ? (
