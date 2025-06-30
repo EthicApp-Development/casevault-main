@@ -4,7 +4,7 @@ import { useCaseContext } from "../CreateCase";
 import { createCaseVideo } from "../../API/cases";
 import { TextField, Button, Collapse, Typography } from "@mui/material";
 
-const YT_API_KEY = "AIzaSyCRaU7KOSkcfLlK0ncd2732bcEYtBQDnxA";
+const YT_API_KEY = import.meta.env.VITE_YT_API_KEY;
 
 const VideoField = ({ open, toggleOpen }) => {
     const [url, setUrl] = useState('');

@@ -32,7 +32,8 @@ Rails.application.routes.draw do
           get :search, to: 'cases#get_searched_cases' 
           post :save_case, to: 'cases#save_case' 
           delete :unsave_case, to: 'cases#unsave_case' 
-          get :saved, to: 'cases#saved_case'       
+          get :saved, to: 'cases#saved_case'
+          get :smart_home_feed
         end
         resources :tags, only: [:index, :destroy] do
           collection do
