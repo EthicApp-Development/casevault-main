@@ -31,7 +31,7 @@ end
     cursor_score = params[:cursor_score]&.to_f
     cursor_id = params[:cursor_id]&.to_i
 
-    service_feed = HomeFeedService.new(@current_user, cursor_score: cursor_score, cursor_id: cursor_id)
+    service_feed = HomeFeedService.new(user, cursor_score: cursor_score, cursor_id: cursor_id)
     cases = service_feed.fetch_cases
 
     next_cursor = nil
