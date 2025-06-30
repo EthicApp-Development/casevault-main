@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema[7.1].define(version: 2025_06_16_031044) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_23_041914) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -154,6 +153,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_16_031044) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  create_table "user_searched_tags", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "tag_id", null: false
+    t.integer "search_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tag_id"], name: "index_user_searched_tags_on_tag_id"
+    t.index ["user_id"], name: "index_user_searched_tags_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -165,6 +174,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_16_031044) do
     t.string "jti", null: false
     t.string "first_name"
     t.string "last_name"
+    t.boolean "track_tag_searches", default: true, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -209,6 +219,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_16_031044) do
   add_foreign_key "images", "cases"
   add_foreign_key "saved_cases", "cases"
   add_foreign_key "saved_cases", "users"
+  add_foreign_key "user_searched_tags", "tags"
+  add_foreign_key "user_searched_tags", "users"
   add_foreign_key "videos", "cases"
   add_foreign_key "votes", "comments"
   add_foreign_key "votes", "users"

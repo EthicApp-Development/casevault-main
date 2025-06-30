@@ -12,6 +12,7 @@ import { getMyChannels } from "./API/channels";
 import { getFromLocalStorage } from './storage-commons'
 
 const CASES_API = import.meta.env.VITE_API_CASES_URL;
+const SMART_HOME_FEED_API = `${CASES_API}/smart_home_feed`;
 
 const css = {
     container: {
@@ -54,6 +55,91 @@ export default function Home() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const inputTextFocusRef = useRef(null);
 
+    const [cursorScore, setCursorScore] = useState(null);
+    const [cursorId, setCursorId] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const loadMoreRef = useRef(null);
+
+
+    const fetchCases = async (load = false) => {
+        if (user) {
+            setLoading(true);
+            try {
+                const params = {
+                    user_id: user.id,
+                };
+                if (load && cursorScore !== null && cursorId !== null) {
+                    params.cursor_score = cursorScore;
+                    params.cursor_id = cursorId;
+                };
+                const response = await axios.get(SMART_HOME_FEED_API, { params });
+                const fetchedCases = response.data.info;
+                if (load) {
+                    setCases((prev) => [...prev, ...fetchedCases]);
+                } else {
+                    setCases(fetchedCases);
+                }
+                if (fetchedCases.length > 0) {
+                    // Update cursors to last item in list
+                    const lastItem = fetchedCases[fetchedCases.length - 1];
+                    setCursorScore(lastItem.score);
+                    setCursorId(lastItem.id);
+
+                    // If less than limit, no more data
+                    if (fetchedCases.length < 9) {
+                        setHasMore(false);
+                    } else {
+                        setHasMore(true);
+                    }
+                } else {
+                    setHasMore(false);
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        const loggedInUser = getFromLocalStorage("authenticated");
+        if (loggedInUser) {
+            setauthenticated(loggedInUser);
+        } else {
+            navigate("/login")
+        }
+    };
+
+    useEffect(() => {
+        fetchCases(false);
+    }, [user, navigate]);
+
+    useEffect(() => {
+        if (loading || !hasMore) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    fetchCases(true);
+                }
+            },
+            {
+                threshold: 1.0
+            }
+        );
+
+        const currentRef = loadMoreRef.current;
+        if (currentRef) {
+            observer.observe(currentRef);
+        }
+
+        return () => {
+            if (currentRef) {
+                observer.unobserve(currentRef);
+            }
+        };
+    }, [loading, hasMore]);
+
+/*
     useEffect(() => {
         const fetchCases = async () => {
             if (user){
@@ -78,7 +164,7 @@ export default function Home() {
         };
         fetchCases();
     }, [user, navigate]); 
-
+*/
     useEffect(() => {
         const fetchTags = async () => {
             try {
@@ -244,6 +330,14 @@ export default function Home() {
                             </ListItemButton>
                         </Grid>
                     ))}
+                    {hasMore && (
+                        <Box
+                            ref={loadMoreRef}
+                            sx={{ height: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                        >
+                            {loading && <span>Cargando más casos...</span>}
+                        </Box>
+                    )}
                 </Grid>
                 <Snackbar
                     open={snackbarOpen}

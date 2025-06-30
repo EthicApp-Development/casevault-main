@@ -7,3 +7,7 @@ export function getUser(id) {
 export function getAllUsers(){
     return axiosInstance.get('api/v1/users')
 }
+
+export function patchUser(userId, data){
+    return axiosInstance.patch(`/api/v1/users/${userId}`,{ user: data });
+}

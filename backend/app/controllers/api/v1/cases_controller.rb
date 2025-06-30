@@ -25,6 +25,41 @@ class Api::V1::CasesController < ApplicationController
   render json: { info: cases_with_images }
 end
 
+  def smart_home_feed
+    user_id = params[:user_id]
+    user = User.find(user_id)
+    cursor_score = params[:cursor_score]&.to_f
+    cursor_id = params[:cursor_id]&.to_i
+
+    service_feed = HomeFeedService.new(user, cursor_score: cursor_score, cursor_id: cursor_id)
+    cases = service_feed.fetch_cases
+
+    next_cursor = nil
+    if cases.size == HomeFeedService::FETCH_LIMIT_TO
+      last_case = cases.last
+      next_cursor = {
+        cursor_score: last_case.score.to_f.round(6), # precision
+        cursor_id: last_case.id
+      }
+    end
+    average_ratings = fetch_average_ratings
+    cases_with_images = cases.map do |c|
+      case_json = c.as_json(include: [:images, :documents, :audios, :videos])
+      case_json["main_image_url"] = c.main_image.attached? ? url_for(c.main_image) : nil
+      case_json["saved"] = SavedCase.exists?(user_id: user_id, case_id: c.id)
+      if c.user.present?
+        case_json["user_info"] = {
+          first_name: c.user.first_name,
+          last_name: c.user.last_name
+        }
+      end
+
+      case_json["average_rating"] = average_ratings[c.id]&.round(2)
+      case_json
+    end
+    render json: { info: cases_with_images,  next_cursor: next_cursor}
+  end
+
 
   def save_case
     user = User.find(params[:user_id])
@@ -217,7 +252,7 @@ end
 
     # Only allow a list of trusted parameters through.
     def case_params
-      params.require(:case).permit(:user_id,:case_id,:visibility, :text, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
+      params.require(:case).permit(:user_id,:case_id,:visibility, :comments_availability, :text, :title, :description, :body, :main_image, images_attributes: [:id, :title, :description, :_destroy, :file], documents_attributes: [:id, :title, :description, :_destroy, :file], audios_attributes: [:id, :title, :url, :description, :_destroy, :file], videos_attributes: [:id, :title, :url, :_destroy])
     end
 
     def fetch_average_ratings

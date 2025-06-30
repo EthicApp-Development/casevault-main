@@ -37,7 +37,8 @@ export default function Login() {
                 email: response.data.data.email,
                 jti: response.data.data.jti,
                 first_name: response.data.data.first_name,
-                last_name: response.data.data.last_name
+                last_name: response.data.data.last_name,
+                track_tag_searches: response.data.data.track_tag_searches
             };
             console.log(response)
             setUser(account);

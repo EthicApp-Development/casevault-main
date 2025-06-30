@@ -44,6 +44,8 @@ function ShowCase() {
                     setMainImage(response.data.main_image_url);
                     setText(response.data.text || '');
                     setTitle(response.data.title);
+                    setAllowComments(response.data.comments_availability === "comments_enabled");
+                    setCanComment(response.data.current_user_comment_available);
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }

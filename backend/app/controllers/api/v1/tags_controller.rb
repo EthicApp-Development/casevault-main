@@ -24,8 +24,13 @@ class Api::V1::TagsController < ApplicationController
     def get_searched_tags
         search_param = params[:search]
         @tags = Tag.where("name LIKE ?", "%#{search_param}%")
+        if @current_user&.track_tag_searches
+            @tags.each do |tag|
+                UserSearchedTag.track_tag_search(@current_user, tag)
+            end
+        end
         render json: { info: @tags }
-      end
+    end
 
     def add_tag
         @tag = Tag.find(params[:tag_id])

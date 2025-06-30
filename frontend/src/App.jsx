@@ -27,6 +27,7 @@ import UserCases from './MyCases/UserCases.jsx';
 import SavedCases from './MyCases/SavedCases.jsx';
 import IndexChannels from './Channels/IndexChannels.jsx';
 import ShowChannel from './Channels/ShowChannel.jsx';
+import IndexUser from './UserSettings/IndexUser.jsx';
 import { getFromLocalStorage } from './storage-commons.js'
 import ShowCaseComments from './ShowCase/ShowCaseComments.jsx';
 function App() {
@@ -73,6 +74,7 @@ function App() {
             <Route path="/my_cases/" element={<UserCases />} />
             <Route path="/saved_cases/" element={<SavedCases />} />
             <Route path="/channels" element={<IndexChannels />} />
+            <Route path="/user_settings" element={<IndexUser />} />
             <Route path="/show_channel/:channelId" element={<ShowChannel />} />
             <Route path="/show_case/:caseId/" element={<ShowCase />}>
               <Route path="text" element={<ShowCaseText />} />
