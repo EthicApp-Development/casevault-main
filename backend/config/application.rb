@@ -24,6 +24,8 @@ module Backend
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     config.x.limit_case_tags_to = 6
+    config.x.spotify.client_id = Rails.application.credentials.dig(:spotify, :client_id)
+    config.x.spotify.client_secret = Rails.application.credentials.dig(:spotify, :client_secret)
 
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.

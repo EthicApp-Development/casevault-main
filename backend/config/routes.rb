@@ -73,6 +73,7 @@ Rails.application.routes.draw do
           get 'cases', to: 'channels#cases'
         end
       end
+      get "spotify/token", to: "spotify_tokens#show"
     end
   end
   
