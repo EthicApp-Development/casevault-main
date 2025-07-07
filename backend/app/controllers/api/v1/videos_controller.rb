@@ -9,12 +9,18 @@ class Api::V1::VideosController < ApplicationController
 
     # POST /cases/:case_id/videos
     def create
-        @video = @case.videos.build(video_params)
-        @videos = @case.videos
-        if @video.save
-            render json: {info: @videos, status: :created}
-        else
-            render json: {info: @video.errors, status: :unprocessable_entity}
+        begin
+            yt_service = YoutubeService.new(params[:video][:url], params[:video][:title])
+            video_data = yt_service.fetch_data!
+
+            @video = @case.videos.build(url: "https://www.youtube.com/embed/#{video_data[:id]}", title: video_data[:title])
+            if @video.save
+                render json: { info: @case.videos, status: :created }
+            else
+                render json: { info: @video.errors, status: :unprocessable_entity }
+            end
+        rescue => e
+            render json: { info: e.message, status: :unprocessable_entity }
         end
     end
 

@@ -1,4 +1,4 @@
-# app/services/spotify/token_service.rb
+# app/services/spotify_token_service.rb
 require "base64"
 require "net/http"
 
