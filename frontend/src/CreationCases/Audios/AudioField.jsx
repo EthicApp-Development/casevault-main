@@ -3,9 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Collapse, TextField, ToggleButtonGroup, ToggleButton, Button, Typography } from '@mui/material';
 import { createCaseAudio } from '../../API/cases';
 import { useCaseContext } from '../CreateCase';
+import { getSpotifyToken } from '../../API/tokens';
 
-const CLIENT_ID = import.meta.env.VITE_SPOTIFY_API_CLIENT_ID;
-const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_API_CLIENT_SECRET;
 
 const AudioField = ({ open, toggleMenu }) => {
     const [accessToken, setAccessToken] = useState('');
@@ -17,22 +16,39 @@ const AudioField = ({ open, toggleMenu }) => {
     const { caseId } = useParams();
     const { audios, setAudios } = useCaseContext();
 
-    useEffect(() => {
-        var authParameters = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: 'grant_type=client_credentials&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET
+
+    const fetchAndSetToken = async () => {
+        try {
+            const tokenResponse = await getSpotifyToken();
+            const token = tokenResponse.data.token;
+            setAccessToken(token);
+            return token;
+        } catch (error) {
+            console.error("Error al obtener el token de Spotify:", error);
         }
-        fetch('https://accounts.spotify.com/api/token', authParameters)
-            .then(result => result.json())
-            .then(data => setAccessToken(data.access_token))
-    }, {})
+    };
+    useEffect(() => {
+        fetchAndSetToken();
+    }, []);
 
     const handleOptionChange = (event, newOption) => {
         setSelectedOption(newOption);
     };
+    
+    async function fetchSpotify(url, options) {
+        let token = accessToken;
+        const fetchWithAccessToken = async (token) => {
+            const response = await fetch(url, { ...options, headers: { ...options.headers, Authorization: `Bearer ${token}`}});
+            return response;
+        };
+
+        let response = await fetchWithAccessToken(token);
+        if (response.status === 401){
+            token = await fetchAndSetToken();
+            response = await fetchWithAccessToken(token);
+        }
+        return response;
+    }
 
     const handleSave = async () => {
         let embedUrl = '';
@@ -66,12 +82,11 @@ const AudioField = ({ open, toggleMenu }) => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + accessToken
                 }
             }
             try {
-                const responseTracks = await fetch(`https://api.spotify.com/v1/tracks/${spotifyId}`, searchParams);
-                const responseEpisodes = await fetch(`https://api.spotify.com/v1/episodes/${spotifyId}`, searchParams);
+                const responseTracks = await fetchSpotify(`https://api.spotify.com/v1/tracks/${spotifyId}`, searchParams);
+                const responseEpisodes = await fetchSpotify(`https://api.spotify.com/v1/episodes/${spotifyId}`, searchParams);
                 const dataTrack = await responseTracks.json();
                 const dataEpisode = await responseEpisodes.json();
                 if (responseTracks.status === 200){
