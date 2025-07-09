@@ -1,0 +1,79 @@
+name: Deploy App with Rollback
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+env:
+  COMPOSE_PROJECT_NAME: casevault
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, apps-runner]
+    env:
+      RAILS_ENV: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY_B64 }}" | base64 -d > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan remote-nginx >> ~/.ssh/known_hosts
+        
+      - name: Deploy static files via rsync over SSH
+        run: |
+          rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+            ./frontend/assets/ user@remote-nginx:/var/www/casevault.ethicapp.info
+
+      - name: Tag current image as previous (for rollback)
+        run: |
+          docker image tag myapp_backend:latest myapp_backend:previous || echo "No existing latest image to tag"
+
+      - name: Build and start new containers
+        run: |
+          set -e
+          docker compose -p $COMPOSE_PROJECT_NAME -f ./deploy/docker-compose.production.yml build
+          docker compose -p $COMPOSE_PROJECT_NAME -f ./deploy/docker-compose.production.yml up -d
+
+      - name: Wait for Rails to boot
+        run: sleep 15
+
+      - name: Run Rails migrations
+        run: |
+          docker compose -p $COMPOSE_PROJECT_NAME -f ./deploy/docker-compose.production.yml exec -T web bundle exec rails db:migrate
+
+      - name: Smoke test API health
+        run: |
+          curl --fail http://localhost:3000/health || (echo "Health check failed" && exit 1)
+
+    # Rollback en caso de fallo
+    continue-on-error: false
+
+  rollback:
+    needs: deploy
+    if: failure()
+    runs-on: self-hosted
+    steps:
+      - name: Rollback to previous image
+        run: |
+          echo "Rolling back to previous version..."
+          docker image tag myapp_backend:previous myapp_backend:latest
+          docker compose -p $COMPOSE_PROJECT_NAME -f ./deploy/docker-compose.production.yml up -d
