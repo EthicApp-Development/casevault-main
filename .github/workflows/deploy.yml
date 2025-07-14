@@ -7,6 +7,7 @@ on:
   workflow_dispatch:
 env:
   COMPOSE_PROJECT_NAME: casevault
+  FRONTEND_SERVER: 100.73.82.93
 
 jobs:
   deploy:
@@ -36,12 +37,12 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY_B64 }}" | base64 -d > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan entrypoint-server >> ~/.ssh/known_hosts
+          ssh-keyscan $FRONTEND_SERVER >> ~/.ssh/known_hosts
         
       - name: Deploy static files via rsync over SSH
         run: |
           rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
-            ./frontend/assets/ deploy@entrypoint-server:/var/www/casevault.ethicapp.info
+            ./frontend/assets/ deploy@$FRONTEND_SERVER:/var/www/casevault.ethicapp.info
 
       - name: Tag current image as previous (for rollback)
         run: |
