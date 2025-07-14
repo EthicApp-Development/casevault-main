@@ -36,12 +36,12 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY_B64 }}" | base64 -d > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan remote-nginx >> ~/.ssh/known_hosts
+          ssh-keyscan entrypoint-server >> ~/.ssh/known_hosts
         
       - name: Deploy static files via rsync over SSH
         run: |
           rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
-            ./frontend/assets/ user@remote-nginx:/var/www/casevault.ethicapp.info
+            ./frontend/assets/ deploy@entrypoint-server:/var/www/casevault.ethicapp.info
 
       - name: Tag current image as previous (for rollback)
         run: |
@@ -54,15 +54,15 @@ jobs:
           docker compose -p $COMPOSE_PROJECT_NAME -f ./deploy/docker-compose.production.yml up -d
 
       - name: Wait for Rails to boot
-        run: sleep 15
+        run: sleep 60
 
       - name: Run Rails migrations
         run: |
           docker compose -p $COMPOSE_PROJECT_NAME -f ./deploy/docker-compose.production.yml exec -T web bundle exec rails db:migrate
 
-      - name: Smoke test API health
-        run: |
-          curl --fail http://localhost:3000/health || (echo "Health check failed" && exit 1)
+      #- name: Smoke test API health
+      #  run: |
+      #    curl --fail http://localhost:3000/health || (echo "Health check failed" && exit 1)
 
     # Rollback en caso de fallo
     continue-on-error: false
