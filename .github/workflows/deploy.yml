@@ -68,10 +68,14 @@ jobs:
           docker image tag myapp_backend:latest myapp_backend:previous || echo "No existing latest image to tag"
 
       - name: Variable check
+        env:
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         run: | 
-          echo "POSTGRES_DB=${{ env.POSTGRES_DB }}"
-          echo "POSTGRES_USER=${{ env.POSTGRES_USER }}"
-          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
+          echo "POSTGRES_DB=$POSTGRES_DB"
+          echo "POSTGRES_USER=$POSTGRES_USER"
+          echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD"
 
       - name: Build and start new containers
         run: |
