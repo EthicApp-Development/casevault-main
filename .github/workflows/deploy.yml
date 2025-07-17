@@ -39,9 +39,9 @@ jobs:
 
       - name: Create Frontend .env
         run: | 
-          echo "VITE_API_CASES_URL=${{ env.VITE_API_CASES_URL }}" >> frontend/.env
-          echo "VITE_API_BASE_URL=${{ env.VITE_API_BASE_URL }}" >> frontend/.env
-          echo "VITE_API_EXPORT_CASE_URL=${{ env.VITE_API_EXPORT_CASE_URL }}" >> frontend/.env
+          echo "VITE_API_CASES_URL=${{ vars.VITE_API_CASES_URL }}" >> frontend/.env
+          echo "VITE_API_BASE_URL=${{ vars.VITE_API_BASE_URL }}" >> frontend/.env
+          echo "VITE_API_EXPORT_CASE_URL=${{ vars.VITE_API_EXPORT_CASE_URL }}" >> frontend/.env
 
       - name: Install frontend dependencies
         working-directory: frontend
@@ -66,23 +66,17 @@ jobs:
       - name: Tag current image as previous (for rollback)
         run: |
           docker image tag myapp_backend:latest myapp_backend:previous || echo "No existing latest image to tag"
-
-      - name: Variable check
-        env:
-          POSTGRES_DB: ${{ vars.POSTGRES_DB }}
-          POSTGRES_USER: ${{ vars.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        run: | 
-          echo "POSTGRES_DB=$POSTGRES_DB"
-          echo "POSTGRES_USER=$POSTGRES_USER"
-          echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD"
-
+      
       - name: Build and start new containers
         run: |
           set -e
           docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml build
           docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml up -d
 
+      - name: Reset Postgres user password
+        run: |
+          docker exec casevault-db-1 psql -U postgres -c "ALTER USER casevault WITH PASSWORD '${{ secrets.POSTGRES_PASSWORD }}';"
+          
       - name: Wait for Rails to boot
         run: sleep 60
       
