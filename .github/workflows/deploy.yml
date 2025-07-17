@@ -78,15 +78,15 @@ jobs:
       - name: Build and start new containers
         run: |
           set -e
-          docker compose -p $COMPOSE_PROJECT_NAME -f ./deploy/docker-compose.production.yml build
-          docker compose -p $COMPOSE_PROJECT_NAME -f ./deploy/docker-compose.production.yml up -d
+          docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml build
+          docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml up -d
 
       - name: Wait for Rails to boot
         run: sleep 60
 
       - name: Run Rails migrations
         run: |
-          docker compose -p $COMPOSE_PROJECT_NAME -f ./deploy/docker-compose.production.yml exec -T web bundle exec rails db:migrate
+          docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml exec -T web bundle exec rails db:migrate
 
       #- name: Smoke test API health
       #  run: |
