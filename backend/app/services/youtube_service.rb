@@ -7,7 +7,7 @@ class YoutubeService
   YT_REGEX = %r{(?:youtu\.be/|v/|e/|u/\w+/|embed/|watch\?v=|v=)([^#&?]{11})}x.freeze
 
   def initialize(url, title)
-    @api_key = Rails.application.credentials.dig(:youtube, :api_key)
+    @api_key = ENV.fetch("YOUTUBE_API_KEY")
     @video_id = extract_video_id(url)
     @titleFromFrontend = title
   end

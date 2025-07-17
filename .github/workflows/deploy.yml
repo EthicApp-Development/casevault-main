@@ -23,6 +23,30 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+      
+      - name: Create production.env
+        run: | 
+          cat > production.env <<EOF
+          SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}
+          JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+          SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}
+          REDIS_URL=${{ secrets.REDIS_URL }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          HOST_DB_VOLUME_PATH=${{ env.HOST_DB_VOLUME_PATH }}
+          POSTGRES_DB=${{ env.POSTGRES_DB }}
+          POSTGRES_USER=${{ env.POSTGRES_USER }}
+          EOF
+
+      - name: Create Frontend .env
+        run: | 
+          cat > frontend/.env <<EOF
+          VITE_API_CASES_URL=${{ env.VITE_API_CASES_URL }}
+          VITE_API_BASE_URL=${{ env.VITE_API_BASE_URL }}
+          VITE_API_EXPORT_CASE_URL=${{ env.VITE_API_EXPORT_CASE_URL }}
+          # other frontend env vars here
+          EOF
 
       - name: Install frontend dependencies
         working-directory: frontend

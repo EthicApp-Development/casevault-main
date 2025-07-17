@@ -16,11 +16,7 @@ services:
     environment:
       RAILS_ENV: production
       BUNDLE_PATH: /usr/local/bundle
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_HOST: db
-      REDIS_URL: ${REDIS_URL}
     command: ./bin/rails server -b 0.0.0.0
     depends_on:
       - db

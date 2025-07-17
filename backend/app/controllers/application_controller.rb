@@ -10,7 +10,7 @@ class ApplicationController < ActionController::API
       token = request.headers['Authorization']&.split(' ')&.last
       if token
         begin
-          decoded_token = JWT.decode(token, Rails.application.credentials.jwt_secret_key, true, algorithm: 'HS256')
+          decoded_token = JWT.decode(token, ENV.fetch("JWT_SECRET_KEY"), true, algorithm: 'HS256')
           payload = decoded_token.first
           user_id = payload['sub'] # Assuming 'sub' in payload represents user id
           @current_user = User.find_by(id: user_id)
