@@ -73,10 +73,6 @@ jobs:
           docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml build
           docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml up -d
 
-      - name: Reset Postgres user password
-        run: |
-          docker exec casevault-db-1 psql -U postgres -c "ALTER USER casevault WITH PASSWORD '${{ secrets.POSTGRES_PASSWORD }}';"
-          
       - name: Wait for Rails to boot
         run: sleep 60
       
