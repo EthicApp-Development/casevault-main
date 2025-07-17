@@ -86,7 +86,7 @@ jobs:
 
       - name: Run Rails migrations
         run: |
-          docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml exec -T web bundle exec rails db:migrate
+          docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml exec -T backend bundle exec rails db:migrate
 
       #- name: Smoke test API health
       #  run: |

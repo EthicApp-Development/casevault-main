@@ -12,7 +12,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - production.env
+      - ./production.env
     environment:
       RAILS_ENV: production
       BUNDLE_PATH: /usr/local/bundle
@@ -33,7 +33,7 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     env_file:
-      - production.env
+      - ./production.env
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
