@@ -71,8 +71,8 @@ jobs:
       - name: Build and start new containers
         run: |
           set -e
-          docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml build
-          docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml up -d
+          POSTGRES_DB=${{ env.POSTGRES_DB }} POSTGRES_USER=${{ env.POSTGRES_USER }} POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml build
+          POSTGRES_DB=${{ env.POSTGRES_DB }} POSTGRES_USER=${{ env.POSTGRES_USER }} POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml up -d
 
       - name: Wait for Rails to boot
         run: sleep 60
