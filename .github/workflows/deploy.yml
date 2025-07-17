@@ -67,6 +67,13 @@ jobs:
       - name: Tag current image as previous (for rollback)
         run: |
           docker image tag myapp_backend:latest myapp_backend:previous || echo "No existing latest image to tag"
+      
+      - name: Debug working directory
+        run: |
+          echo "PWD: $(pwd)"
+          ls -al
+          echo "Contents of ./deploy:"
+          ls -al ./deploy || echo "No ./deploy directory found"
 
       - name: Build and start new containers
         run: |
