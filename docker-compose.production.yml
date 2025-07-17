@@ -34,10 +34,6 @@ services:
       - pg_data:/var/lib/postgresql/data
     env_file:
       - ./production.env
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     
   frontend:
     build:

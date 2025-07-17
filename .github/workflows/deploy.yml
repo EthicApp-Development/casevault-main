@@ -67,13 +67,6 @@ jobs:
       - name: Tag current image as previous (for rollback)
         run: |
           docker image tag myapp_backend:latest myapp_backend:previous || echo "No existing latest image to tag"
-      
-      - name: Debug working directory
-        run: |
-          echo "PWD: $(pwd)"
-          ls -al
-          echo "Contents of ./deploy:"
-          ls -al ./deploy || echo "No ./deploy directory found"
 
       - name: Build and start new containers
         run: |
@@ -83,14 +76,13 @@ jobs:
 
       - name: Wait for Rails to boot
         run: sleep 60
-
-      - name: Check running containers
-        run: |
-          docker ps
+      
+      - name: Check running container
+        run: docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml ps
 
       - name: Run Rails migrations
         run: |
-          docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml exec -T casevault-main-backend-1 bundle exec rails db:migrate
+          docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml exec -T backend bundle exec rails db:migrate
 
       #- name: Smoke test API health
       #  run: |
