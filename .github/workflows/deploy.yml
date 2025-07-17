@@ -77,8 +77,11 @@ jobs:
       - name: Wait for Rails to boot
         run: sleep 60
       
-      - name: Check running container
-        run: docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml ps
+      - name: Show container status
+        run: docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml ps -a
+
+      - name: Show backend logs
+        run: docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml logs backend || true
 
       - name: Run Rails migrations
         run: |
