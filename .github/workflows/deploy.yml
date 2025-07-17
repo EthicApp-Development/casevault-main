@@ -33,9 +33,9 @@ jobs:
           echo "YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}" >> production.env
           echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> production.env
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> production.env
-          echo "HOST_DB_VOLUME_PATH=${{ env.HOST_DB_VOLUME_PATH }}" >> production.env
-          echo "POSTGRES_DB=${{ env.POSTGRES_DB }}" >> production.env
-          echo "POSTGRES_USER=${{ env.POSTGRES_USER }}" >> production.env
+          echo "HOST_DB_VOLUME_PATH=${{ vars.HOST_DB_VOLUME_PATH }}" >> production.env
+          echo "POSTGRES_DB=${{ vars.POSTGRES_DB }}" >> production.env
+          echo "POSTGRES_USER=${{ vars.POSTGRES_USER }}" >> production.env
 
       - name: Create Frontend .env
         run: | 
@@ -69,8 +69,8 @@ jobs:
 
       - name: Variable check
         env:
-          POSTGRES_DB: ${{ env.POSTGRES_DB }}
-          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+          POSTGRES_USER: ${{ vars.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         run: | 
           echo "POSTGRES_DB=$POSTGRES_DB"
