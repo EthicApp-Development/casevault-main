@@ -333,7 +333,7 @@ export default function Home() {
                     {hasMore && (
                         <Box
                             ref={loadMoreRef}
-                            sx={{ height: '60px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                            sx={{ height: '60px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginLeft: 45, marginTop: 10 }}
                         >
                             {loading && <span>Cargando más casos...</span>}
                         </Box>

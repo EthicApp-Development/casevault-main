@@ -64,12 +64,12 @@ export default function Login() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Iniciar sesión
-                    </Typography>
+                    <Box display="flex" flexDirection="column" alignItems="center">
+                        <Avatar
+                            src="/images/default_case_img.png"
+                            sx={{ m: 1, width: 140, height: 140, borderRadius: 0 }}
+                        />
+                    </Box>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"

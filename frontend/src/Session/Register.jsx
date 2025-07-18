@@ -78,12 +78,12 @@ export default function Register() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Registrarse
-                    </Typography>
+                    <Box display="flex" flexDirection="column" alignItems="center">
+                        <Avatar
+                            src="/images/default_case_img.png"
+                            sx={{ m: 1, width: 140, height: 140, borderRadius: 0 }}
+                        />
+                    </Box>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                     <TextField
                             margin="normal"
@@ -127,7 +127,7 @@ export default function Register() {
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
+                            label="Recordarme"
                         />
                         <Button
                             type="submit"

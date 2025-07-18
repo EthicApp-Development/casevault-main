@@ -60,12 +60,12 @@ function App() {
   }, [pathname]);
 
   return (
-    <div>
+    <div id='App'>
       <AppContext.Provider value={{
         user, setUser, avatar, setAvatar
       }}>
         {pathname !== "/login/" && pathname !== "/login" && pathname !== "/register" && pathname !== "/register/" && <Navbar />}
-        <Box marginTop={0} marginLeft={45}>
+        <Box id="App-box-1" marginTop={0} marginLeft={pathname !== "/login" && pathname !== "/login/" && pathname !== "/register" && pathname !== "/register/" ? '270px' : 0}>
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />

@@ -10,8 +10,14 @@ default: &default
   timeout: 5000
 
 development:
-  <<: *default
-  database: storage/development.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  database: <%= ENV.fetch("POSTGRES_DB", "casevault_dev") %>
+  username: <%= ENV.fetch("POSTGRES_USER", "casevault") %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD", "casevault") %>
+  host: <%= ENV.fetch("POSTGRES_HOST", "db") %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
 
 
 # Warning: The database defined as "test" will be erased and

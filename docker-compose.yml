@@ -11,10 +11,29 @@ services:
       - bundle_data:/usr/local/bundle
     ports:
       - "3000:3000"
+    env_file:
+      - ./.env
     environment:
       RAILS_ENV: development
       BUNDLE_PATH: /usr/local/bundle
+      POSTGRES_HOST: db
     command: ./bin/rails server -b 0.0.0.0
+    depends_on:
+      - db
+      - redis
+  
+  redis:
+    image: redis:alpine
+    container_name: "casevault-redis"
+    ports:
+      - "6379:6379"
+
+  db:
+    image: postgres:17
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    env_file:
+      - ./.env
     
   frontend:
     build:
@@ -32,3 +51,4 @@ services:
 
 volumes:
   bundle_data:
+  pg_data:
