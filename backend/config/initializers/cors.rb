@@ -8,7 +8,7 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   if Rails.env.production?
     allow do
-      origins '*' # Production frontend domain
+      origins ENV.fetch('CORS_ORIGIN', 'https://casevault.ethicapp.info')
       resource '*',
         headers: :any,
         methods: [:get, :post, :put, :patch, :delete, :options, :head],

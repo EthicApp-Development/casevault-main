@@ -36,6 +36,7 @@ jobs:
           echo "HOST_DB_VOLUME_PATH=${{ vars.HOST_DB_VOLUME_PATH }}" >> production.env
           echo "POSTGRES_DB=${{ vars.POSTGRES_DB }}" >> production.env
           echo "POSTGRES_USER=${{ vars.POSTGRES_USER }}" >> production.env
+          echo "BACKEND_PORT=${{ vars.BACKEND_PORT}}" >> production.env
 
       - name: Create Frontend .env
         run: | 
@@ -67,10 +68,10 @@ jobs:
         run: |
           docker image tag myapp_backend:latest myapp_backend:previous || echo "No existing latest image to tag"
 
-      - name: Tear down Docker Compose
-        run: |
-          docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml down --volumes
-          
+      #- name: Tear down Docker Compose
+      #  run: |
+      #    docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml down --volumes
+
       - name: Build and start new containers
         run: |
           set -e
