@@ -41,6 +41,16 @@ export default function Login() {
                 track_tag_searches: response.data.data.track_tag_searches
             };
             console.log(response)
+            const headers = response.headers;
+
+            if (!headers || Object.keys(headers).length === 0) {
+            console.log("No accessible headers (CORS may be blocking them)");
+            } else {
+                for (const key in headers) {
+                    console.log(`${key}: ${headers[key]}`);
+                }
+            }
+
             setUser(account);
             const token = response.headers['authorization'];
             setInLocalStorage('token', token);
