@@ -149,7 +149,7 @@ export default function CaseCard({ title, description, image_url, case_id, owner
             />
           </CardContent>
         </CardActionArea>
-        <Box sx={{ display: 'flex', flexDirection: 'row' , justifyContent: 'flex-start', alignItems: 'center',  gap: 1, }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row' , justifyContent: 'flex-start', alignItems: 'center',  gap: 1, marginLeft: 2 }}>
           <Rating
             name="interactive-rating"
             value={rating}
