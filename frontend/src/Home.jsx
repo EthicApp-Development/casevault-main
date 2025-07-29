@@ -259,14 +259,14 @@ export default function Home() {
                         <ClickAwayListener onClickAway={handleCloseForm}>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
                             {!isFormOpen && (
-                                <Button variant="contained" onClick={handleOpenForm}>
+                                <Button variant="contained" onClick={handleOpenForm} sx={{ whiteSpace: 'nowrap' }}>
                                 Crear caso
                                 </Button>
                             )}
-                            <Collapse in={isFormOpen}>
+                            <Collapse in={isFormOpen} sx={{ width: '100%' }} timeout={100}>
                                 <form onSubmit={handleSubmit}>
                                 <FormControl fullWidth>
-                                    <Box sx={{ ...css.centerAlign, ...css.inline_buttons }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 2 }}>
                                     <TextField
                                         required
                                         id="case-title"
