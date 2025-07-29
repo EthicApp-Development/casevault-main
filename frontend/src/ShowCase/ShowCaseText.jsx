@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import React, { useContext, useEffect, useState } from 'react';
 import { getCase } from '../API/cases';
 import InterpreterRichText from '../Utils/InterpreterRichText';
@@ -9,13 +9,17 @@ import { useCaseContext } from "./ShowCase";
 function ShowCaseText() {
     const { mainImage, setMainImage , title, setTitle, text, setText, tags, setTags} = useCaseContext();
     const { caseId } = useParams();
-    const {user} = useContext(AppContext)    
+    const {user} = useContext(AppContext);
+
+    const shouldShowTitle = location.pathname.startsWith('/cases/');
 
     return (
         <Box p={2} sx={{ position: 'relative', marginRight: '320px' }}>
-            <Typography variant="h1" align='left' gutterBottom>
-                <strong>{title}</strong>
-            </Typography>
+            {shouldShowTitle && (
+                <Typography variant="h1" align='left' gutterBottom>
+                    <strong>{title}</strong>
+                </Typography>
+            )}
             <Typography variant="body1" align='left' gutterBottom>
                 <InterpreterRichText htmlContent={text} />
             </Typography>
@@ -39,7 +43,8 @@ function ShowCaseText() {
                         alt={title} 
                         sx={{
                             width: '300px',
-                            height: '250px',
+                            height: 'auto',
+                            objectFit: 'contain',
                             marginBottom: '16px'
                         }}
                     />
