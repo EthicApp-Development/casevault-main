@@ -68,10 +68,6 @@ jobs:
         run: |
           docker image tag myapp_backend:latest myapp_backend:previous || echo "No existing latest image to tag"
 
-      #- name: Tear down Docker Compose
-      #  run: |
-      #    docker compose -p $COMPOSE_PROJECT_NAME -f ./docker-compose.production.yml down --volumes
-
       - name: Build and start new containers
         run: |
           set -e
