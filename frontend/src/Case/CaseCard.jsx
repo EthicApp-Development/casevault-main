@@ -63,7 +63,7 @@ export default function CaseCard({ title, description, image_url, case_id, owner
   const { user } = useContext(AppContext);
   const navigate = useNavigate();
   const [localSaved, setLocalSaved] = useState(saved);
-  const [rating, setRating] = useState(avgRating);
+  const [rating, setRating] = useState(parseFloat(avgRating) || 0);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -163,9 +163,9 @@ export default function CaseCard({ title, description, image_url, case_id, owner
             icon={<StarIcon fontSize="inherit" />}
             emptyIcon={<StarBorderIcon fontSize="inherit" />}
           />
-          <box sx={{ fontSize: '1rem', color: 'text.secondary' }}>
+          <Box sx={{ fontSize: '1rem', color: 'text.secondary' }}>
             {!isNaN(Number(rating)) ? Number(rating).toFixed(1) : ' '}
-          </box>
+          </Box>
         </Box>
         <Box>
           <Typography sx={{ padding: 2 }} variant="body1"> Creador: {owner.first_name} {owner.last_name}</Typography>

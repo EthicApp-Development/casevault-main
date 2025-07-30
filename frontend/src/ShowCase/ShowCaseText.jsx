@@ -55,6 +55,7 @@ function ShowCaseText() {
                 </Box>
 
                 <Typography
+                    component="div"
                     variant="body1"
                     align="left"
                     gutterBottom
