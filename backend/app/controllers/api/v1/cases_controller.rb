@@ -222,6 +222,8 @@ end
         comments: { only: [:id, :body, :created_at], include: {user: {only: [:id, :first_name, :last_name]}}}
       })
 
+      case_json["avge_ratings"] = @case.average_rating
+
       if @case.comments_enabled?
         case_json["comments"].each do |comment_json|
           comment = @case.comments.find { |c| c.id == comment_json["id"] }

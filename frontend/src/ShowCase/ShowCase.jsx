@@ -11,6 +11,7 @@ export const useCaseContext = () => {
 };
 
 function ShowCase() {
+    const [avgeRating, SetAvgeRating] = useState(0);
     const [selectedTab, setSelectedTab] = useState(0); 
     const [title, setTitle] = useState('');
     const [summary, setSummary] = useState('');
@@ -46,6 +47,7 @@ function ShowCase() {
                     setTitle(response.data.title);
                     setAllowComments(response.data.comments_availability === "comments_enabled");
                     setCanComment(response.data.current_user_comment_available);
+                    SetAvgeRating(response.data.avge_ratings);
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
@@ -127,6 +129,8 @@ function ShowCase() {
         setAllowComments,
         canComment,
         setCanComment,
+        avgeRating,
+        SetAvgeRating,
     };
 
     return (

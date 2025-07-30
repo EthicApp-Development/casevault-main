@@ -5,6 +5,7 @@ import InterpreterRichText from '../Utils/InterpreterRichText';
 import { Box, Typography, Chip, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import AppContext from '../Contexts/AppContext';
 import { useCaseContext } from "./ShowCase";
+import InsideCaseImageCard from '../Case/InsideCaseImageCard';
 
 function ShowCaseText() {
     const { mainImage, setMainImage , title, setTitle, text, setText, tags, setTags} = useCaseContext();
@@ -78,29 +79,26 @@ function ShowCaseText() {
                         flexDirection: 'column',
                         alignItems: 'center'
                     }}
-                >
-                    <Box 
-                        component="img" 
-                        src={mainImage} 
-                        alt={title} 
-                        sx={{
-                            width: '300px',
-                            height: 'auto',
-                            objectFit: 'contain',
-                            marginBottom: '16px'
-                        }}
-                    />
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-                        {tags.map(tag => (
-                            <Chip key={tag.id} label={tag.name} 
-                                sx={{ 
-                                    margin: '4px',
-                                    fontSize: '1.1rem',
-                                    padding: '10px',
-                                }} 
-                            />
-                        ))}
+                >                    
+                    {/* This is new image card */}
+                    <Box>
+                        <InsideCaseImageCard
+                            image_url={mainImage}
+                            case_id={caseId}
+                            tags={tags}
+                            sx={{
+                                height: '100%', 
+                                display: 'flex', 
+                                flexDirection: 'column',
+                                overflow: 'hidden', 
+                                textOverflow: 'ellipsis', 
+                                whiteSpace: 'nowrap',
+                            }}
+                        >
+
+                        </InsideCaseImageCard>
                     </Box>
+                    {/* This is end of new image */}
                 </Box>
             )}
         </Box>
