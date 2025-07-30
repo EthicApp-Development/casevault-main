@@ -9,6 +9,7 @@ services:
     volumes:
       - ./backend:/app
       - bundle_data:/usr/local/bundle
+      - storage_data:/app/storage
     ports:
       - "${BACKEND_PORT:-3000}:3000"
     env_file:
@@ -51,3 +52,4 @@ services:
 volumes:
   bundle_data:
   pg_data:
+  storage_data:

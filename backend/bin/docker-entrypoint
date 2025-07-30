@@ -10,4 +10,10 @@ if [ -f /app/tmp/pids/server.pid ]; then
   rm /app/tmp/pids/server.pid
 fi
 
+# Ensure correct ownership of /app/storage (in case volume was mounted as root)
+if [ -d /app/storage ]; then
+  echo "Corrigiendo permisos en /app/storage para usuario 'rails'..."
+  chown -R rails:rails /app/storage
+fi
+
 exec "${@}"
