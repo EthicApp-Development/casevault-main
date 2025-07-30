@@ -139,32 +139,6 @@ export default function Home() {
         };
     }, [loading, hasMore]);
 
-/*
-    useEffect(() => {
-        const fetchCases = async () => {
-            if (user){
-                try {
-                    const response = await axios.get(CASES_API, {
-                        params: {
-                            user_id: user.id // Enviar user_id como parámetro
-                        }
-                    });
-                    setCases(response.data.info);
-                    
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-            const loggedInUser = getFromLocalStorage("authenticated");
-            if (loggedInUser) {
-                setauthenticated(loggedInUser);
-            } else {
-                navigate("/login")
-            }
-        };
-        fetchCases();
-    }, [user, navigate]); 
-*/
     useEffect(() => {
         const fetchTags = async () => {
             try {
@@ -242,7 +216,7 @@ export default function Home() {
     
     const handleCloseForm = () => {
         setIsFormOpen(false);
-        setCaseTitle(""); // Optional: clear input
+        setCaseTitle("");
     };
     const handleSubmit = (e) => {
         e.preventDefault();

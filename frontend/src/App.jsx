@@ -40,7 +40,6 @@ function App() {
         const fetchUser = async () => {
             const accountString = getFromLocalStorage("account");
             if (accountString) {
-                console.log("accountString", accountString);
                 const account = JSON.parse(accountString);
                 setUser(account)
             }
@@ -49,7 +48,7 @@ function App() {
         fetchUser();
     }, []);
 
-  console.log("user", user)
+  //console.log("user", user)
 
   useEffect(() => {
     const accountInfo = getFromLocalStorage('account');

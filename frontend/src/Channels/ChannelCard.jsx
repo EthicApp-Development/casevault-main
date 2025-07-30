@@ -28,7 +28,6 @@ const ChannelCard = ({ id, title, user_id, description, users, members, onMember
 
     function handleClick() {
         navigate(`/show_channel/${id}`);
-        console.log("haciendo click al caso");
     }
 
     const handleMembersUpdate = (updatedMembers) => {
