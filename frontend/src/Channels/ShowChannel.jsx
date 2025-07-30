@@ -50,7 +50,6 @@ const ShowChannel = () => {
     async function fetchData() {
       try {
         const response = await getChannel({ id: channelId, user_id: user.id });
-        console.log(response.data);
         setChannel(response.data);
         setCurrentMembers(response.data.users);
       } catch (error) {

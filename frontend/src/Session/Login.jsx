@@ -39,8 +39,7 @@ export default function Login() {
                 first_name: response.data.data.first_name,
                 last_name: response.data.data.last_name,
                 track_tag_searches: response.data.data.track_tag_searches
-            };
-            console.log(response)
+            };            
             setUser(account);
             const token = response.headers['authorization'];
             setInLocalStorage('token', token);

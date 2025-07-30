@@ -139,32 +139,6 @@ export default function Home() {
         };
     }, [loading, hasMore]);
 
-/*
-    useEffect(() => {
-        const fetchCases = async () => {
-            if (user){
-                try {
-                    const response = await axios.get(CASES_API, {
-                        params: {
-                            user_id: user.id // Enviar user_id como parámetro
-                        }
-                    });
-                    setCases(response.data.info);
-                    
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-            const loggedInUser = getFromLocalStorage("authenticated");
-            if (loggedInUser) {
-                setauthenticated(loggedInUser);
-            } else {
-                navigate("/login")
-            }
-        };
-        fetchCases();
-    }, [user, navigate]); 
-*/
     useEffect(() => {
         const fetchTags = async () => {
             try {
@@ -242,7 +216,7 @@ export default function Home() {
     
     const handleCloseForm = () => {
         setIsFormOpen(false);
-        setCaseTitle(""); // Optional: clear input
+        setCaseTitle("");
     };
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -259,14 +233,14 @@ export default function Home() {
                         <ClickAwayListener onClickAway={handleCloseForm}>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
                             {!isFormOpen && (
-                                <Button variant="contained" onClick={handleOpenForm}>
+                                <Button variant="contained" onClick={handleOpenForm} sx={{ whiteSpace: 'nowrap' }}>
                                 Crear caso
                                 </Button>
                             )}
-                            <Collapse in={isFormOpen}>
+                            <Collapse in={isFormOpen} sx={{ width: '100%' }} timeout={100}>
                                 <form onSubmit={handleSubmit}>
                                 <FormControl fullWidth>
-                                    <Box sx={{ ...css.centerAlign, ...css.inline_buttons }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 2 }}>
                                     <TextField
                                         required
                                         id="case-title"

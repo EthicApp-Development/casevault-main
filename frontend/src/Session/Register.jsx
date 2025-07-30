@@ -35,8 +35,7 @@ export default function Register() {
             "last_name": data.get("last_name")
           };
       
-          const response = await authRegister({ user: params });
-          console.log(response)
+          const response = await authRegister({ user: params });          
           if (response.status === 200) {
             const account = {
               id: response.data.data.id,

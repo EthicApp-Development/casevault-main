@@ -1,7 +1,7 @@
 import React, { useState, createContext, useContext, useEffect } from "react";
 import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
 import { getCase } from "../API/cases";
-import { Box, Tab, Tabs } from '@mui/material';
+import { Box, Tab, Tabs, Typography } from '@mui/material';
 import AppContext from "../Contexts/AppContext";
 
 const CaseContext = createContext();
@@ -11,6 +11,7 @@ export const useCaseContext = () => {
 };
 
 function ShowCase() {
+    const [avgeRating, SetAvgeRating] = useState(0);
     const [selectedTab, setSelectedTab] = useState(0); 
     const [title, setTitle] = useState('');
     const [summary, setSummary] = useState('');
@@ -46,6 +47,7 @@ function ShowCase() {
                     setTitle(response.data.title);
                     setAllowComments(response.data.comments_availability === "comments_enabled");
                     setCanComment(response.data.current_user_comment_available);
+                    SetAvgeRating(response.data.avge_ratings);
                 } catch (error) {
                     console.log("No se pudo obtener el caso");
                 }
@@ -127,12 +129,17 @@ function ShowCase() {
         setAllowComments,
         canComment,
         setCanComment,
+        avgeRating,
+        SetAvgeRating,
     };
 
     return (
         <CaseContext.Provider value={contextValue}>
             <Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginLeft: 10 }}>
+                    <Typography variant="h1" align='left' gutterBottom>
+                        <strong>{title}</strong>
+                    </Typography>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs aria-label="basic tabs example" value={selectedTab} onChange={handleTabChange}>
                             <Tab label="Texto" value={0} sx={{ textTransform: 'none' }} />
